@@ -1,0 +1,12 @@
+[Bb]in/
+[Oo]bj/
+
+.idea/
+.vs/
+*.user
+*.userosscache
+*.sln.docuser
+
+*.log
+
+publish/

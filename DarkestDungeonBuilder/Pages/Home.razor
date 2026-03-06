@@ -1,0 +1,86 @@
+﻿@page "/"
+@using DarkestDungeonBuilder.Models
+@using DarkestDungeonBuilder.Services
+@inject HeroDatabase Db
+
+<PageTitle>Darkest Dungeon Builder</PageTitle>
+
+<MudText Typo="Typo.h3">Darkest Dungeon Builder</MudText>
+
+
+
+@code {
+
+    private List<Hero> roster;
+
+    protected override void OnInitialized()
+    {
+        roster = Db.GetInitialRoster();
+
+    }
+
+    private Team currentTeam = new Team();
+
+    public void AddHero(Hero hero)
+    {
+        foreach (var slot in currentTeam.Slots.ToList())
+        {
+            if (slot.Value == null)
+            {
+                var cloned = hero.Clone();
+                currentTeam.Slots[slot.Key] = cloned;
+                break;
+            }
+        }
+    }
+
+    
+
+}
+
+<MudGrid>
+    <!-- left panel: list of heroes -->
+    <MudItem xs="3">
+        <MudPaper Class="pa-4" Style="height: 100%">
+            <MudText Typo="Typo.h6">Hero Roster</MudText>
+            <MudDataGrid Items="@roster" Hover="true" Dense="true">
+                <Columns>
+                    <PropertyColumn Property="x => x.Name" Title="Name" />
+                    <PropertyColumn Property="x => x.Role" Title="Role" />
+                    <TemplateColumn CellClass="d-flex justify-end">
+                        <CellTemplate>
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" @onclick=@(() => AddHero(context.Item))/>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+            </MudPaper>
+    </MudItem>
+    
+    <!-- center panel, team composition -->
+    <MudItem xs="6">
+        <MudGrid>
+            @foreach (var hero in currentTeam.Slots)
+            {
+                <MudItem xs="3">
+                    <MudPaper Class="pa-4">
+                        <MudText Typo="Typo.h6">@hero.Key</MudText>
+                        @if (hero.Value == null)
+                        {
+                            <MudText Typo="Typo.h6">Empty</MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6">@hero.Value.Name</MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudItem>
+    
+    <!-- right panel: stats and warnings -->
+    <MudItem xs="3">
+        <MudPaper Class="pa-4">Here will be radar graph and warnings</MudPaper>
+    </MudItem>
+</MudGrid>
