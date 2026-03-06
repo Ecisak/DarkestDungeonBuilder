@@ -2,12 +2,12 @@ namespace DarkestDungeonBuilder.Models;
 
 public class Skill
 {
-    public string Name { get; set; }
-    public string SkillImage { get; set; }
-    public List<int> CastablePositions { get; set; }
-    public List<int> Targets { get; set; }
-    public bool IsFriendly { get; set; }
-    public string Effects { get; set; }
+    public required string Name { get; init; }
+    public required string SkillImage { get; init; }
+    public required List<int> CastablePositions { get; init; }
+    public required List<int> Targets { get; init; }
+    public bool IsFriendly { get; init; }
+    public required string Effects { get; init; }
 
     public Skill Clone()
     {

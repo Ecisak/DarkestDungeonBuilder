@@ -2,35 +2,32 @@ namespace DarkestDungeonBuilder.Models;
 
 public class Hero
 {
-    public string Name { get; set; }
-    public string Portrait { get; set; }
-    public string Role { get; set; }
+    public required string Name { get; set; }
+    public required string Portrait { get; set; }
+    public required string Role { get; set; }
     public int Health { get; set; }
 
-    public List<int> PreferredPositions
-    {
-        get
-        {
-            //todo logic for preferred position calculation
-            return new List<int>();
-        }
-    }
-    public List<Skill> Skills { get; set; } = new List<Skill>();
-    public List<Skill> SelectedSkills { get; set; } = new List<Skill>();
+    public static List<int> PreferredPositions =>
+        //todo logic for preferred position calculation
+        [];
+    public List<Skill> Skills { get; set; } = [];
+    private List<Skill> SelectedSkills { get; init; } = [];
 
     public Hero Clone()
     {
-        Hero newHero = new Hero();
-        newHero.Name = this.Name;
-        newHero.Portrait = this.Portrait;
-        newHero.Role = this.Role;
-        newHero.Health = this.Health;
-        newHero.Skills = new List<Skill>();
-        newHero.SelectedSkills = new List<Skill>();
-
-        foreach (Skill skill in this.Skills)
+        var newHero = new Hero
         {
-            Skill skillClone = (skill.Clone());
+            Name = this.Name,
+            Portrait = this.Portrait,
+            Role = this.Role,
+            Health = this.Health,
+            Skills = [],
+            SelectedSkills = []
+        };
+
+        foreach (var skill in this.Skills)
+        {
+            var skillClone = (skill.Clone());
             newHero.Skills.Add(skillClone);
             if (this.SelectedSkills.Contains(skill))
             {

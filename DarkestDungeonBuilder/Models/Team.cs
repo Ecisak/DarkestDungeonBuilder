@@ -2,7 +2,7 @@ namespace DarkestDungeonBuilder.Models;
 
 public class Team
 {
-    public Dictionary<int, Hero> Slots { get; set; } = new()
+    public Dictionary<int, Hero?> Slots { get; set; } = new()
     {
         { 1, null }, 
         { 2, null }, 
@@ -10,5 +10,5 @@ public class Team
         { 4, null }
     };
     
-    // todo: methods addhero etc.
+    // TODO: methods addhero etc.
 }

@@ -7,16 +7,42 @@ public class HeroDatabase
     {
         var roster = new List<Hero>();
         
-        Hero crusader = new Hero();
-        crusader.Name = "Crusader";
-        crusader.Portrait = "crusader.png";
-        crusader.Role = "Warrior";
-        crusader.Health = 100;
-        crusader.Skills =
-        [
-            new Skill { Name = "Smite", CastablePositions = new List<int> { 1, 2 }, IsFriendly = false },
-            new Skill { Name = "Smite2", CastablePositions = new List<int> { 1, 2 }, IsFriendly = false }
-        ];
+        var crusader = new Hero
+        {
+            Name = "Crusader",
+            Portrait = "crusader.png",
+            Role = "Warrior",
+            Health = 100,
+            Skills =
+            [
+                new Skill
+                {
+                    Name = "Smite",
+                    CastablePositions =
+                    [
+                        1,
+                        2
+                    ],
+                    IsFriendly = false,
+                    SkillImage = null,
+                    Targets = null,
+                    Effects = null
+                },
+                new Skill
+                {
+                    Name = "Smite2",
+                    CastablePositions = new List<int>
+                    {
+                        1,
+                        2
+                    },
+                    IsFriendly = false,
+                    SkillImage = null,
+                    Targets = null,
+                    Effects = null
+                }
+            ]
+        };
         roster.Add(crusader);
         return roster;
     }

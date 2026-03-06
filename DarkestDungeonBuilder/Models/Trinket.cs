@@ -2,8 +2,8 @@ namespace DarkestDungeonBuilder.Models;
 
 public class Trinket
 {
-    public string Name { get; set; }
-    public string TrinketImage { get; set; }
-    public string Rarity { get; set; }
-    public string Effects { get; set; }
+    public required string Name { get; set; }
+    public required string TrinketImage { get; set; }
+    public required string Rarity { get; set; }
+    public required string Effects { get; set; }
 }
