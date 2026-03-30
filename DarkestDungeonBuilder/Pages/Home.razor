@@ -15,6 +15,7 @@
 
 
     private List<Hero> _roster = null!;
+    private Hero? draggedHero;
 
     protected override void OnInitialized()
     {
@@ -35,15 +36,55 @@
         }
     }
 
-    private void RemoveHero(Hero hero)
+    private void RemoveHero(int slotKey)
     {
-        foreach (var slot in _currentTeam.Slots)
+        _currentTeam.Slots[slotKey] = null;
+    }
+
+    private async Task HandleDrop(int slotKey)
+    {
+        if (draggedHero == null) return;
+        
+        // check if the slot is empty
+        if (_currentTeam.Slots[slotKey] == null)
         {
-            if (slot.Value == hero)
+            _currentTeam.Slots[slotKey] = draggedHero.Clone();
+        }
+        else
+        {
+            // determine adjacent slots
+            int leftSlot = slotKey - 1;
+            int rightSlot = slotKey + 1;
+            
+            // check if left slot is empty or if it exists
+            if (leftSlot >= 1 && _currentTeam.Slots[leftSlot] == null)
             {
-                _currentTeam.Slots[slot.Key] = null;
+                _currentTeam.Slots[leftSlot] = _currentTeam.Slots[slotKey];
+                _currentTeam.Slots[slotKey] = draggedHero.Clone();
+            }
+            // do the same for right
+            else if (rightSlot <= 4 && _currentTeam.Slots[rightSlot] == null)
+            {
+                _currentTeam.Slots[rightSlot] = _currentTeam.Slots[slotKey];
+                _currentTeam.Slots[slotKey] = draggedHero.Clone();
+            }
+            // full adjacent slots, pop a modal to remove target slot hero
+            else
+            {
+                bool? result = await DialogService.ShowMessageBoxAsync(
+                    "Slot is full.",
+                    "The slot and all adjacent slots are full. Do you want to replace the hero with a new one?",
+                    yesText: "Replace", cancelText: "Cancel");
+
+                if (result == true)
+                {
+                    _currentTeam.Slots[slotKey] = draggedHero.Clone();
+                }
             }
         }
+        // clean memory
+        draggedHero = null;
+        StateHasChanged();
     }
 
     private Task OpenDialogAsync(Hero hero)
@@ -65,11 +106,24 @@
             <MudText Typo="Typo.h6">Hero Roster</MudText>
             <MudDataGrid Items="@_roster" Hover="true" Dense="true">
                 <Columns>
-                    <PropertyColumn Property="x => x.Name" Title="Name" />
-                    <PropertyColumn Property="x => x.Role" Title="Role" />
-                    <TemplateColumn CellClass="d-flex justify-end">
+                    <TemplateColumn Title="Available Heroes">
                         <CellTemplate>
-                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" @onclick=@(() => AddHero(context.Item))/>
+                
+                            <div draggable="true" 
+                                 @ondragstart="@(() => draggedHero = context.Item)" 
+                                 style="cursor: grab;" 
+                                 class="d-flex align-center justify-space-between w-100 pa-2">
+                     
+                                <div>
+                                    <MudText Typo="Typo.body1"><strong>@context.Item.Name</strong></MudText>
+                                    <MudText Typo="Typo.caption">@context.Item.Role</MudText>
+                                </div>
+                                
+                                <!--TODO do a non-moda window to ask a user, where he wishes to place the hero -->
+                                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" @onclick=@(() => AddHero(context.Item)) />
+                    
+                            </div>
+                
                         </CellTemplate>
                     </TemplateColumn>
                 </Columns>
@@ -83,7 +137,7 @@
             @foreach (var hero in _currentTeam.Slots)
             {
                 <MudItem xs="3">
-                    <MudPaper Class="pa-4">
+                    <MudPaper Class="pa-4" Style="min-height: 150px;" @ondragover:preventDefault="true" @ondrop="@(() => HandleDrop(hero.Key))">
                         <MudText Typo="Typo.h6">@hero.Key</MudText>
                         @if (hero.Value == null)
                         {
@@ -92,7 +146,7 @@
                         else
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => OpenDialogAsync(hero.Value))">@hero.Value.Name</MudButton>
-                            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => RemoveHero(hero.Value))">DELETE</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => RemoveHero(hero.Key))">DELETE</MudButton>
                         }
                     </MudPaper>
                 </MudItem>
