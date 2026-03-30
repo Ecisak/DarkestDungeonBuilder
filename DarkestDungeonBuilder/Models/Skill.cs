@@ -9,6 +9,13 @@ public class Skill
     public bool IsFriendly { get; init; }
     public required string Effects { get; init; }
 
+    public SkillCategory Category { get; set; }
+    public enum SkillCategory
+    {
+        Combat,
+        Camping
+    }
+
     public Skill Clone()
     {
         return new Skill
@@ -18,7 +25,8 @@ public class Skill
             CastablePositions = this.CastablePositions,
             Targets = this.Targets,
             IsFriendly = this.IsFriendly,
-            Effects = this.Effects
+            Effects = this.Effects, 
+            Category = this.Category
         };
     }
 }

@@ -6,12 +6,14 @@ public class Hero
     public required string Portrait { get; set; }
     public required string Role { get; set; }
     public int Health { get; set; }
+    
+    public List<Trinket> Trinkets { get; set; } = [];
 
     public static List<int> PreferredPositions =>
         //todo logic for preferred position calculation
         [];
     public List<Skill> Skills { get; set; } = [];
-    private List<Skill> SelectedSkills { get; init; } = [];
+    public List<Skill> SelectedSkills { get; init; } = [];
 
     public Hero Clone()
     {

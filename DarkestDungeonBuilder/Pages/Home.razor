@@ -1,7 +1,9 @@
 ﻿@page "/"
+@using DarkestDungeonBuilder.Components
 @using DarkestDungeonBuilder.Models
 @using DarkestDungeonBuilder.Services
 @inject HeroDatabase Db
+@inject IDialogService DialogService
 
 <PageTitle>Darkest Dungeon Builder</PageTitle>
 
@@ -10,6 +12,7 @@
 
 
 @code {
+
 
     private List<Hero> _roster = null!;
 
@@ -31,6 +34,25 @@
             break;
         }
     }
+
+    private void RemoveHero(Hero hero)
+    {
+        foreach (var slot in _currentTeam.Slots)
+        {
+            if (slot.Value == hero)
+            {
+                _currentTeam.Slots[slot.Key] = null;
+            }
+        }
+    }
+
+    private Task OpenDialogAsync(Hero hero)
+    {
+        var parameters = new DialogParameters<HeroDetailDialog> { { x => x.Hero, hero } };
+        
+        return DialogService.ShowAsync<HeroDetailDialog>("Simple Dialog", parameters);
+    }
+    
 
     
 
@@ -69,7 +91,8 @@
                         }
                         else
                         {
-                            <MudText Typo="Typo.h6">@hero.Value.Name</MudText>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => OpenDialogAsync(hero.Value))">@hero.Value.Name</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => RemoveHero(hero.Value))">DELETE</MudButton>
                         }
                     </MudPaper>
                 </MudItem>

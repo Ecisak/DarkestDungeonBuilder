@@ -1,0 +1,85 @@
+@using System.Web
+@using DarkestDungeonBuilder.Models
+
+<MudDialog>
+    <TitleContent>Setup</TitleContent>
+    
+    <DialogContent>
+        
+        <MudText Typo="Typo.h6">@Hero?.Name</MudText>
+        <MudImage Src="@Hero?.Portrait"/>
+
+        @if (@Hero?.Skills != null)
+        {
+            <MudText>Choose 4 Combat Skills</MudText>
+            foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Combat))
+            {
+                <MudCheckBox
+                    T="bool"
+                    label="@skill.Name"
+                    Value="@Hero.SelectedSkills.Contains(skill)"
+                    ValueChanged="@((bool isChecked) => OnSkillToggled(skill, isChecked))"
+                    Disabled="@(LockSkills(skill))">
+                </MudCheckBox>
+                <div class="d-flex gap-1">
+                    @for (int i = 1; i <= 4; i++)
+                    {
+                        if (skill.CastablePositions.Contains(i))
+                        {
+                            <span>🔴</span>
+                        }
+                        else
+                        {
+                            <span>⚫</span>
+                        }
+                    }
+                </div>
+            }
+
+            <MudText>Choose 4 Camping Skills</MudText>
+            foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Camping))
+            {
+                <MudCheckBox
+                    T="bool"
+                    label="@skill.Name"
+                    Value="@Hero.SelectedSkills.Contains(skill)"
+                    ValueChanged="@((bool isChecked) => OnSkillToggled(skill, isChecked))"
+                    Disabled="@(LockSkills(skill))">
+                </MudCheckBox>
+
+            }
+
+        }
+    </DialogContent>
+</MudDialog>
+
+@code {
+    
+    [Parameter]
+    public Hero? Hero { get; set; }
+    
+    private void OnSkillToggled(Skill skill, bool isChecked)
+    {
+        if (isChecked )
+        {
+            if (Hero.SelectedSkills.Count(s => s.Category == skill.Category) < 4)
+            {
+                Hero?.SelectedSkills.Add(skill);
+                
+            }
+        }
+
+        else
+        {
+            Hero?.SelectedSkills.Remove(skill);
+        }
+    }
+
+    private bool LockSkills(Skill skill)
+    {
+        int count = Hero.SelectedSkills.Count(s => s.Category == skill.Category);
+        bool isAlreadySelected = Hero.SelectedSkills.Contains(skill);
+
+        return (count >= 4) && (!isAlreadySelected);
+    }
+}
