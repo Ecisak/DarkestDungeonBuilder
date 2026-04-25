@@ -2,8 +2,9 @@
 @using DarkestDungeonBuilder.Components
 @using DarkestDungeonBuilder.Models
 @using DarkestDungeonBuilder.Services
-@inject HeroDatabase Db
+@inject HeroDatabase HeroDb
 @inject IDialogService DialogService
+@inject DungeonLocationDatabase LocationDb
 
 <PageTitle>Darkest Dungeon Builder</PageTitle>
 
@@ -15,12 +16,14 @@
 
 
     private List<Hero> _roster = null!;
+    private List<DungeonLocation> _locations = null!;
     private Hero? _heroToAssign;
-    private Location? _selectedLocation = null;
+    private DungeonLocation? _selectedLocation = null;
 
     protected override void OnInitialized()
     {
-        _roster = Db.GetInitialRoster();
+        _roster = HeroDb.GetInitialRoster();
+        _locations = LocationDb.GetInitialDungeonLocations();
 
     }
 
@@ -33,7 +36,7 @@
         StateHasChanged();
     }
 
-    private void SetLocation(Location loc)
+    private void SetLocation(DungeonLocation loc)
     {
         if (loc == null) return;
         if (_selectedLocation != null)
@@ -117,20 +120,32 @@
 }
 @if (_selectedLocation == null)
 {
-    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16">
+    <MudContainer Class="d-flex flex-column align-center justify-center" Style="height: 100vh;">
         <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8">Choose Your Destination</MudText>
         
         <MudGrid Justify="Justify.Center">
-            <!--TODO udelat cyklus na vykresleni karet pro lokace, pridat lokace do mocku, nastavit na kazdou kartu onclick ktera nastavi currentLocation -->
-            <!-- DOPLŇ: Tady by měl být cyklus (foreach), který vykreslí karty pro Ruins, Weald, Warrens atd. -->
-            <!-- Každá karta bude mít @onclick, které nastaví currentLocation -->
+            @foreach (var loc in _locations)
+            {
+                <MudItem xs="3">
+                    <MudPaper Class="pa-4" Style="min-height: 150px;" @onclick="@(() => SetLocation(loc))">
+                        <MudText Typo="Typo.h6">@loc.Name</MudText>
+                        <MudText Typo="Typo.caption">@loc.Strengths</MudText>
+                        <MudText Typo="Typo.caption">@loc.Weaknesses</MudText>
+                        <div class="align-center justify-center justify-content-center align-content-center d-flex">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SetLocation(loc))" >Zvolit</MudButton>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            }
         </MudGrid>
     </MudContainer>
 }
-<MudGrid>
+else
+{
+    <MudGrid>
     <!-- left panel: list of heroes -->
     <MudItem xs="3">
-        <MudText Typo="Typo.h5">Current Location:</MudText>
+        <MudText Typo="Typo.h5">Current Location: @_selectedLocation?.Name</MudText>
         <MudPaper Class="pa-4" Style="height: 100%">
             <MudText Typo="Typo.h6">Hero Roster</MudText>
             <MudDataGrid Items="@_roster" Hover="true" Dense="true">
@@ -194,3 +209,4 @@
         <MudPaper Class="pa-4">Here will be radar graph and warnings</MudPaper>
     </MudItem>
 </MudGrid>
+}

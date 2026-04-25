@@ -15,4 +15,6 @@ builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<HeroDatabase>();
 
+builder.Services.AddSingleton<DungeonLocationDatabase>();
+
 await builder.Build().RunAsync();

@@ -26,14 +26,27 @@
                     {
                         if (skill.CastablePositions.Contains(i))
                         {
-                            <span>🔴</span>
+                            <span>🟡</span>
                         }
                         else
                         {
                             <span>⚫</span>
                         }
                     }
+                    |
+                    @for (int i = 1; i <= 4; i++)
+                    {
+                        if (skill.Targets.Contains(i))
+                        {
+                            <span>🔴</span>
+                        } 
+                        else
+                        {
+                            <span>⚫</span>
+                        }
+                    }
                 </div>
+
             }
 
             <MudText>Choose 4 Camping Skills</MudText>
