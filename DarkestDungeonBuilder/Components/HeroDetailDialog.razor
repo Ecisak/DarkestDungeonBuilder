@@ -62,7 +62,7 @@
     {
         if (isChecked )
         {
-            if (Hero.SelectedSkills.Count(s => s.Category == skill.Category) < 4)
+            if (Hero?.SelectedSkills.Count(s => s.Category == skill.Category) < 4)
             {
                 Hero?.SelectedSkills.Add(skill);
                 
@@ -77,8 +77,8 @@
 
     private bool LockSkills(Skill skill)
     {
-        int count = Hero.SelectedSkills.Count(s => s.Category == skill.Category);
-        bool isAlreadySelected = Hero.SelectedSkills.Contains(skill);
+        var count = Hero?.SelectedSkills.Count(s => s.Category == skill.Category);
+        var isAlreadySelected = Hero.SelectedSkills.Contains(skill);
 
         return (count >= 4) && (!isAlreadySelected);
     }

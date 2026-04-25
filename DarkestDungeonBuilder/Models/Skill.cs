@@ -9,7 +9,7 @@ public class Skill
     public bool IsFriendly { get; init; }
     public required string Effects { get; init; }
 
-    public SkillCategory Category { get; set; }
+    public SkillCategory Category { get; init; }
     public enum SkillCategory
     {
         Combat,

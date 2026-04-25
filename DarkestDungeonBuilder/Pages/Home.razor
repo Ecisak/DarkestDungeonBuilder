@@ -15,7 +15,8 @@
 
 
     private List<Hero> _roster = null!;
-    private Hero? draggedHero;
+    private Hero? _heroToAssign;
+    private Location? _selectedLocation = null;
 
     protected override void OnInitialized()
     {
@@ -25,14 +26,23 @@
 
     private readonly Team _currentTeam = new Team();
 
-    private void AddHero(Hero hero)
+    private async Task AddHero(Hero clickedHero, int slotKey)
     {
-        foreach (var slot in _currentTeam.Slots.ToList())
+        await AssignHeroToSlotAsync(clickedHero, slotKey);
+    
+        StateHasChanged();
+    }
+
+    private void SetLocation(Location loc)
+    {
+        if (loc == null) return;
+        if (_selectedLocation != null)
         {
-            if (slot.Value != null) continue;
-            var cloned = hero.Clone();
-            _currentTeam.Slots[slot.Key] = cloned;
-            break;
+            // todo modal window na zeptani se zda chce uzivatel zmenit lokaci
+        }
+        else
+        {
+            _selectedLocation = loc;
         }
     }
 
@@ -40,50 +50,57 @@
     {
         _currentTeam.Slots[slotKey] = null;
     }
-
-    private async Task HandleDrop(int slotKey)
+    
+    private async Task AssignHeroToSlotAsync(Hero heroToAssign, int targetSlotKey)
     {
-        if (draggedHero == null) return;
+        if (heroToAssign == null) return;
         
         // check if the slot is empty
-        if (_currentTeam.Slots[slotKey] == null)
+        if (_currentTeam.Slots[targetSlotKey] == null)
         {
-            _currentTeam.Slots[slotKey] = draggedHero.Clone();
+            _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
         }
         else
         {
             // determine adjacent slots
-            int leftSlot = slotKey - 1;
-            int rightSlot = slotKey + 1;
+            int leftSlot = targetSlotKey - 1;
+            int rightSlot = targetSlotKey + 1;
             
             // check if left slot is empty or if it exists
             if (leftSlot >= 1 && _currentTeam.Slots[leftSlot] == null)
             {
-                _currentTeam.Slots[leftSlot] = _currentTeam.Slots[slotKey];
-                _currentTeam.Slots[slotKey] = draggedHero.Clone();
+                _currentTeam.Slots[leftSlot] = _currentTeam.Slots[targetSlotKey];
+                _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
             }
             // do the same for right
             else if (rightSlot <= 4 && _currentTeam.Slots[rightSlot] == null)
             {
-                _currentTeam.Slots[rightSlot] = _currentTeam.Slots[slotKey];
-                _currentTeam.Slots[slotKey] = draggedHero.Clone();
+                _currentTeam.Slots[rightSlot] = _currentTeam.Slots[targetSlotKey];
+                _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
             }
             // full adjacent slots, pop a modal to remove target slot hero
             else
             {
-                bool? result = await DialogService.ShowMessageBoxAsync(
+                var result = await DialogService.ShowMessageBoxAsync(
                     "Slot is full.",
                     "The slot and all adjacent slots are full. Do you want to replace the hero with a new one?",
                     yesText: "Replace", cancelText: "Cancel");
 
                 if (result == true)
                 {
-                    _currentTeam.Slots[slotKey] = draggedHero.Clone();
+                    _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
                 }
             }
         }
-        // clean memory
-        draggedHero = null;
+    }
+
+    private async Task HandleDrop(int slotKey)
+    {
+        if (_heroToAssign == null) return;
+    
+        await AssignHeroToSlotAsync(_heroToAssign, slotKey);
+    
+        _heroToAssign = null;
         StateHasChanged();
     }
 
@@ -98,43 +115,61 @@
     
 
 }
-
+@if (_selectedLocation == null)
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16">
+        <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8">Choose Your Destination</MudText>
+        
+        <MudGrid Justify="Justify.Center">
+            <!--TODO udelat cyklus na vykresleni karet pro lokace, pridat lokace do mocku, nastavit na kazdou kartu onclick ktera nastavi currentLocation -->
+            <!-- DOPLŇ: Tady by měl být cyklus (foreach), který vykreslí karty pro Ruins, Weald, Warrens atd. -->
+            <!-- Každá karta bude mít @onclick, které nastaví currentLocation -->
+        </MudGrid>
+    </MudContainer>
+}
 <MudGrid>
     <!-- left panel: list of heroes -->
     <MudItem xs="3">
+        <MudText Typo="Typo.h5">Current Location:</MudText>
         <MudPaper Class="pa-4" Style="height: 100%">
             <MudText Typo="Typo.h6">Hero Roster</MudText>
             <MudDataGrid Items="@_roster" Hover="true" Dense="true">
                 <Columns>
                     <TemplateColumn Title="Available Heroes">
                         <CellTemplate>
-                
-                            <div draggable="true" 
-                                 @ondragstart="@(() => draggedHero = context.Item)" 
-                                 style="cursor: grab;" 
+
+                            <div draggable="true"
+                                 @ondragstart="@(() => _heroToAssign = context.Item)"
+                                 style="cursor: grab;"
                                  class="d-flex align-center justify-space-between w-100 pa-2">
-                     
+
                                 <div>
                                     <MudText Typo="Typo.body1"><strong>@context.Item.Name</strong></MudText>
                                     <MudText Typo="Typo.caption">@context.Item.Role</MudText>
                                 </div>
-                                
-                                <!--TODO do a non-moda window to ask a user, where he wishes to place the hero -->
-                                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" @onclick=@(() => AddHero(context.Item)) />
-                    
+
+                                <!--TODO do a non-modal window to ask a user, where he wishes to place the hero -->
+                                <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.BottomRight" Dense="true">
+                                    <MudMenuItem @onclick="@(() => AddHero(context.Item, 1))">1</MudMenuItem>
+                                    <MudMenuItem @onclick="@(() => AddHero(context.Item, 2))">2</MudMenuItem>
+                                    <MudMenuItem @onclick="@(() => AddHero(context.Item, 3))">3</MudMenuItem>
+                                    <MudMenuItem @onclick="@(() => AddHero(context.Item, 4))">4</MudMenuItem>
+                                </MudMenu>
+
+
                             </div>
-                
+
                         </CellTemplate>
                     </TemplateColumn>
                 </Columns>
             </MudDataGrid>
-            </MudPaper>
+        </MudPaper>
     </MudItem>
     
     <!-- center panel, team composition -->
     <MudItem xs="6">
         <MudGrid>
-            @foreach (var hero in _currentTeam.Slots)
+            @foreach (var hero in _currentTeam.Slots.Reverse())
             {
                 <MudItem xs="3">
                     <MudPaper Class="pa-4" Style="min-height: 150px;" @ondragover:preventDefault="true" @ondrop="@(() => HandleDrop(hero.Key))">
