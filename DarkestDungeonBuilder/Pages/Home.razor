@@ -186,7 +186,6 @@ else
         <MudText Typo="Typo.h5" class="d-inline">Current Location: @_selectedLocation.Name</MudText>
         <MudButton Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary" OnClick="@(ChangeLocation)">Change</MudButton>
         <MudPaper Class="pa-4" Style="height: 100%">
-            <MudText Typo="Typo.h6">Hero Roster</MudText>
             <MudDataGrid Items="@_roster" Hover="true" Dense="true">
                 <Columns>
                     <TemplateColumn Title="Available Heroes">
