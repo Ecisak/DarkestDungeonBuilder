@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using DarkestDungeonBuilder;
 using DarkestDungeonBuilder.Services;
 using MudBlazor.Services;
+using Blazored.LocalStorage;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -14,6 +15,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<HeroDatabase>();
+
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<DungeonLocationDatabase>();
 

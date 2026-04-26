@@ -5,6 +5,7 @@
 @inject HeroDatabase HeroDb
 @inject IDialogService DialogService
 @inject DungeonLocationDatabase LocationDb
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Darkest Dungeon Builder</PageTitle>
 
@@ -18,14 +19,19 @@
     private List<Hero> _roster = null!;
     private List<DungeonLocation> _locations = null!;
     private Hero? _heroToAssign;
-    private DungeonLocation? _selectedLocation = null;
-
-    protected override void OnInitialized()
+    private DungeonLocation? _selectedLocation;
+    protected override async Task OnInitializedAsync()
     {
         _roster = HeroDb.GetInitialRoster();
         _locations = LocationDb.GetInitialDungeonLocations();
-
+        
+        var savedLocationName = await LocalStorage.GetItemAsync<string>("savedLocation");
+        if (!string.IsNullOrEmpty(savedLocationName))
+        {
+            _selectedLocation = _locations.FirstOrDefault(l => l.Name == savedLocationName);
+        }
     }
+    
 
     private readonly Team _currentTeam = new Team();
 
@@ -36,7 +42,7 @@
         StateHasChanged();
     }
 
-    private void SetLocation(DungeonLocation loc)
+    private async Task SetLocation(DungeonLocation? loc)
     {
         if (loc == null) return;
         if (_selectedLocation != null)
@@ -46,15 +52,23 @@
         else
         {
             _selectedLocation = loc;
+            await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
         }
+
     }
 
     private void RemoveHero(int slotKey)
     {
         _currentTeam.Slots[slotKey] = null;
     }
+
+    private void ChangeLocation()
+    {
+        _selectedLocation = null;
+        StateHasChanged();
+    }
     
-    private async Task AssignHeroToSlotAsync(Hero heroToAssign, int targetSlotKey)
+    private async Task AssignHeroToSlotAsync(Hero? heroToAssign, int targetSlotKey)
     {
         if (heroToAssign == null) return;
         
@@ -66,8 +80,8 @@
         else
         {
             // determine adjacent slots
-            int leftSlot = targetSlotKey - 1;
-            int rightSlot = targetSlotKey + 1;
+            var leftSlot = targetSlotKey - 1;
+            var rightSlot = targetSlotKey + 1;
             
             // check if left slot is empty or if it exists
             if (leftSlot >= 1 && _currentTeam.Slots[leftSlot] == null)
@@ -113,13 +127,18 @@
         
         return DialogService.ShowAsync<HeroDetailDialog>("Simple Dialog", parameters);
     }
-    
 
-    
-
+    private void GetHeroesForLocation()
+    {
+        foreach (var location in _locations)
+        {
+            location.RecommendedHeroes = location.GetRecommendedHeroes(_roster, location);
+        }
+    }
 }
 @if (_selectedLocation == null)
 {
+    GetHeroesForLocation();
     <MudContainer Class="d-flex flex-column align-center justify-center" Style="height: 100vh;">
         <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8">Choose Your Destination</MudText>
         
@@ -127,12 +146,31 @@
             @foreach (var loc in _locations)
             {
                 <MudItem xs="3">
-                    <MudPaper Class="pa-4" Style="min-height: 150px;" @onclick="@(() => SetLocation(loc))">
-                        <MudText Typo="Typo.h6">@loc.Name</MudText>
+                    <MudPaper Class="pa-4" Style="min-height: 150px;">
+                        <MudText Typo="Typo.h6" class="align-content-center">@loc.Name</MudText>
                         <MudText Typo="Typo.caption">@loc.Strengths</MudText>
                         <MudText Typo="Typo.caption">@loc.Weaknesses</MudText>
+                        <div class="align-content-center justify-content-center align-center justify-center">
+                            @if (loc.RecommendedHeroes != null)
+                            {
+                                <MudText Typo="Typo.h6">Recommended Heroes</MudText>
+                                @foreach (var hero in loc.RecommendedHeroes)
+                                {
+                                    <MudItem xs="3">
+                                        <MudAvatar>
+                                            <div style="width: 100%; height: 100%">
+                                                <MudTooltip Text=@hero.Name>
+                                                    <MudImage Src=@hero.Portrait Elevation="25" Alt=@hero.Name style="width: 100%; object-fit: cover;"></MudImage>
+                                                </MudTooltip>
+                                            </div>
+                                        </MudAvatar>
+                                    </MudItem>
+
+                                }
+                            }
+                        </div>
                         <div class="align-center justify-center justify-content-center align-content-center d-flex">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SetLocation(loc))" >Zvolit</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SetLocation(loc))" >Choose</MudButton>
                         </div>
                     </MudPaper>
                 </MudItem>
@@ -145,7 +183,8 @@ else
     <MudGrid>
     <!-- left panel: list of heroes -->
     <MudItem xs="3">
-        <MudText Typo="Typo.h5">Current Location: @_selectedLocation?.Name</MudText>
+        <MudText Typo="Typo.h5" class="d-inline">Current Location: @_selectedLocation.Name</MudText>
+        <MudButton Variant="Variant.Filled" Size="Size.Small"  Color="Color.Primary" OnClick="@(ChangeLocation)">Change</MudButton>
         <MudPaper Class="pa-4" Style="height: 100%">
             <MudText Typo="Typo.h6">Hero Roster</MudText>
             <MudDataGrid Items="@_roster" Hover="true" Dense="true">
@@ -158,9 +197,23 @@ else
                                  style="cursor: grab;"
                                  class="d-flex align-center justify-space-between w-100 pa-2">
 
-                                <div>
-                                    <MudText Typo="Typo.body1"><strong>@context.Item.Name</strong></MudText>
-                                    <MudText Typo="Typo.caption">@context.Item.Role</MudText>
+                                <div class="d-block">
+                                    <MudAvatar>
+                                        <MudImage Src=@context.Item.Portrait></MudImage>
+                                    </MudAvatar>
+                                    <div class="d-inline">
+                                        <MudText Typo="Typo.body1" class="d-inline"><strong class="d-inline">@context.Item.Name</strong></MudText>
+                                        @if (_selectedLocation.RecommendedHeroes.Contains(context.Item))
+                                        {
+                                            
+                                            <MudTooltip Text="@($"Recommended hero for {_selectedLocation.Name}")">
+                                                <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary" Size="Size.Small"></MudIcon>
+                                            </MudTooltip>
+                                        }
+                                    </div>
+                                    <div class="d-block">
+                                        <MudText Typo="Typo.caption">@context.Item.Role</MudText>
+                                    </div>
                                 </div>
 
                                 <!--TODO do a non-modal window to ask a user, where he wishes to place the hero -->
@@ -187,18 +240,32 @@ else
             @foreach (var hero in _currentTeam.Slots.Reverse())
             {
                 <MudItem xs="3">
-                    <MudPaper Class="pa-4" Style="min-height: 150px;" @ondragover:preventDefault="true" @ondrop="@(() => HandleDrop(hero.Key))">
-                        <MudText Typo="Typo.h6">@hero.Key</MudText>
-                        @if (hero.Value == null)
-                        {
+                    @if (hero.Value == null)
+                    {
+                        <MudPaper Class="pa-4" Style="min-height: 150px;" @ondragover:preventDefault="true" @ondrop="@(() => HandleDrop(hero.Key))">
+                            <MudText Typo="Typo.h6">@hero.Key</MudText>
                             <MudText Typo="Typo.h6">Empty</MudText>
-                        }
-                        else
-                        {
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => OpenDialogAsync(hero.Value))">@hero.Value.Name</MudButton>
-                            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => RemoveHero(hero.Key))">DELETE</MudButton>
-                        }
-                    </MudPaper>
+                        </MudPaper>
+                    }
+                    else
+                    {
+                        <MudPaper Class="pa-4" Style="min-height: 150px;" @ondragover:preventDefault="true" @ondrop="@(() => HandleDrop(hero.Key))">
+                            <div>
+                                <MudText Typo="Typo.h6">@hero.Key</MudText>
+                                <MudText Typo="Typo.h6">@hero.Value.Name</MudText>
+                                <MudAvatar>
+                                    <MudImage Src=@hero.Value.Portrait></MudImage>
+                                </MudAvatar>
+                            </div>
+                            <MudTooltip Text="Delete">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" @onclick="@(() => RemoveHero(hero.Key))" />
+                            </MudTooltip>
+                            <MudTooltip Text="Edit">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Medium" @onclick="@(() => OpenDialogAsync(hero.Value))"/>
+                            </MudTooltip>
+                        </MudPaper>
+                    }
+
                 </MudItem>
             }
         </MudGrid>

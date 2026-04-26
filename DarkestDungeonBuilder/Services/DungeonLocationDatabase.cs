@@ -12,7 +12,8 @@ public class DungeonLocationDatabase
             Name = "Ruins",
             Image = "/images/mock/bg_ruins.png",
             Strengths = "High Bleed Resist, Heavy Stress Damage",
-            Weaknesses = "Vulnerable to Blight, Weak to +Unholy Damage"
+            Weaknesses = "Vulnerable to Blight, Weak to +Unholy Damage",
+            DominantEnemyTypes = Skill.BonusTarget.Unholy | Skill.BonusTarget.Human
         };
         dungeonLocations.Add(ruins);
         var warrens = new DungeonLocation
@@ -20,7 +21,8 @@ public class DungeonLocationDatabase
             Name = "Warrens",
             Image = "/images/mock/bg_warrens.png",
             Strengths = "High Blight Resist, High Disease Chance",
-            Weaknesses = "Vulnerable to Bleed, Weak to +Beast Damage"
+            Weaknesses = "Vulnerable to Bleed, Weak to +Beast Damage",
+            DominantEnemyTypes = Skill.BonusTarget.Beast | Skill.BonusTarget.Human
         };
         dungeonLocations.Add(warrens);
         var weald = new DungeonLocation
@@ -28,7 +30,8 @@ public class DungeonLocationDatabase
             Name = "Weald",
             Image = "/images/mock/bg_weald.png",
             Strengths = "High Blight Resist, High Enemy Dodge & PROT",
-            Weaknesses = "Vulnerable to Bleed, Weak to +Human Damage"
+            Weaknesses = "Vulnerable to Bleed, Weak to +Human Damage",
+            DominantEnemyTypes = Skill.BonusTarget.Eldritch | Skill.BonusTarget.Beast | Skill.BonusTarget.Human
         };
         dungeonLocations.Add(weald);
         var cove = new DungeonLocation
@@ -36,7 +39,8 @@ public class DungeonLocationDatabase
             Name = "Cove",
             Image = "/images/mock/bg_cove.png",
             Strengths = "High Bleed Resist, Heavy Enemy Damage & PROT",
-            Weaknesses = "Vulnerable to Blight, Weak to +Eldritch Damage"
+            Weaknesses = "Vulnerable to Blight, Weak to +Eldritch Damage",
+            DominantEnemyTypes = Skill.BonusTarget.Eldritch
         };
         dungeonLocations.Add(cove);
 

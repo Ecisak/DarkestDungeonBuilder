@@ -48,6 +48,7 @@ public class Skill
         ClearCorpse = 1 << 20
     }
     
+    [Flags]
     public enum BonusTarget
     {
         None = 0,
