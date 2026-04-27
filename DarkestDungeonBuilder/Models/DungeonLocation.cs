@@ -16,7 +16,6 @@ public class DungeonLocation
     {
         List<Hero> recHeroes = new List<Hero>();
 
-        // Projdeme všechny hrdiny jednoho po druhém
         foreach (var hero in heroes)
         {
             var hasEffectiveSkill = hero.Skills.Any(skill => (skill.BonusAgainst & location.DominantEnemyTypes) != 0);

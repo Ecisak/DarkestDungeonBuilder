@@ -4,6 +4,7 @@ public class Hero
 {
     public required string Name { get; set; }
     public required string Portrait { get; set; }
+    public required string Sprite { get; set; }
     public required string Role { get; set; }
     public int Health { get; set; }
     
@@ -21,6 +22,7 @@ public class Hero
         {
             Name = this.Name,
             Portrait = this.Portrait,
+            Sprite = this.Sprite,
             Role = this.Role,
             Health = this.Health,
             Skills = [],

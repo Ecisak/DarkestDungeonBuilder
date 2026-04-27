@@ -20,6 +20,9 @@
     private List<DungeonLocation> _locations = null!;
     private Hero? _heroToAssign;
     private DungeonLocation? _selectedLocation;
+    private Team _currentTeam = new Team();
+
+    
     protected override async Task OnInitializedAsync()
     {
         _roster = HeroDb.GetInitialRoster();
@@ -30,14 +33,22 @@
         {
             _selectedLocation = _locations.FirstOrDefault(l => l.Name == savedLocationName);
         }
+        var savedRoster = await LocalStorage.GetItemAsync<Team>("savedRoster");
+        if (savedRoster != null)
+        {
+            _currentTeam = savedRoster;
+            StateHasChanged();
+        }
+            
     }
     
 
-    private readonly Team _currentTeam = new Team();
 
     private async Task AddHero(Hero clickedHero, int slotKey)
     {
         await AssignHeroToSlotAsync(clickedHero, slotKey);
+        
+        
     
         StateHasChanged();
     }
@@ -57,9 +68,18 @@
 
     }
 
-    private void RemoveHero(int slotKey)
+    private async Task RemoveHero(int slotKey)
     {
-        _currentTeam.Slots[slotKey] = null;
+        var result = await DialogService.ShowMessageBoxAsync(
+            "Hero removal",
+            "Do you want to remove the hero from the roster? All of the settings will be lost.",
+            yesText: "Delete", cancelText: "Cancel");
+
+        if (result == true)
+        {
+            _currentTeam.Slots[slotKey] = null;
+        }
+        await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
     }
 
     private void ChangeLocation()
@@ -107,8 +127,10 @@
                 {
                     _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
                 }
+
             }
         }
+        await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
     }
 
     private async Task HandleDrop(int slotKey)
@@ -121,11 +143,19 @@
         StateHasChanged();
     }
 
-    private Task OpenDialogAsync(Hero hero)
+    private async Task OpenDialogAsync(Hero hero)
     {
         var parameters = new DialogParameters<HeroDetailDialog> { { x => x.Hero, hero } };
         
-        return DialogService.ShowAsync<HeroDetailDialog>("Simple Dialog", parameters);
+        var dialog =  await DialogService.ShowAsync<HeroDetailDialog>("Hero setup of" + hero.Name, parameters);
+        
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
+            StateHasChanged();
+        }
     }
 
     private void GetHeroesForLocation()
@@ -202,7 +232,7 @@ else
                                     </MudAvatar>
                                     <div class="d-inline">
                                         <MudText Typo="Typo.body1" class="d-inline"><strong class="d-inline">@context.Item.Name</strong></MudText>
-                                        @if (_selectedLocation.RecommendedHeroes.Contains(context.Item))
+                                        @if (_selectedLocation.RecommendedHeroes != null && _selectedLocation.RecommendedHeroes.Contains(context.Item))
                                         {
                                             
                                             <MudTooltip Text="@($"Recommended hero for {_selectedLocation.Name}")">
@@ -215,21 +245,19 @@ else
                                     </div>
                                 </div>
 
-                                <!--TODO do a non-modal window to ask a user, where he wishes to place the hero -->
                                 <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.BottomRight" Dense="true">
                                     <MudMenuItem @onclick="@(() => AddHero(context.Item, 1))">1</MudMenuItem>
                                     <MudMenuItem @onclick="@(() => AddHero(context.Item, 2))">2</MudMenuItem>
                                     <MudMenuItem @onclick="@(() => AddHero(context.Item, 3))">3</MudMenuItem>
                                     <MudMenuItem @onclick="@(() => AddHero(context.Item, 4))">4</MudMenuItem>
                                 </MudMenu>
-
-
                             </div>
 
                         </CellTemplate>
                     </TemplateColumn>
                 </Columns>
             </MudDataGrid>
+            <MudText Typo="Typo.caption">Hold to drag</MudText>
         </MudPaper>
     </MudItem>
     
@@ -252,9 +280,7 @@ else
                             <div>
                                 <MudText Typo="Typo.h6">@hero.Key</MudText>
                                 <MudText Typo="Typo.h6">@hero.Value.Name</MudText>
-                                <MudAvatar>
-                                    <MudImage Src=@hero.Value.Portrait></MudImage>
-                                </MudAvatar>
+                                <MudImage Src=@hero.Value.Sprite></MudImage>
                             </div>
                             <MudTooltip Text="Delete">
                                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" @onclick="@(() => RemoveHero(hero.Key))" />

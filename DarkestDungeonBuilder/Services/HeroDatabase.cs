@@ -11,7 +11,8 @@ public class HeroDatabase
         var crusader = new Hero
         {
             Name = "Crusader",
-            Portrait = "/images/mock/rider.png",
+            Portrait = "/images/heroes/crusader/crusader_icon.png",
+            Sprite = "/images/heroes/crusader/crusader_sprite.webp",
             Role = "Frontline",
             Health = 33,
             Skills =
@@ -19,7 +20,7 @@ public class HeroDatabase
                 // COMBAT SKILLS
                 new Skill
                 {
-                    Name = "Smite", SkillImage = "smite.png",
+                    Name = "Smite", SkillImage = "/images/heroes/crusader/spells/smite.webp",
                     CastablePositions = [1, 2], Targets = [1, 2],
                     IsFriendly = false, Effects = "Damage to front lines",
                     EffectsBitfield = Skill.SkillEffect.Damage,
@@ -28,7 +29,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Zealous Accusation", SkillImage = "zealous_accusation.png",
+                    Name = "Zealous Accusation", SkillImage = "/images/heroes/crusader/spells/zealous_accusation.webp",
                     CastablePositions = [1, 2], Targets = [1, 2],
                     IsFriendly = false, Effects = "AoE Damage",
                     EffectsBitfield = Skill.SkillEffect.Damage,
@@ -36,7 +37,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Stunning Blow", SkillImage = "stunning_blow.png",
+                    Name = "Stunning Blow", SkillImage = "/images/heroes/crusader/spells/stunning_blow.webp",
                     CastablePositions = [1, 2], Targets = [1, 2],
                     IsFriendly = false, Effects = "Damage + Stun",
                     EffectsBitfield = Skill.SkillEffect.Damage | Skill.SkillEffect.Stun,
@@ -44,7 +45,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Bulwark of Faith", SkillImage = "bulwark_of_faith.png",
+                    Name = "Bulwark of Faith", SkillImage = "/images/heroes/crusader/spells/bulwark_of_faith.webp",
                     CastablePositions = [1, 2], Targets = [1], // Self
                     IsFriendly = true, Effects = "Prot Buff + Mark",
                     EffectsBitfield = Skill.SkillEffect.Buff | Skill.SkillEffect.Mark | Skill.SkillEffect.Torch,
@@ -52,7 +53,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Battle Heal", SkillImage = "battle_heal.png",
+                    Name = "Battle Heal", SkillImage = "/images/heroes/crusader/spells/battle_heal.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Small Heal",
                     EffectsBitfield = Skill.SkillEffect.Heal,
@@ -60,7 +61,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Holy Lance", SkillImage = "holy_lance.png",
+                    Name = "Holy Lance", SkillImage = "/images/heroes/crusader/spells/holy_lance.webp",
                     CastablePositions = [3, 4], Targets = [2, 3, 4],
                     IsFriendly = false, Effects = "Damage + Move Forward 1",
                     EffectsBitfield = Skill.SkillEffect.Damage | Skill.SkillEffect.Move,
@@ -69,7 +70,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Inspiring Cry", SkillImage = "inspiring_cry.png",
+                    Name = "Inspiring Cry", SkillImage = "/images/heroes/crusader/spells/inspiring_cry.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Heal + Stress Heal + Torch",
                     EffectsBitfield = Skill.SkillEffect.Heal | Skill.SkillEffect.StressHeal | Skill.SkillEffect.Torch,
@@ -79,7 +80,7 @@ public class HeroDatabase
                 // CAMPING SKILLS
                 new Skill
                 {
-                    Name = "Zealous Vigil", SkillImage = "zealous_vigil.png",
+                    Name = "Zealous Vigil", SkillImage = "/images/heroes/crusader/spells/zealous_vigil.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1], // Self
                     IsFriendly = true, Effects = "Stress Heal, Prevents Nighttime Ambush",
                     EffectsBitfield = Skill.SkillEffect.StressHeal | Skill.SkillEffect.Buff,
@@ -87,7 +88,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Zealous Speech", SkillImage = "zealous_speech.png",
+                    Name = "Zealous Speech", SkillImage = "/images/heroes/crusader/spells/zealous_speech.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4], // Party
                     IsFriendly = true, Effects = "Party Stress Heal + Stress Resist",
                     EffectsBitfield = Skill.SkillEffect.StressHeal | Skill.SkillEffect.Buff,
@@ -95,7 +96,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Stand Tall", SkillImage = "stand_tall.png",
+                    Name = "Stand Tall", SkillImage = "/images/heroes/crusader/spells/stand_tall.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4], // One Ally
                     IsFriendly = true, Effects = "Stress Heal + Remove Mortality Debuffs",
                     EffectsBitfield = Skill.SkillEffect.StressHeal | Skill.SkillEffect.Buff | Skill.SkillEffect.Cure,
@@ -103,7 +104,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Unshakeable Leader", SkillImage = "unshakeable_leader.png",
+                    Name = "Unshakeable Leader", SkillImage = "/images/heroes/crusader/spells/unshakeable_leader.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1], // Self
                     IsFriendly = true, Effects = "Stress Resist",
                     EffectsBitfield = Skill.SkillEffect.Buff,
@@ -117,7 +118,8 @@ public class HeroDatabase
         var plagueDoctor = new Hero
         {
             Name = "Plague Doctor",
-            Portrait = "/images/mock/pd_hero.png",
+            Portrait = "/images/heroes/plague_doctor/pd_hero.png",
+            Sprite = "/images/heroes/plague_doctor/pd_sprite.webp",
             Role = "Support",
             Health = 22,
             Skills =

@@ -2,7 +2,7 @@
 @using DarkestDungeonBuilder.Models
 
 <MudDialog>
-    <TitleContent>Setup</TitleContent>
+    <TitleContent>Setup @Hero?.Name</TitleContent>
     
     <DialogContent>
         
@@ -12,15 +12,21 @@
         @if (@Hero?.Skills != null)
         {
             <MudText>Choose 4 Combat Skills</MudText>
+
             foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Combat))
             {
-                <MudCheckBox
-                    T="bool"
-                    label="@skill.Name"
-                    Value="@Hero.SelectedSkills.Contains(skill)"
-                    ValueChanged="@((bool isChecked) => OnSkillToggled(skill, isChecked))"
-                    Disabled="@(LockSkills(skill))">
-                </MudCheckBox>
+                bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
+                string imgStyle = isSelected 
+                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;" 
+                    : "filter: grayscale(100%); opacity: 0.4; transition: filter 0.3s, opacity 0.3s;";
+                <MudImage 
+                    Src="@(skill.SkillImage)"
+                    Width="48" 
+                    Height="48" 
+                    Class="rounded ma-1" 
+                    Style="@imgStyle"
+                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                    Alt="@skill.Name" />
                 <div class="d-flex gap-1">
                     @for (int i = 1; i <= 4; i++)
                     {
@@ -52,26 +58,37 @@
             <MudText>Choose 4 Camping Skills</MudText>
             foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Camping))
             {
-                <MudCheckBox
-                    T="bool"
-                    label="@skill.Name"
-                    Value="@Hero.SelectedSkills.Contains(skill)"
-                    ValueChanged="@((bool isChecked) => OnSkillToggled(skill, isChecked))"
-                    Disabled="@(LockSkills(skill))">
-                </MudCheckBox>
-
+                bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
+                string imgStyle = isSelected 
+                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;" 
+                    : "filter: grayscale(100%); opacity: 0.4; transition: filter 0.3s, opacity 0.3s;";
+                <MudImage 
+                    Src="@(skill.SkillImage)"
+                    Width="48" 
+                    Height="48" 
+                    Class="rounded ma-1" 
+                    Style="@imgStyle"
+                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                    Alt="@skill.Name" />
             }
 
         }
     </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Close">Save and Close</MudButton>
+    </DialogActions>
 </MudDialog>
 
 @code {
-    
+    [CascadingParameter]
+    private IMudDialogInstance? MudDialog { get; set; }
     [Parameter]
     public Hero? Hero { get; set; }
-    
-    private void OnSkillToggled(Skill skill, bool isChecked)
+
+    private void Close() {
+        MudDialog?.Close(DialogResult.Ok(true));
+    }
+    private async Task OnSkillToggled(Skill skill, bool isChecked)
     {
         if (isChecked )
         {
@@ -84,15 +101,15 @@
 
         else
         {
-            Hero?.SelectedSkills.Remove(skill);
+            Hero?.SelectedSkills.RemoveAll(s => s.Name == skill.Name);
         }
     }
 
     private bool LockSkills(Skill skill)
     {
         var count = Hero?.SelectedSkills.Count(s => s.Category == skill.Category);
-        var isAlreadySelected = Hero.SelectedSkills.Contains(skill);
-
+        var isAlreadySelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
         return (count >= 4) && (!isAlreadySelected);
     }
 }
+
