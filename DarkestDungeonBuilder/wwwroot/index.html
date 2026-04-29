@@ -34,4 +34,47 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 
+
+<script>
+    let customGhost = null;
+
+    function setCustomDragImage(event, spriteUrl) {
+        const emptyImage = new Image();
+        emptyImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        event.dataTransfer.setDragImage(emptyImage, 0, 0);
+
+        customGhost = document.getElementById('custom-drag-ghost');
+        if (!customGhost) {
+            customGhost = document.createElement('img');
+            customGhost.id = 'custom-drag-ghost';
+            customGhost.style.position = 'fixed';
+            customGhost.style.pointerEvents = 'none';
+            customGhost.style.zIndex = '999999';
+            customGhost.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(customGhost);
+        }
+
+        customGhost.src = spriteUrl;
+        customGhost.style.display = 'block';
+
+        customGhost.style.left = event.clientX + 'px';
+        customGhost.style.top = event.clientY + 'px';
+
+        document.addEventListener('dragover', moveGhost);
+    }
+
+    function moveGhost(event) {
+        if (!customGhost) return;
+
+        customGhost.style.left = event.clientX + 'px';
+        customGhost.style.top = event.clientY + 'px';
+    }
+
+    document.addEventListener('dragend', function() {
+        if (customGhost) {
+            customGhost.style.display = 'none';
+            document.removeEventListener('dragover', moveGhost);
+        }
+    });
+</script>
 </html>

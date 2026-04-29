@@ -1,4 +1,3 @@
-@using System.Web
 @using DarkestDungeonBuilder.Models
 
 <MudDialog>
@@ -19,40 +18,57 @@
                 string imgStyle = isSelected 
                     ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;" 
                     : "filter: grayscale(100%); opacity: 0.4; transition: filter 0.3s, opacity 0.3s;";
-                <MudImage 
-                    Src="@(skill.SkillImage)"
-                    Width="48" 
-                    Height="48" 
-                    Class="rounded ma-1" 
-                    Style="@imgStyle"
-                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
-                    Alt="@skill.Name" />
-                <div class="d-flex gap-1">
-                    @for (int i = 1; i <= 4; i++)
-                    {
-                        if (skill.CastablePositions.Contains(i))
-                        {
-                            <span>🟡</span>
-                        }
-                        else
-                        {
-                            <span>⚫</span>
-                        }
-                    }
-                    |
-                    @for (int i = 1; i <= 4; i++)
-                    {
-                        if (skill.Targets.Contains(i))
-                        {
-                            <span>🔴</span>
-                        } 
-                        else
-                        {
-                            <span>⚫</span>
-                        }
-                    }
-                </div>
+                <div class="d-inline">
+                <MudTooltip>
+                    <ChildContent>
+                        <MudImage
+                            Src="@(skill.SkillImage)"
+                            Width="48"
+                            Height="48"
+                            Class="rounded ma-1"
+                            Style="@imgStyle"
+                            @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                            Alt="@skill.Name"/>
+                    </ChildContent>
+                    <TooltipContent>
+                        <div class="d-block">
+                            @skill.Name
+                        </div>
+                        <div class="d-block">
+                            @for (int i = 4; i >= 1; i--)
+                            {
+                                if (skill.CastablePositions.Contains(i))
+                                {
+                                    <span>🟡</span>
+                                }
+                                else
+                                {
+                                    <span>⚫</span>
+                                }
+                            }
 
+                            @if (!skill.IsFriendly)
+                            {
+                                <MudText class="d-inline">|</MudText>
+                                @for (int i = 1; i <= 4; i++)
+                                {
+                                    if (skill.Targets.Contains(i))
+                                    {
+                                        <span>🔴</span>
+                                    }
+                                    else
+                                    {
+                                        <span>⚫</span>
+                                    }
+                                }
+
+                            }
+                        </div>
+
+                    </TooltipContent>
+                    
+                </MudTooltip>
+                </div>
             }
 
             <MudText>Choose 4 Camping Skills</MudText>
@@ -103,13 +119,6 @@
         {
             Hero?.SelectedSkills.RemoveAll(s => s.Name == skill.Name);
         }
-    }
-
-    private bool LockSkills(Skill skill)
-    {
-        var count = Hero?.SelectedSkills.Count(s => s.Category == skill.Category);
-        var isAlreadySelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
-        return (count >= 4) && (!isAlreadySelected);
     }
 }
 

@@ -7,14 +7,13 @@ public class Hero
     public required string Sprite { get; set; }
     public required string Role { get; set; }
     public int Health { get; set; }
+
+    public List<int> PreferredPositions { get; set; } = [];
     
     public List<Trinket> Trinkets { get; set; } = [];
-
-    public static List<int> PreferredPositions =>
-        //todo logic for preferred position calculation
-        [];
+    
     public List<Skill> Skills { get; set; } = [];
-    public List<Skill> SelectedSkills { get; init; } = [];
+    public List<Skill> SelectedSkills { get; set; } = [];
 
     public Hero Clone()
     {
@@ -40,4 +39,6 @@ public class Hero
         }
         return newHero;
     }
+    
+
 }

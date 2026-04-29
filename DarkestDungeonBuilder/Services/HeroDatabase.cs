@@ -127,7 +127,7 @@ public class HeroDatabase
                 // COMBAT SKILLS
                 new Skill
                 {
-                    Name = "Noxious Blast", SkillImage = "noxious_blast.png",
+                    Name = "Noxious Blast", SkillImage = "/images/heroes/plague_doctor/spells/noxious_blast.webp",
                     CastablePositions = [2, 3, 4], Targets = [1, 2],
                     IsFriendly = false, Effects = "Damage + Blight",
                     EffectsBitfield = Skill.SkillEffect.Damage | Skill.SkillEffect.Blight,
@@ -135,7 +135,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Plague Grenade", SkillImage = "plague_grenade.png",
+                    Name = "Plague Grenade", SkillImage = "/images/heroes/plague_doctor/spells/plague_grenade.webp",
                     CastablePositions = [3, 4], Targets = [3, 4],
                     IsFriendly = false, Effects = "AoE Blight",
                     EffectsBitfield = Skill.SkillEffect.Blight,
@@ -143,7 +143,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Blinding Gas", SkillImage = "blinding_gas.png",
+                    Name = "Blinding Gas", SkillImage = "/images/heroes/plague_doctor/spells/blinding_gas.webp",
                     CastablePositions = [3, 4], Targets = [3, 4],
                     IsFriendly = false, Effects = "AoE Stun",
                     EffectsBitfield = Skill.SkillEffect.Stun,
@@ -151,7 +151,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Incision", SkillImage = "incision.png",
+                    Name = "Incision", SkillImage = "/images/heroes/plague_doctor/spells/incision.webp",
                     CastablePositions = [1, 2, 3], Targets = [1, 2],
                     IsFriendly = false, Effects = "Damage + Bleed",
                     EffectsBitfield = Skill.SkillEffect.Damage | Skill.SkillEffect.Bleed,
@@ -159,7 +159,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Battlefield Medicine", SkillImage = "battlefield_medicine.png",
+                    Name = "Battlefield Medicine", SkillImage = "/images/heroes/plague_doctor/spells/battlefield_medicine.webp",
                     CastablePositions = [3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Heal + Cure Bleed/Blight",
                     EffectsBitfield = Skill.SkillEffect.Heal | Skill.SkillEffect.Cure,
@@ -167,7 +167,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Emboldening Vapours", SkillImage = "emboldening_vapours.png",
+                    Name = "Emboldening Vapours", SkillImage = "/images/heroes/plague_doctor/spells/emboldening_vapours.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Damage Buff + SPD Buff",
                     EffectsBitfield = Skill.SkillEffect.Buff,
@@ -175,7 +175,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Disorienting Blast", SkillImage = "disorienting_blast.png",
+                    Name = "Disorienting Blast", SkillImage = "/images/heroes/plague_doctor/spells/disorienting_blast.webp",
                     CastablePositions = [2, 3, 4], Targets = [2, 3, 4],
                     IsFriendly = false, Effects = "Stun + Shuffle + Clear Corpses",
                     EffectsBitfield = Skill.SkillEffect.Stun | Skill.SkillEffect.Move | Skill.SkillEffect.ClearCorpse,
@@ -185,7 +185,7 @@ public class HeroDatabase
                 // CAMPING SKILLS
                 new Skill
                 {
-                    Name = "Experimental Vapours", SkillImage = "experimental_vapours.png",
+                    Name = "Experimental Vapours", SkillImage = "/images/heroes/plague_doctor/spells/experimental_vapours.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Huge Heal on One Ally",
                     EffectsBitfield = Skill.SkillEffect.Heal | Skill.SkillEffect.Buff,
@@ -193,7 +193,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Leeches", SkillImage = "leeches.png",
+                    Name = "Leeches", SkillImage = "/images/heroes/plague_doctor/spells/leeches.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1, 2, 3, 4],
                     IsFriendly = true, Effects = "Heal + Cure Disease/Blight",
                     EffectsBitfield = Skill.SkillEffect.Heal | Skill.SkillEffect.Disease | Skill.SkillEffect.Cure,
@@ -201,7 +201,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "Preventative Medicine", SkillImage = "preventative_medicine.png",
+                    Name = "Self-Medicate", SkillImage = "/images/heroes/plague_doctor/spells/self-medicate.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1], // Self
                     IsFriendly = true, Effects = "Heal + Disease Resist",
                     EffectsBitfield = Skill.SkillEffect.Heal | Skill.SkillEffect.Buff,
@@ -209,7 +209,7 @@ public class HeroDatabase
                 },
                 new Skill
                 {
-                    Name = "The Cure", SkillImage = "the_cure.png",
+                    Name = "The Cure", SkillImage = "/images/heroes/plague_doctor/spells/the_cure.webp",
                     CastablePositions = [1, 2, 3, 4], Targets = [1], // Self
                     IsFriendly = true, Effects = "Cure Disease on Self",
                     EffectsBitfield = Skill.SkillEffect.Disease | Skill.SkillEffect.Cure,

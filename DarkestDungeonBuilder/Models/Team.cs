@@ -9,6 +9,4 @@ public class Team
         { 3, null }, 
         { 4, null }
     };
-    
-    // TODO: methods addhero etc.
 }

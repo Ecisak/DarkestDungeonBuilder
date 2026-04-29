@@ -1,0 +1,54 @@
+@using DarkestDungeonBuilder.Models
+
+<MudContainer Class="d-flex flex-column align-center justify-center" Style="height: 100vh;">
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8">Choose Your Destination</MudText>
+
+    <MudGrid Justify="Justify.Center">
+        @foreach (var loc in Locations)
+        {
+            <MudItem xs="3">
+                <MudPaper Class="pa-4" Style="min-height: 150px;">
+                    <MudText Typo="Typo.h6" class="align-content-center">@loc.Name</MudText>
+                    <MudText Typo="Typo.caption">@loc.Strengths</MudText>
+                    <MudText Typo="Typo.caption">@loc.Weaknesses</MudText>
+                    
+                    <div class="align-content-center justify-content-center align-center justify-center mt-2">
+                        @if (loc.RecommendedHeroes != null)
+                        {
+                            <MudText Typo="Typo.h6">Recommended Heroes</MudText>
+                            <div class="d-flex gap-1 justify-center mt-1">
+                                @foreach (var hero in loc.RecommendedHeroes)
+                                {
+                                    <MudAvatar>
+                                        <MudTooltip Text="@hero.Name">
+                                            <MudImage Src="@hero.Portrait" Elevation="25" Alt="@hero.Name" style="width: 100%; object-fit: cover;"></MudImage>
+                                        </MudTooltip>
+                                    </MudAvatar>
+                                }
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="align-center justify-center justify-content-center align-content-center d-flex mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                   @onclick="@(() => HandleLocationClick(loc))">Choose
+                        </MudButton>
+                    </div>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    [Parameter] 
+    public List<DungeonLocation> Locations { get; set; } = new();
+
+    [Parameter] 
+    public EventCallback<DungeonLocation> OnLocationSelected { get; set; }
+
+    private async Task HandleLocationClick(DungeonLocation location)
+    {
+        await OnLocationSelected.InvokeAsync(location);
+    }
+}
