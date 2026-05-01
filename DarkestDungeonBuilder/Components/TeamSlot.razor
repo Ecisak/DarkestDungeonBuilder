@@ -1,4 +1,5 @@
 @using DarkestDungeonBuilder.Models
+@inject IDialogService DialogService
 
 @if (Hero == null)
 {
@@ -15,7 +16,9 @@ else
 {
     @* Ooccupied *@
     <MudPaper Class="pa-4 d-flex flex-column align-center" 
-              Style="min-height: 500px;" 
+              Style="min-height: 800px;" 
+              draggable="true" 
+              @ondragstart="HandleDragStart" 
               @ondragover:preventDefault="true"
               @ondrop="HandleDrop">
         
@@ -39,63 +42,91 @@ else
         @* hero info *@
         <MudText Typo="Typo.subtitle2" Color="Color.Tertiary">Rank @SlotKey</MudText>
         <MudText Typo="Typo.h6" Class="font-weight-bold">@Hero.Name</MudText>
+        <div style="height: 320px; width: 100%; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 16px;">
+            <MudImage Src="@Hero.Sprite" style="max-height: 100%; max-width: 100%; object-fit: contain; object-position: bottom;" />
+        </div>
         
-        <MudImage Src="@Hero.Sprite" Class="my-2" />
-        
-        @* selected spells info *@
-        <div class="d-flex flex-row justify-center gap-4 my-4 w-100">
+        <div class="d-flex flex-column align-center w-100">
             
-            @* combat skills *@
-            <div class="d-flex flex-wrap justify-center" style="max-width: 120px;">
-                @foreach (var skill in Hero.SelectedSkills.Where(s => s.Category == Skill.SkillCategory.Combat))
+            <div class="d-flex gap-2 justify-center my-3">
+                @for (int i = 0; i < 2; i++)
                 {
-                    <MudTooltip>
-                        <ChildContent>
-                            <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
-                        </ChildContent>
-                        <TooltipContent>
-                            <div class="d-block">@skill.Name</div>
-                            <div class="d-block">
-                                @for (int i = 4; i >= 1; i--)
-                                {
-                                    <span>@(skill.CastablePositions.Contains(i) ? "🟡" : "⚫")</span>
-                                }
-                                @if (!skill.IsFriendly)
-                                {
-                                    <MudText class="d-inline"> | </MudText>
-                                    @for (int i = 1; i <= 4; i++)
+                    int slotIndex = i;
+                    var equippedTrinket = Hero.EquippedTrinkets[slotIndex];
+
+                    <MudPaper Width="54px" Height="54px" 
+                              Class="d-flex align-center justify-center border-dashed border-2 cursor-pointer"
+                              Style="border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.1);"
+                              @onclick="@(() => OpenTrinketDialog(slotIndex))">
+            
+                        @if (equippedTrinket == null)
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Color="Color.Default" />
+                        }
+                        else
+                        {
+                            <MudTooltip Text="@($"{equippedTrinket.Name}: {equippedTrinket.Effects}")">
+                                <MudImage Src="@equippedTrinket.TrinketImage" Width="48" Height="48" ObjectFit="ObjectFit.Contain" />
+                            </MudTooltip>
+                        }
+                    </MudPaper>
+                }
+            </div>
+            @* selected spells info *@
+            <div class="d-flex flex-row justify-center gap-4 my-4 w-100">
+
+                @* combat skills *@
+                <div class="d-flex flex-wrap justify-center" style="max-width: 120px;">
+                    @foreach (var skill in Hero.SelectedSkills.Where(s => s.Category == Skill.SkillCategory.Combat))
+                    {
+                        <MudTooltip>
+                            <ChildContent>
+                                <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
+                            </ChildContent>
+                            <TooltipContent>
+                                <div class="d-block">@skill.Name</div>
+                                <div class="d-block">
+                                    @for (int i = 4; i >= 1; i--)
                                     {
-                                        <span>@(skill.Targets.Contains(i) ? "🔴" : "⚫")</span>
+                                        <span>@(skill.CastablePositions.Contains(i) ? "🟡" : "⚫")</span>
                                     }
-                                }
-                            </div>
-                        </TooltipContent>
-                    </MudTooltip>
-                }
+                                    @if (!skill.IsFriendly)
+                                    {
+                                        <MudText class="d-inline"> | </MudText>
+                                        @for (int i = 1; i <= 4; i++)
+                                        {
+                                            <span>@(skill.Targets.Contains(i) ? "🔴" : "⚫")</span>
+                                        }
+                                    }
+                                </div>
+                            </TooltipContent>
+                        </MudTooltip>
+                    }
+                </div>
+
+                @* line *@
+                <MudDivider Vertical="true" FlexItem="true"/>
+
+                @* camping skills *@
+                <div class="d-flex flex-wrap justify-center" style="max-width: 120px;">
+                    @foreach (var skill in Hero.SelectedSkills.Where(s => s.Category == Skill.SkillCategory.Camping))
+                    {
+                        <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
+                    }
+                </div>
             </div>
 
-            @* line *@
-            <MudDivider Vertical="true" FlexItem="true" />
-
-            @* camping skills *@
-            <div class="d-flex flex-wrap justify-center" style="max-width: 120px;">
-                @foreach (var skill in Hero.SelectedSkills.Where(s => s.Category == Skill.SkillCategory.Camping))
-                {
-                    <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
-                }
+            @* buttons *@
+            <div class="d-flex gap-2 mt-auto">
+                <MudTooltip Text="Delete">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" @onclick="HandleRemove"/>
+                </MudTooltip>
+                <MudTooltip Text="Edit Loadout">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" @onclick="HandleEdit"/>
+                </MudTooltip>
             </div>
-
         </div>
 
-        @* buttons *@
-        <div class="d-flex gap-2 mt-auto">
-            <MudTooltip Text="Delete">
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" @onclick="HandleRemove"/>
-            </MudTooltip>
-            <MudTooltip Text="Edit Skills">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" @onclick="HandleEdit"/>
-            </MudTooltip>
-        </div>
     </MudPaper>
 }
 
@@ -106,6 +137,35 @@ else
     [Parameter] public EventCallback<int> OnDrop { get; set; }
     [Parameter] public EventCallback<int> OnRemove { get; set; }
     [Parameter] public EventCallback<Hero> OnEdit { get; set; }
+    [Parameter] public EventCallback OnLoadoutChanged { get; set; }
+    
+    [Parameter] public List<Trinket> AvailableTrinkets { get; set; } = new();
+    
+    [Parameter] public EventCallback<int> OnDragStart { get; set; }
+
+    private async Task HandleDragStart() => await OnDragStart.InvokeAsync(SlotKey);
+
+    private async Task OpenTrinketDialog(int trinketSlotIndex)
+    {
+        var parameters = new DialogParameters<TrinketView>
+        {
+            { x => x.AllTrinkets, AvailableTrinkets },
+            { x => x.CurrentHero, Hero }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+
+        var dialog = await DialogService.ShowAsync<TrinketView>("Select Trinket", parameters, options);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: Trinket selectedTrinket })
+        {
+            Hero?.EquippedTrinkets[trinketSlotIndex] = selectedTrinket;
+            await OnLoadoutChanged.InvokeAsync();
+            StateHasChanged();
+            
+        }
+    }
 
     private async Task HandleDrop() => await OnDrop.InvokeAsync(SlotKey);
     private async Task HandleRemove() => await OnRemove.InvokeAsync(SlotKey);
@@ -118,6 +178,7 @@ else
         }
     }
 
+    
     private static List<int> GetPreferredPositions(List<Skill> selectedSkills)
     {
         List<int> positionsScore = [0, 0, 0, 0];
@@ -125,7 +186,7 @@ else
 
         foreach (var position in selectedSkills.Where(s => s.Category == Skill.SkillCategory.Combat).SelectMany(skill => skill.CastablePositions))
         {
-            if (position >= 1 && position <= 4)
+            if (position is >= 1 and <= 4)
             {
                 positionsScore[position - 1]++;
             }

@@ -10,8 +10,7 @@ public class Hero
 
     public List<int> PreferredPositions { get; set; } = [];
     
-    public List<Trinket> Trinkets { get; set; } = [];
-    
+    public Trinket?[] EquippedTrinkets { get; set; } = new Trinket?[2];    
     public List<Skill> Skills { get; set; } = [];
     public List<Skill> SelectedSkills { get; set; } = [];
 
@@ -25,7 +24,8 @@ public class Hero
             Role = this.Role,
             Health = this.Health,
             Skills = [],
-            SelectedSkills = []
+            SelectedSkills = [],
+            EquippedTrinkets = new Trinket?[2]
         };
 
         foreach (var skill in this.Skills)

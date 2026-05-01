@@ -20,4 +20,6 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<DungeonLocationDatabase>();
 
+builder.Services.AddScoped<TrinketDatabase>();
+
 await builder.Build().RunAsync();

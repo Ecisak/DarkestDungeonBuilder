@@ -1,0 +1,138 @@
+
+@using DarkestDungeonBuilder.Models
+
+
+<MudDialog>
+    <DialogContent>
+        <MudStack AlignItems="AlignItems.Center">
+            <MudTextField T="string" Label="Search Trinkets" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" TextChanged="OnTextChanged!" Immediate="true" Clearable="true" />
+            <MudTreeView Items="@_treeItemData" @ref="_treeView" ExpandOnClick="true" FilterFunc="MatchesName">
+                <ItemTemplate>
+                    @{
+                        var item = (TrinketTreeItem)context;
+                    }
+                    <MudTreeViewItem @bind-Expanded="@item.Expanded" Items="@item.Children" Value="@item.Value" Visible="@item.Visible">
+                        <Content>
+                            @if (item.TrinketData != null)
+                            {
+                                <div class="d-flex align-center gap-2 pa-1 w-100" style="cursor: pointer;" @onclick="@(() => SelectTrinket(item.TrinketData))">
+                                    <MudImage Src="@item.TrinketData.TrinketImage" Width="48" Height="96" ObjectFit="ObjectFit.Contain"></MudImage>
+                                    <div class="d-flex flex-column">
+                                        <MudText Typo="Typo.body1" Class="fw-bold">@item.Text</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">@item.TrinketData.Effects</MudText>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @*rarity*@
+                                <div class="d-flex align-center gap-2 pa-1 ">
+                                    <MudIcon Icon="@item.Icon" Color="Color.Primary" />
+                                    <MudText Typo="Typo.h6">@item.Text</MudText>
+                                </div>
+                            }
+                        </Content>
+                    </MudTreeViewItem>
+                </ItemTemplate>
+            </MudTreeView>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Text" Color="Color.Default">Cancel</MudButton>
+        <MudButton OnClick="Save" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_selectedTrinket == null)">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+    
+    [Parameter] public List<Trinket> AllTrinkets { get; set; } = new();
+    [Parameter] public Hero? CurrentHero { get; set; }
+    
+    private Trinket? _selectedTrinket;
+    
+
+    private readonly List<TreeItemData<string>> _treeItemData = new();
+    private MudTreeView<string>? _treeView;
+    private string? _searchPhrase;
+
+    public sealed class TrinketTreeItem : TreeItemData<string>
+    {
+        public Trinket? TrinketData { get; set; }
+        public TrinketTreeItem(string text, string? icon = null) : base(text)
+        {
+            Text = text;
+            Value = text;
+            Icon = icon;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        _selectedTrinket = null;
+        _searchPhrase = string.Empty;
+
+        BuildTree();
+    }
+
+    private void BuildTree()
+    {
+        _treeItemData.Clear();
+
+        if (CurrentHero != null)
+        {
+            var classTrinkets = AllTrinkets
+                .Where(t => !string.IsNullOrEmpty(t.ClassTrinket) && 
+                            t.ClassTrinket.Equals(CurrentHero.Name, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (classTrinkets.Any())
+            {
+                // trinkets for a specific hero
+                _treeItemData.Add(new TrinketTreeItem($"{CurrentHero.Name} Specific", Icons.Material.Filled.Shield)
+                {
+                    Expanded = true,
+                    Children = classTrinkets.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string>>().ToList()
+                });
+            }
+        }
+
+        // other nonclass trinkets ordered by rarity
+        var otherGroups = AllTrinkets
+            .Where(t => string.IsNullOrEmpty(t.ClassTrinket) || 
+                        (CurrentHero != null && t.ClassTrinket.Equals(null, StringComparison.OrdinalIgnoreCase)))
+            .GroupBy(t => t.Rarity);
+
+        foreach (var group in otherGroups)
+        {
+            _treeItemData.Add(new TrinketTreeItem(group.Key, Icons.Material.Filled.Label)
+            {
+                Expanded = false,
+                Children = group.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string>>().ToList()
+            });
+        }
+    }
+    private void SelectTrinket(Trinket t) => _selectedTrinket = t;
+    private void Save() => MudDialog?.Close(DialogResult.Ok(_selectedTrinket));
+    private void Cancel() => MudDialog?.Cancel();
+
+    private async Task OnTextChanged(string searchPhrase)
+    {
+        _searchPhrase = searchPhrase;
+        if (_treeView != null)
+        {
+            await _treeView.FilterAsync();
+        }
+    }
+
+    private Task<bool> MatchesName(ITreeItemData<string> baseItem)
+    {
+        var item = (TrinketTreeItem)baseItem;
+        if (string.IsNullOrEmpty(item.Text)) return Task.FromResult(false);
+        if (string.IsNullOrEmpty(_searchPhrase)) return Task.FromResult(true);
+
+        bool matchesName = item.Text.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //name
+        bool matchesEffect = item.TrinketData != null && item.TrinketData.Effects.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //effects
+
+        return Task.FromResult(matchesName || matchesEffect);
+    }
+}}

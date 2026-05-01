@@ -1,11 +1,5 @@
 ﻿@page "/"
 @using DarkestDungeonBuilder.Components
-@using DarkestDungeonBuilder.Models
-@using DarkestDungeonBuilder.Services
-@inject HeroDatabase HeroDb
-@inject IDialogService DialogService
-@inject DungeonLocationDatabase LocationDb
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 
 <PageTitle>Darkest Dungeon Builder</PageTitle>
@@ -14,158 +8,7 @@
 
 
 
-@code {
 
-
-    private List<Hero> _roster = null!;
-    private List<DungeonLocation> _locations = null!;
-    private Hero? _heroToAssign;
-    private DungeonLocation? _selectedLocation;
-    private Team _currentTeam = new Team();
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        _roster = HeroDb.GetInitialRoster();
-        _locations = LocationDb.GetInitialDungeonLocations();
-
-        var savedLocationName = await LocalStorage.GetItemAsync<string>("savedLocation");
-        GetHeroesForLocation();
-        if (!string.IsNullOrEmpty(savedLocationName))
-        {
-            _selectedLocation = _locations.FirstOrDefault(l => l.Name == savedLocationName);
-        }
-
-        var savedRoster = await LocalStorage.GetItemAsync<Team>("savedRoster");
-        if (savedRoster != null)
-        {
-            _currentTeam = savedRoster;
-            StateHasChanged();
-        }
-    }
-
-
-    private async Task AddHero(Hero clickedHero, int slotKey)
-    {
-        await AssignHeroToSlotAsync(clickedHero, slotKey);
-
-
-        StateHasChanged();
-    }
-
-    private async Task SetLocation(DungeonLocation? loc)
-    {
-        if (loc == null) return;
-        if (_selectedLocation != null)
-        {
-            // todo modal window na zeptani se zda chce uzivatel zmenit lokaci
-        }
-        else
-        {
-            _selectedLocation = loc;
-            await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
-        }
-    }
-
-    private async Task RemoveHero(int slotKey)
-    {
-        var result = await DialogService.ShowMessageBoxAsync(
-            "Hero removal",
-            "Do you want to remove the hero from the roster? All of the settings will be lost.",
-            yesText: "Delete", cancelText: "Cancel");
-
-        if (result == true)
-        {
-            _currentTeam.Slots[slotKey] = null;
-        }
-
-        await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
-    }
-
-    private void ChangeLocation()
-    {
-        _selectedLocation = null;
-        StateHasChanged();
-    }
-
-    private async Task AssignHeroToSlotAsync(Hero? heroToAssign, int targetSlotKey)
-    {
-        if (heroToAssign == null) return;
-
-        // check if the slot is empty
-        if (_currentTeam.Slots[targetSlotKey] == null)
-        {
-            _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
-        }
-        else
-        {
-            // determine adjacent slots
-            var leftSlot = targetSlotKey - 1;
-            var rightSlot = targetSlotKey + 1;
-
-            // check if left slot is empty or if it exists
-            if (leftSlot >= 1 && _currentTeam.Slots[leftSlot] == null)
-            {
-                _currentTeam.Slots[leftSlot] = _currentTeam.Slots[targetSlotKey];
-                _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
-            }
-            // do the same for right
-            else if (rightSlot <= 4 && _currentTeam.Slots[rightSlot] == null)
-            {
-                _currentTeam.Slots[rightSlot] = _currentTeam.Slots[targetSlotKey];
-                _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
-            }
-            // full adjacent slots, pop a modal to remove target slot hero
-            else
-            {
-                var result = await DialogService.ShowMessageBoxAsync(
-                    "Slot is full.",
-                    "The slot and all adjacent slots are full. Do you want to replace the hero with a new one?",
-                    yesText: "Replace", cancelText: "Cancel");
-
-                if (result == true)
-                {
-                    _currentTeam.Slots[targetSlotKey] = heroToAssign.Clone();
-                }
-            }
-        }
-
-        await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
-    }
-
-    private async Task HandleDrop(int slotKey)
-    {
-        if (_heroToAssign == null) return;
-
-        await AssignHeroToSlotAsync(_heroToAssign, slotKey);
-
-        _heroToAssign = null;
-        StateHasChanged();
-    }
-
-    private async Task OpenDialogAsync(Hero hero)
-    {
-        var parameters = new DialogParameters<HeroDetailDialog> { { x => x.Hero, hero } };
-
-        var dialog = await DialogService.ShowAsync<HeroDetailDialog>("Hero setup of" + hero.Name, parameters);
-
-        var result = await dialog.Result;
-
-        if (result is { Canceled: false })
-        {
-            await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
-            StateHasChanged();
-        }
-    }
-
-    private void GetHeroesForLocation()
-    {
-        foreach (var location in _locations)
-        {
-            location.RecommendedHeroes = location.GetRecommendedHeroes(_roster, location);
-        }
-    }
-}
 
 @if (_selectedLocation == null)
 {
@@ -189,7 +32,7 @@ else
                         </div>
                         <TemplateColumn Title="Available Heroes">
                             <CellTemplate>
-                                <div @ondragstart="@(() => _heroToAssign = context.Item)">
+                                <div @ondragstart="@(() => { _heroToAssign = context.Item; _draggedSlotKey = null; })">
                                     <div draggable="true"
                                          data-drag-image="@context.Item.Sprite"
                                          ondragstart="setCustomDragImage(event, '@context.Item.Sprite')"
@@ -247,12 +90,17 @@ else
                 @foreach (var slot in _currentTeam.Slots.Reverse())
                 {
                     <MudItem xs="3">
-                        <TeamSlot 
+                        <TeamSlot
+                            @key="slot.Key"
                             Hero="slot.Value" 
+                            AvailableTrinkets="@_trinkets"
                             SlotKey="slot.Key" 
+                            OnDragStart="HandleSlotDragStart"
                             OnDrop="HandleDrop" 
                             OnRemove="RemoveHero" 
-                            OnEdit="OpenDialogAsync" />
+                            OnEdit="OpenDialogAsync"
+                            OnLoadoutChanged="SaveTeam"
+                            />
                     </MudItem>
                 }
             </MudGrid>
