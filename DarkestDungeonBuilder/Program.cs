@@ -4,6 +4,7 @@ using DarkestDungeonBuilder;
 using DarkestDungeonBuilder.Services;
 using MudBlazor.Services;
 using Blazored.LocalStorage;
+using DarkestDungeonBuilder.Models;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -14,12 +15,11 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddMudServices();
 
-builder.Services.AddSingleton<HeroDatabase>();
+builder.Services.AddSingleton<IHeroDatabase, HeroDatabase>();
+builder.Services.AddSingleton<ITrinketDatabase, TrinketDatabase>();
+builder.Services.AddSingleton<IDungeonLocationDatabase, DungeonLocationDatabase>();
+builder.Services.AddScoped<TeamAdvisorService>();
 
 builder.Services.AddBlazoredLocalStorage();
-
-builder.Services.AddSingleton<DungeonLocationDatabase>();
-
-builder.Services.AddScoped<TrinketDatabase>();
 
 await builder.Build().RunAsync();

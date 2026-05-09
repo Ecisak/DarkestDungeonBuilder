@@ -12,20 +12,8 @@ public class DungeonLocation
     public Skill.BonusTarget DominantEnemyTypes { get; set; } = Skill.BonusTarget.None;
 
 
-    public List<Hero> GetRecommendedHeroes(List<Hero> heroes, DungeonLocation location)
+    public static List<Hero> GetRecommendedHeroes(List<Hero> heroes, DungeonLocation location)
     {
-        List<Hero> recHeroes = new List<Hero>();
-
-        foreach (var hero in heroes)
-        {
-            var hasEffectiveSkill = hero.Skills.Any(skill => (skill.BonusAgainst & location.DominantEnemyTypes) != 0);
-            
-            if (hasEffectiveSkill)
-            {
-                recHeroes.Add(hero);
-            }
-        }
-
-        return recHeroes;
+        return (from hero in heroes let hasEffectiveSkill = hero.Skills.Any(skill => (skill.BonusAgainst & location.DominantEnemyTypes) != 0) where hasEffectiveSkill select hero).ToList();
     }
 }

@@ -25,7 +25,7 @@ else
         @* position circles *@
         <div class="d-flex gap-2 align-center mb-4" style="height: 30px;">
             @{
-                var scores = GetPreferredPositions(Hero.SelectedSkills);
+                var scores = Hero.GetPreferredPositions();
             }
             @for (int i = 3; i >= 0; i--)
             {
@@ -179,19 +179,4 @@ else
     }
 
     
-    private static List<int> GetPreferredPositions(List<Skill> selectedSkills)
-    {
-        List<int> positionsScore = [0, 0, 0, 0];
-        if (selectedSkills.Count == 0) return positionsScore;
-
-        foreach (var position in selectedSkills.Where(s => s.Category == Skill.SkillCategory.Combat).SelectMany(skill => skill.CastablePositions))
-        {
-            if (position is >= 1 and <= 4)
-            {
-                positionsScore[position - 1]++;
-            }
-        }
-
-        return positionsScore;
-    }
 }

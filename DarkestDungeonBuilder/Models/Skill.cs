@@ -1,6 +1,6 @@
 namespace DarkestDungeonBuilder.Models;
 
-public class Skill
+public class Skill : IPrototype<Skill>
 {
     public required string Name { get; init; }
     public required string SkillImage { get; init; }

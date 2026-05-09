@@ -1,7 +1,7 @@
 using DarkestDungeonBuilder.Models;
 namespace DarkestDungeonBuilder.Services;
 
-public class DungeonLocationDatabase
+public class DungeonLocationDatabase : IDungeonLocationDatabase
 {
     public List<DungeonLocation> GetInitialDungeonLocations()
     {

@@ -1,6 +1,6 @@
 namespace DarkestDungeonBuilder.Models;
 
-public class Hero
+public class Hero : IPrototype<Hero>
 {
     public required string Name { get; set; }
     public required string Portrait { get; set; }
@@ -38,6 +38,25 @@ public class Hero
             }
         }
         return newHero;
+    }
+    
+    
+    public List<int> GetPreferredPositions()
+    {
+        List<int> positionsScore = [0, 0, 0, 0];
+        if (this.SelectedSkills.Count == 0) return positionsScore;
+
+        foreach (var position in this.SelectedSkills
+                     .Where(s => s.Category == Skill.SkillCategory.Combat)
+                     .SelectMany(skill => skill.CastablePositions))
+        {
+            if (position is >= 1 and <= 4)
+            {
+                positionsScore[position - 1]++;
+            }
+        }
+
+        return positionsScore;
     }
     
 

@@ -2,7 +2,7 @@ using DarkestDungeonBuilder.Models;
 
 namespace DarkestDungeonBuilder.Services;
 
-public class TrinketDatabase
+public class TrinketDatabase : ITrinketDatabase
 {
     public List<Trinket> GetMockTrinkets()
     {

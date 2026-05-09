@@ -15,10 +15,16 @@
                         <Content>
                             @if (item.TrinketData != null)
                             {
-                                <div class="d-flex align-center gap-2 pa-1 w-100" style="cursor: pointer;" @onclick="@(() => SelectTrinket(item.TrinketData))">
+                                var isAlreadyEquipped = CurrentHero?.EquippedTrinkets.Any(t => t?.Name == item.TrinketData.Name) == true;
+                                <div class="d-flex align-center gap-2 pa-1 w-100" 
+                                     style="cursor: @(isAlreadyEquipped ? "not-allowed" : "pointer"); opacity: @(isAlreadyEquipped ? 0.4 : 1);"
+                                     @onclick="@(() => { if (!isAlreadyEquipped) SelectTrinket(item.TrinketData); })">
                                     <MudImage Src="@item.TrinketData.TrinketImage" Width="48" Height="96" ObjectFit="ObjectFit.Contain"></MudImage>
                                     <div class="d-flex flex-column">
-                                        <MudText Typo="Typo.body1" Class="fw-bold">@item.Text</MudText>
+                                        <MudText Typo="Typo.body1" Class="fw-bold">
+                                            @item.Text
+                                            @if (isAlreadyEquipped) { <MudText Typo="Typo.caption" Color="Color.Error"> (Equipped)</MudText> }
+                                        </MudText>
                                         <MudText Typo="Typo.caption" Color="Color.Secondary">@item.TrinketData.Effects</MudText>
                                     </div>
                                 </div>

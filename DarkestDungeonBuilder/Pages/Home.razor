@@ -108,7 +108,40 @@ else
 
         <!-- right panel: stats and warnings -->
         <MudItem xs="3">
-            <MudPaper Class="pa-4">Here will be radar graph and warnings</MudPaper>
+            <MudPaper Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h5" Class="mb-4">Advisor</MudText>
+        
+                <div class="d-flex justify-center mb-6 mud-background-gray pa-4 rounded">
+                    <MudIcon Icon="@Icons.Material.Filled.Radar" Size="Size.Large" Color="Color.Surface" />
+                    <MudText Typo="Typo.caption" Class="ml-2 align-self-center">Synergy graph (tbd)</MudText>
+                </div>
+
+                <MudText Typo="Typo.h6" Class="mb-2">Warnings and tips:</MudText>
+
+                @switch (_currentWarnings.Count)
+                {
+                    case 0 when _currentTeam.Slots.Values.Any(h => h != null):
+                        <MudAlert Severity="Severity.Success" Variant="Variant.Filled">
+                            Looks good!
+                        </MudAlert>
+                        break;
+                    case 0:
+                        <MudText Typo="Typo.body2">Add heroes to start the analysis.</MudText>
+                        break;
+                    default:
+                    {
+                        <div class="d-flex flex-column gap-2">
+                            @foreach (var warning in _currentWarnings)
+                            {
+                                <MudAlert Severity="Severity.Warning" Dense="true" Icon="@Icons.Material.Filled.WarningAmber">
+                                    @warning
+                                </MudAlert>
+                            }
+                        </div>
+                        break;
+                    }
+                }
+            </MudPaper>
         </MudItem>
         
         

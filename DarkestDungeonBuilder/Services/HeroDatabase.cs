@@ -1,7 +1,7 @@
 using DarkestDungeonBuilder.Models;
 namespace DarkestDungeonBuilder.Services;
 
-public class HeroDatabase
+public class HeroDatabase : IHeroDatabase
 {
     public List<Hero> GetInitialRoster()
     {

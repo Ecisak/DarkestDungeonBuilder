@@ -1,7 +1,5 @@
 using DarkestDungeonBuilder.Components;
 using Microsoft.AspNetCore.Components;
-
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using DarkestDungeonBuilder.Models;
 using DarkestDungeonBuilder.Services;
@@ -10,11 +8,13 @@ namespace DarkestDungeonBuilder.Pages;
 
 public partial class Home : ComponentBase
 {
-    [Inject] private HeroDatabase HeroDb { get; set; } = null!;
+    [Inject] private IHeroDatabase HeroDb { get; set; } = null!;
     [Inject] private IDialogService DialogService { get; set; } = null!;
-    [Inject] private DungeonLocationDatabase LocationDb { get; set; } = null!;
-    [Inject] private TrinketDatabase TrinketDb { get; set; } = null!;
+    [Inject] private IDungeonLocationDatabase LocationDb { get; set; } = null!;
+    [Inject] private ITrinketDatabase TrinketDb { get; set; } = null!;
     [Inject] private Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; } = null!;
+
+    [Inject] private TeamAdvisorService Advisor { get; set; } = null!;
     
     private List<Hero> _roster = null!;
     private List<DungeonLocation> _locations = null!;
@@ -23,6 +23,7 @@ public partial class Home : ComponentBase
     private DungeonLocation? _selectedLocation;
     private int? _draggedSlotKey;
     private Team _currentTeam = new Team();
+    private List<string> _currentWarnings = [];
     
     protected override async Task OnInitializedAsync()
     {
@@ -151,6 +152,7 @@ public partial class Home : ComponentBase
         if (result is { Canceled: false })
         {
             await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
+            UpdateAdvisor();
             StateHasChanged();
         }
     }
@@ -163,7 +165,32 @@ public partial class Home : ComponentBase
     {
         foreach (var location in _locations)
         {
-            location.RecommendedHeroes = location.GetRecommendedHeroes(_roster, location);
+            location.RecommendedHeroes = DungeonLocation.GetRecommendedHeroes(_roster, location);
         }
+    }
+
+    private void UpdateAdvisor()
+    {
+        
+        if (_selectedLocation == null) return;
+        
+        ILocationStrategy? strategy = null;
+        
+        if (_selectedLocation.Name == "Ruins")
+        {
+            strategy = new RuinsStrategy();
+        }
+        
+        else if (_selectedLocation.Name == "Weald")
+        {
+            strategy = new WealdStrategy();
+        }
+        
+        //TODO: another locations strategies to be added here
+
+        if (strategy != null) _currentWarnings = Advisor.EvaluateTeam(_currentTeam, strategy);
+
+
+        StateHasChanged();
     }
 }
