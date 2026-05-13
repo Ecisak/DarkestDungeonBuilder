@@ -18,7 +18,16 @@ public class TeamAdvisorService
         {
             warnings.Add("Team does not have a healer!");
         }
-        
+
+        var heroesMissingSkills = GetHeroesWithMissingSkills(team);
+
+        if (heroesMissingSkills.Count != 0)
+        {
+            var formattedNames = heroesMissingSkills.Select(x => $"{x.Hero.Name} (Rank {x.Rank})");
+
+            warnings.Add("These heroes don't have 8 skills selected (4 fighting and 4 camping): " + string.Join(", ", formattedNames) + ".");
+        }
+
         // position analysis
         CheckHeroPositions(team, warnings);
         
@@ -33,6 +42,15 @@ public class TeamAdvisorService
         return warnings;
     }
 
+    private static List<(int Rank, Hero Hero)> GetHeroesWithMissingSkills(Team team)
+    {
+        return team.Slots
+            .Where(slot => slot.Value != null)
+            .Where(slot => slot.Value!.SelectedSkills.Count < 8)
+            .Select(slot => (Rank: slot.Key, Hero: slot.Value!)) 
+            .ToList();
+    }
+
     private static bool HasHealer(Team team)
     {
         return team.Slots.Values
@@ -43,41 +61,55 @@ public class TeamAdvisorService
 
     private void CheckHeroPositions(Team team, List<string> warnings)
     {
-        //TODO: LUKASI Z BUDOUCNOSTI (V DOBE KDY TO BUDES CIST, LUKASI Z PRITOMNOSTI), OPRAV TOHLE PROSIM, LUKAS PRITOMNOSTI (LUKAS MINULOSTI) NA TO DNES UZ NEMA
-        
         // check all occupied slots
-        foreach (var slot in team.Slots.Where(s => s.Value != null))
+        foreach (var (currentRank, hero) in team.Slots.Where(s => s.Value != null))
         {
-            var hero = slot.Value!;
-            var currentRank = slot.Key;
+            var scores = hero?.GetPreferredPositions();
 
-            var scores = hero.GetPreferredPositions();
-            
+            if (scores == null) continue;
             var currentScore = scores[currentRank - 1];
             
-            int maxScore = scores.Max();
+            var maxScore = scores.Max();
 
-            if (maxScore > 0)
+            if (maxScore <= 0) continue;
+            if (currentScore == 0)
             {
-                if (currentScore == 0)
-                {
-                    warnings.Add($"{hero.Name} on position {currentRank} cannot use ANY of the selected skills!");
-                }
-                else if (currentScore < maxScore)
-                {
-                    // okayish position
-                    // check which positions are better
-                    var betterRanks = new List<int>();
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (scores[i] == maxScore) betterRanks.Add(i + 1);
-                    }
-
-                    string betterRanksString = string.Join(" or ", betterRanks);
-                    warnings.Add($"Tip: {hero.Name} on position {currentRank} can  be better on {betterRanksString} positions.");
-                }
+                warnings.Add($"{hero?.Name} on position {currentRank} cannot use ANY of the selected skills!");
             }
-            
+            else if (currentScore < maxScore)
+            {
+                // okayish position
+                // check which positions are better
+                var betterRanks = new List<int>();
+                for (int i = 0; i < 4; i++)
+                {
+                    var targetRank = i + 1;
+                    var heroScoreIfMoved = scores[i];
+
+                    if (heroScoreIfMoved <= currentScore) continue;
+                    var heroInTargetSlot = team.Slots[targetRank];
+                    if (heroInTargetSlot == null)
+                    {
+                        betterRanks.Add(targetRank);
+                    }
+                    else
+                    {
+                        var otherHeroScore = heroInTargetSlot.GetPreferredPositions();
+                        var currentCombinedScore = currentScore + otherHeroScore[targetRank - 1];
+                                
+                        var swappedCombinedScore = heroScoreIfMoved + otherHeroScore[currentRank - 1];
+
+                        if (swappedCombinedScore > currentCombinedScore)
+                        {
+                            betterRanks.Add(targetRank);
+                        }
+                    }
+                }
+
+                if (betterRanks.Count == 0) continue;
+                var betterRanksString = string.Join(" or ", betterRanks);
+                warnings.Add($"Tip: {hero?.Name} on position {currentRank} can  be better on {betterRanksString} positions.");
+            }
         }
     }
 }

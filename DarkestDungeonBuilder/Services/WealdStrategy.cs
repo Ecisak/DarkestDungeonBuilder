@@ -12,10 +12,9 @@ public class WealdStrategy : ILocationStrategy
             .Where(h => h != null)
             .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)))
             .ToList();
-        if (hasBlight.Count > 0)
+        if (hasBlight.Count <= 0) return warnings;
         {
-            
-            string heroNames = string.Join(", ", hasBlight.Select(h => h?.Name));
+            var heroNames = string.Join(", ", hasBlight.Select(h => h?.Name));
             warnings.Add("Blight has no effect against monsters in Weald. Change skills of or remove them: " + heroNames);
         }
 

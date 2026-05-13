@@ -22,7 +22,7 @@ public partial class Home : ComponentBase
     private Hero? _heroToAssign;
     private DungeonLocation? _selectedLocation;
     private int? _draggedSlotKey;
-    private Team _currentTeam = new Team();
+    private Team _currentTeam = new();
     private List<string> _currentWarnings = [];
     
     protected override async Task OnInitializedAsync()
@@ -57,6 +57,7 @@ public partial class Home : ComponentBase
     {
         if (loc == null) return;
         _selectedLocation = loc;
+        UpdateAdvisor();
         await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
     }
 
@@ -71,7 +72,7 @@ public partial class Home : ComponentBase
         {
             _currentTeam.Slots[slotKey] = null;
         }
-
+        UpdateAdvisor();
         await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
     }
 
@@ -104,7 +105,7 @@ public partial class Home : ComponentBase
                 return; 
             }
         }
-        
+        UpdateAdvisor();
         await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
     }
 
@@ -133,11 +134,10 @@ public partial class Home : ComponentBase
             _currentTeam.Slots[_draggedSlotKey.Value] = targetHero;
             
             _draggedSlotKey = null;
-            
             await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
         }
 
-
+        UpdateAdvisor();
         StateHasChanged();
     }
 
@@ -150,8 +150,8 @@ public partial class Home : ComponentBase
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
-        {
-            await LocalStorage.SetItemAsync("savedRoster", _currentTeam);
+        { 
+            await SaveTeam();
             UpdateAdvisor();
             StateHasChanged();
         }
@@ -173,21 +173,15 @@ public partial class Home : ComponentBase
     {
         
         if (_selectedLocation == null) return;
-        
-        ILocationStrategy? strategy = null;
-        
-        if (_selectedLocation.Name == "Ruins")
-        {
-            strategy = new RuinsStrategy();
-        }
-        
-        else if (_selectedLocation.Name == "Weald")
-        {
-            strategy = new WealdStrategy();
-        }
-        
-        //TODO: another locations strategies to be added here
 
+        ILocationStrategy? strategy = _selectedLocation.Name switch
+        {
+            "Ruins" => new RuinsStrategy(),
+            "Weald" => new WealdStrategy(),
+            "Warrens" => new WarrensStrategy(),
+            "Cove" => new CoveStrategy(),
+            _ => null
+        };
         if (strategy != null) _currentWarnings = Advisor.EvaluateTeam(_currentTeam, strategy);
 
 

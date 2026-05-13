@@ -2,16 +2,16 @@ namespace DarkestDungeonBuilder.Models;
 
 public class Hero : IPrototype<Hero>
 {
-    public required string Name { get; set; }
-    public required string Portrait { get; set; }
-    public required string Sprite { get; set; }
-    public required string Role { get; set; }
-    public int Health { get; set; }
+    public required string Name { get; init; }
+    public required string Portrait { get; init; }
+    public required string Sprite { get; init; }
+    public required string Role { get; init; }
+    public int Health { get; init; }
 
     public List<int> PreferredPositions { get; set; } = [];
     
     public Trinket?[] EquippedTrinkets { get; set; } = new Trinket?[2];    
-    public List<Skill> Skills { get; set; } = [];
+    public List<Skill> Skills { get; init; } = [];
     public List<Skill> SelectedSkills { get; set; } = [];
 
     public Hero Clone()
@@ -44,9 +44,9 @@ public class Hero : IPrototype<Hero>
     public List<int> GetPreferredPositions()
     {
         List<int> positionsScore = [0, 0, 0, 0];
-        if (this.SelectedSkills.Count == 0) return positionsScore;
+        if (SelectedSkills.Count == 0) return positionsScore;
 
-        foreach (var position in this.SelectedSkills
+        foreach (var position in SelectedSkills
                      .Where(s => s.Category == Skill.SkillCategory.Combat)
                      .SelectMany(skill => skill.CastablePositions))
         {

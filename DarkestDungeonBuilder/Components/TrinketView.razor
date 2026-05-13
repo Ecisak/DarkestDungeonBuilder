@@ -136,8 +136,8 @@
         if (string.IsNullOrEmpty(item.Text)) return Task.FromResult(false);
         if (string.IsNullOrEmpty(_searchPhrase)) return Task.FromResult(true);
 
-        bool matchesName = item.Text.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //name
-        bool matchesEffect = item.TrinketData != null && item.TrinketData.Effects.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //effects
+        var matchesName = item.Text.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //name
+        var matchesEffect = item.TrinketData != null && item.TrinketData.Effects.Contains(_searchPhrase, StringComparison.OrdinalIgnoreCase); //effects
 
         return Task.FromResult(matchesName || matchesEffect);
     }

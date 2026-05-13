@@ -26,7 +26,7 @@ public class Team
         }
 
         // try left slot
-        int leftSlot = targetSlotKey - 1;
+        var leftSlot = targetSlotKey - 1;
         if (leftSlot >= 1 && Slots[leftSlot] == null)
         {
             Slots[leftSlot] = Slots[targetSlotKey];
