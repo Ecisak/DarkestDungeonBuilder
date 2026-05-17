@@ -4,24 +4,24 @@
 @if (Hero == null)
 {
     @* empty *@
-    <MudPaper Class="pa-4 d-flex flex-column align-center justify-center" 
-              Style="min-height: 500px; border: 2px dashed black;" 
+    <MudPaper Class="pa-4 d-flex flex-column align-center justify-center"
+              Style="min-height: 500px; border: 2px dashed #5a1010; background-color: #0a0a0a;"
               @ondragover:preventDefault="true"
               @ondrop="HandleDrop">
-        <MudText Typo="Typo.h5" Color="Color.Surface">@SlotKey</MudText>
-        <MudText Typo="Typo.body1">Empty</MudText>
+        <MudText Typo="Typo.h5" Style="color: #5a1010; font-family: 'Cinzel', serif;">@SlotKey</MudText>
+        <MudText Typo="Typo.body1" Style="color: #9e8a70;">Empty</MudText>
     </MudPaper>
 }
 else
 {
     @* Ooccupied *@
-    <MudPaper Class="pa-4 d-flex flex-column align-center" 
-              Style="min-height: 800px;" 
-              draggable="true" 
-              @ondragstart="HandleDragStart" 
+    <MudPaper Class="pa-4 d-flex flex-column align-center"
+              Style="min-height: 500px; background-color: #0d0d0d; border: 1px solid #3a0a0a;"
+              draggable="true"
+              @ondragstart="HandleDragStart"
               @ondragover:preventDefault="true"
               @ondrop="HandleDrop">
-        
+
         @* position circles *@
         <div class="d-flex gap-2 align-center mb-4" style="height: 30px;">
             @{
@@ -33,35 +33,37 @@ else
                 int innerSize = currentScore == 0 ? 0 : 4 + (currentScore * 6);
                 double opacity = currentScore == 0 ? 0.3 : 0.6 + (currentScore * 0.1);
 
-                <div style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid black; display: flex; align-items: center; justify-content: center;">
-                    <div style="width: @(innerSize)px; height: @(innerSize)px; border-radius: 50%; background-color: red; opacity: @opacity.ToString(System.Globalization.CultureInfo.InvariantCulture); transition: all 0.2s ease-in-out;"></div>
+                <div style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid #5a1010; display: flex; align-items: center; justify-content: center; background-color: #000;">
+                    <div style="width: @(innerSize)px; height: @(innerSize)px; border-radius: 50%; background-color: #a84b4b; opacity: @opacity.ToString(System.Globalization.CultureInfo.InvariantCulture); transition: all 0.2s ease-in-out;"></div>
                 </div>
             }
         </div>
 
         @* hero info *@
-        <MudText Typo="Typo.subtitle2" Color="Color.Tertiary">Rank @SlotKey</MudText>
-        <MudText Typo="Typo.h6" Class="font-weight-bold">@Hero.Name</MudText>
-        <div style="height: 320px; width: 100%; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 16px;">
+        <MudText Typo="Typo.subtitle2" Style="color: #9e8a70;">Rank @SlotKey</MudText>
+        <div style="height: 32px; display: flex; align-items: center; justify-content: center;">
+            <MudText Typo="Typo.h6" Class="font-weight-bold" Style="@($"color: #e5d1a5; font-family: 'Cinzel Decorative', serif; white-space: nowrap; font-size: {Math.Min(1.25, 12.0 / Hero.Name.Length).ToString(System.Globalization.CultureInfo.InvariantCulture)}rem;")">@Hero.Name</MudText>
+        </div>
+        <div style="height: 320px; width: 100%; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 16px; filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.8));">
             <MudImage Src="@Hero.Sprite" style="max-height: 100%; max-width: 100%; object-fit: contain; object-position: bottom;" />
         </div>
-        
+
         <div class="d-flex flex-column align-center w-100">
-            
+
             <div class="d-flex gap-2 justify-center my-3">
                 @for (int i = 0; i < 2; i++)
                 {
                     int slotIndex = i;
                     var equippedTrinket = Hero.EquippedTrinkets[slotIndex];
 
-                    <MudPaper Width="54px" Height="54px" 
+                    <MudPaper Width="54px" Height="54px"
                               Class="d-flex align-center justify-center border-dashed border-2 cursor-pointer"
-                              Style="border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.1);"
+                              Style="border-color: #5a1010; background: #0a0a0a;"
                               @onclick="@(() => OpenTrinketDialog(slotIndex))">
-            
+
                         @if (equippedTrinket == null)
                         {
-                            <MudIcon Icon="@Icons.Material.Filled.Add" Color="Color.Default" />
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Style="color: #5a1010;" />
                         }
                         else
                         {
@@ -92,7 +94,7 @@ else
                                     }
                                     @if (!skill.IsFriendly)
                                     {
-                                        <MudText class="d-inline"> | </MudText>
+                                        <MudText class="d-inline" Style="color: #cdb48d;"> | </MudText>
                                         @for (int i = 1; i <= 4; i++)
                                         {
                                             <span>@(skill.Targets.Contains(i) ? "🔴" : "⚫")</span>
@@ -111,18 +113,25 @@ else
                 <div class="d-flex flex-wrap justify-center" style="max-width: 120px;">
                     @foreach (var skill in Hero.SelectedSkills.Where(s => s.Category == Skill.SkillCategory.Camping))
                     {
-                        <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
+                        <MudTooltip>
+                            <ChildContent>
+                                <MudImage Src="@(skill.SkillImage)" Width="48" Height="48" Class="rounded ma-1" Alt="@skill.Name"/>
+                            </ChildContent>
+                            <TooltipContent>
+                                <div class="d-block">@skill.Name</div>
+                            </TooltipContent>
+                        </MudTooltip>
                     }
                 </div>
             </div>
 
             @* buttons *@
-            <div class="d-flex gap-2 mt-auto">
+            <div class="d-flex gap-2 mt-auto pt-4">
                 <MudTooltip Text="Delete">
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" @onclick="HandleRemove"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Style="background-color: #800a0a; color: white;" Size="Size.Small" @onclick="HandleRemove"/>
                 </MudTooltip>
                 <MudTooltip Text="Edit Loadout">
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" @onclick="HandleEdit"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Style="background-color: #5a1010; color: #cdb48d;" Size="Size.Small" @onclick="HandleEdit"/>
                 </MudTooltip>
             </div>
         </div>
@@ -138,9 +147,9 @@ else
     [Parameter] public EventCallback<int> OnRemove { get; set; }
     [Parameter] public EventCallback<Hero> OnEdit { get; set; }
     [Parameter] public EventCallback OnLoadoutChanged { get; set; }
-    
+
     [Parameter] public List<Trinket> AvailableTrinkets { get; set; } = new();
-    
+
     [Parameter] public EventCallback<int> OnDragStart { get; set; }
 
     private async Task HandleDragStart() => await OnDragStart.InvokeAsync(SlotKey);
@@ -163,7 +172,7 @@ else
             Hero?.EquippedTrinkets[trinketSlotIndex] = selectedTrinket;
             await OnLoadoutChanged.InvokeAsync();
             StateHasChanged();
-            
+
         }
     }
 
@@ -178,5 +187,5 @@ else
         }
     }
 
-    
+
 }

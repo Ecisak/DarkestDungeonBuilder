@@ -5,8 +5,9 @@
 <MudDialog>
     <DialogContent>
         <MudStack AlignItems="AlignItems.Center">
-            <MudTextField T="string" Label="Search Trinkets" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" TextChanged="OnTextChanged!" Immediate="true" Clearable="true" />
-            <MudTreeView Items="@_treeItemData" @ref="_treeView" ExpandOnClick="true" FilterFunc="MatchesName">
+            <MudTextField T="string" Label="Search Trinkets" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" TextChanged="OnTextChanged!" Immediate="true" Clearable="true"
+                          Style="color: #c9b08b;" />
+            <MudTreeView Items="@_treeItemData" @ref="_treeView" ExpandOnClick="true" FilterFunc="MatchesName" Style="width: 100%;">
                 <ItemTemplate>
                     @{
                         var item = (TrinketTreeItem)context;
@@ -16,16 +17,16 @@
                             @if (item.TrinketData != null)
                             {
                                 var isAlreadyEquipped = CurrentHero?.EquippedTrinkets.Any(t => t?.Name == item.TrinketData.Name) == true;
-                                <div class="d-flex align-center gap-2 pa-1 w-100" 
+                                <div class="d-flex align-center gap-2 pa-1 w-100"
                                      style="cursor: @(isAlreadyEquipped ? "not-allowed" : "pointer"); opacity: @(isAlreadyEquipped ? 0.4 : 1);"
                                      @onclick="@(() => { if (!isAlreadyEquipped) SelectTrinket(item.TrinketData); })">
                                     <MudImage Src="@item.TrinketData.TrinketImage" Width="48" Height="96" ObjectFit="ObjectFit.Contain"></MudImage>
                                     <div class="d-flex flex-column">
-                                        <MudText Typo="Typo.body1" Class="fw-bold">
+                                        <MudText Typo="Typo.body1" Class="fw-bold" Style="color: #cdb48d; font-family: 'Cinzel', serif;">
                                             @item.Text
-                                            @if (isAlreadyEquipped) { <MudText Typo="Typo.caption" Color="Color.Error"> (Equipped)</MudText> }
+                                            @if (isAlreadyEquipped) { <MudText Typo="Typo.caption" Style="color: #a84b4b;"> (Equipped)</MudText> }
                                         </MudText>
-                                        <MudText Typo="Typo.caption" Color="Color.Secondary">@item.TrinketData.Effects</MudText>
+                                        <MudText Typo="Typo.caption" Style="color: #9e8a70;">@item.TrinketData.Effects</MudText>
                                     </div>
                                 </div>
                             }
@@ -33,8 +34,8 @@
                             {
                                 @*rarity*@
                                 <div class="d-flex align-center gap-2 pa-1 ">
-                                    <MudIcon Icon="@item.Icon" Color="Color.Primary" />
-                                    <MudText Typo="Typo.h6">@item.Text</MudText>
+                                    <MudIcon Icon="@item.Icon" Style="color: #5a1010;" />
+                                    <MudText Typo="Typo.h6" Style="color: #e5d1a5; font-family: 'Cinzel Decorative', serif;">@item.Text</MudText>
                                 </div>
                             }
                         </Content>
@@ -44,18 +45,18 @@
         </MudStack>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel" Variant="Variant.Text" Color="Color.Default">Cancel</MudButton>
-        <MudButton OnClick="Save" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_selectedTrinket == null)">Save</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Text" Style="color: #9e8a70;">Cancel</MudButton>
+        <MudButton OnClick="Save" Variant="Variant.Filled" Style="background-color: #5a1010; color: #cdb48d; font-family: 'Cinzel', serif;" Disabled="@(_selectedTrinket == null)">Save</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
-    
+
     [Parameter] public List<Trinket> AllTrinkets { get; set; } = new();
     [Parameter] public Hero? CurrentHero { get; set; }
-    
+
     private Trinket? _selectedTrinket;
-    
+
 
     private readonly List<TreeItemData<string>> _treeItemData = new();
     private MudTreeView<string>? _treeView;
@@ -87,7 +88,7 @@
         if (CurrentHero != null)
         {
             var classTrinkets = AllTrinkets
-                .Where(t => !string.IsNullOrEmpty(t.ClassTrinket) && 
+                .Where(t => !string.IsNullOrEmpty(t.ClassTrinket) &&
                             t.ClassTrinket.Equals(CurrentHero.Name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -104,7 +105,7 @@
 
         // other nonclass trinkets ordered by rarity
         var otherGroups = AllTrinkets
-            .Where(t => string.IsNullOrEmpty(t.ClassTrinket) || 
+            .Where(t => string.IsNullOrEmpty(t.ClassTrinket) ||
                         (CurrentHero != null && t.ClassTrinket.Equals(null, StringComparison.OrdinalIgnoreCase)))
             .GroupBy(t => t.Rarity);
 

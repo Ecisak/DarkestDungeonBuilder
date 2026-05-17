@@ -1,22 +1,24 @@
 @using DarkestDungeonBuilder.Models
 
 <MudDialog>
-    <TitleContent>Setup @Hero?.Name</TitleContent>
-    
+    <TitleContent>
+        <MudText Typo="Typo.h5" Class="font-weight-bold" Style="color: #e5d1a5; font-family: 'Cinzel Decorative', serif;">Setup @Hero?.Name</MudText>
+    </TitleContent>
+
     <DialogContent>
-        
-        <MudText Typo="Typo.h6">@Hero?.Name</MudText>
-        <MudImage Src="@Hero?.Portrait"/>
+
+        <MudText Typo="Typo.h6" Style="color: #e5d1a5;">@Hero?.Name</MudText>
+        <MudImage Src="@Hero?.Portrait" Elevation="5" Class="mb-4" />
 
         @if (@Hero?.Skills != null)
         {
-            <MudText>Choose 4 Combat Skills</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mb-2" Style="color: #c9b08b; font-family: 'Cinzel', serif;">Choose 4 Combat Skills</MudText>
 
             foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Combat))
             {
                 bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
-                string imgStyle = isSelected 
-                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;" 
+                string imgStyle = isSelected
+                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;"
                     : "filter: grayscale(100%); opacity: 0.4; transition: filter 0.3s, opacity 0.3s;";
                 <div class="d-inline">
                 <MudTooltip>
@@ -66,32 +68,44 @@
                         </div>
 
                     </TooltipContent>
-                    
+
                 </MudTooltip>
                 </div>
             }
 
-            <MudText>Choose 4 Camping Skills</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2" Style="color: #c9b08b; font-family: 'Cinzel', serif;">Choose 4 Camping Skills</MudText>
             foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Camping))
             {
                 bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
-                string imgStyle = isSelected 
-                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;" 
+                string imgStyle = isSelected
+                    ? "filter: none; opacity: 1; transition: filter 0.3s, opacity 0.3s;"
                     : "filter: grayscale(100%); opacity: 0.4; transition: filter 0.3s, opacity 0.3s;";
-                <MudImage 
-                    Src="@(skill.SkillImage)"
-                    Width="48" 
-                    Height="48" 
-                    Class="rounded ma-1" 
-                    Style="@imgStyle"
-                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
-                    Alt="@skill.Name" />
+                <div class="d-inline">
+                <MudTooltip>
+                    <ChildContent>
+                        <MudImage
+                            Src="@(skill.SkillImage)"
+                            Width="48"
+                            Height="48"
+                            Class="rounded ma-1"
+                            Style="@imgStyle"
+                            @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                            Alt="@skill.Name"/>
+                    </ChildContent>
+                    <TooltipContent>
+                        <div class="d-block">
+                            @skill.Name
+                        </div>
+                    </TooltipContent>
+
+                </MudTooltip>
+                </div>
             }
 
         }
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Close">Save and Close</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Close" Style="background-color: #5a1010; color: #cdb48d; font-family: 'Cinzel', serif;">Save and Close</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -111,7 +125,7 @@
             if (Hero?.SelectedSkills.Count(s => s.Category == skill.Category) < 4)
             {
                 Hero?.SelectedSkills.Add(skill);
-                
+
             }
         }
 
@@ -121,4 +135,3 @@
         }
     }
 }
-

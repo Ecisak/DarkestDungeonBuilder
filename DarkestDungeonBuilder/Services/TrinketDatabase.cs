@@ -61,7 +61,7 @@ public class TrinketDatabase : ITrinketDatabase
                 Name = "Sun Ring",
                 Rarity = "Rare",
                 Effects = "+10 Acc, +5% Crit, -8 Dodge",
-                TrinketImage = "/images/trinkets/focus_ring.webp"
+                TrinketImage = "/images/trinkets/sun_ring.webp"
             },
 
             // --- BEZ CLASSY (Common / Universal) ---

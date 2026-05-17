@@ -1,80 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>DarkestDungeonBuilder</title>
+        <base href="/" />
+        <link rel="preload" id="webassembly" />
+        <link
+            rel="stylesheet"
+            href="lib/bootstrap/dist/css/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="css/app.css" />
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <link href="DarkestDungeonBuilder.styles.css" rel="stylesheet" />
+        <script type="importmap"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
+        <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    </head>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DarkestDungeonBuilder</title>
-    <base href="/" />
-    <link rel="preload" id="webassembly" />
-    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/app.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link href="DarkestDungeonBuilder.styles.css" rel="stylesheet" />
-    <script type="importmap"></script>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
-</head>
+    <body>
+        <div id="app">
+            <svg class="loading-progress">
+                <circle r="40%" cx="50%" cy="50%" />
+                <circle r="40%" cx="50%" cy="50%" />
+            </svg>
+            <div class="loading-progress-text"></div>
+        </div>
 
-<body>
-    <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
-    </div>
+        <div id="blazor-error-ui">
+            An unhandled error has occurred.
+            <a href="." class="reload">Reload</a>
+            <span class="dismiss">🗙</span>
+        </div>
+        <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+        <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    </body>
 
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
-    </div>
-    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-</body>
+    <script>
+        let customGhost = null;
 
+        function setCustomDragImage(event, spriteUrl) {
+            const emptyImage = new Image();
+            emptyImage.src =
+                "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            event.dataTransfer.setDragImage(emptyImage, 0, 0);
 
-<script>
-    let customGhost = null;
+            customGhost = document.getElementById("custom-drag-ghost");
+            if (!customGhost) {
+                customGhost = document.createElement("img");
+                customGhost.id = "custom-drag-ghost";
+                customGhost.style.position = "fixed";
+                customGhost.style.pointerEvents = "none";
+                customGhost.style.zIndex = "999999";
+                customGhost.style.transform = "translate(-50%, -50%)";
+                document.body.appendChild(customGhost);
+            }
 
-    function setCustomDragImage(event, spriteUrl) {
-        const emptyImage = new Image();
-        emptyImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-        event.dataTransfer.setDragImage(emptyImage, 0, 0);
+            customGhost.src = spriteUrl;
+            customGhost.style.display = "block";
 
-        customGhost = document.getElementById('custom-drag-ghost');
-        if (!customGhost) {
-            customGhost = document.createElement('img');
-            customGhost.id = 'custom-drag-ghost';
-            customGhost.style.position = 'fixed';
-            customGhost.style.pointerEvents = 'none';
-            customGhost.style.zIndex = '999999';
-            customGhost.style.transform = 'translate(-50%, -50%)';
-            document.body.appendChild(customGhost);
+            customGhost.style.left = event.clientX + "px";
+            customGhost.style.top = event.clientY + "px";
+
+            document.addEventListener("dragover", moveGhost);
         }
 
-        customGhost.src = spriteUrl;
-        customGhost.style.display = 'block';
+        function moveGhost(event) {
+            if (!customGhost) return;
 
-        customGhost.style.left = event.clientX + 'px';
-        customGhost.style.top = event.clientY + 'px';
-
-        document.addEventListener('dragover', moveGhost);
-    }
-
-    function moveGhost(event) {
-        if (!customGhost) return;
-
-        customGhost.style.left = event.clientX + 'px';
-        customGhost.style.top = event.clientY + 'px';
-    }
-
-    document.addEventListener('dragend', function() {
-        if (customGhost) {
-            customGhost.style.display = 'none';
-            document.removeEventListener('dragover', moveGhost);
+            customGhost.style.left = event.clientX + "px";
+            customGhost.style.top = event.clientY + "px";
         }
-    });
-</script>
+
+        document.addEventListener("dragend", function () {
+            if (customGhost) {
+                customGhost.style.display = "none";
+                document.removeEventListener("dragover", moveGhost);
+            }
+        });
+    </script>
 </html>

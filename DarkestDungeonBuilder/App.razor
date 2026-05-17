@@ -2,9 +2,30 @@
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
-        <MudThemeProvider IsDarkMode="true"/>
-        <MudThemeProvider />
+        <MudThemeProvider Theme="@_darkestTheme" IsDarkMode="true"/>
         <MudSnackbarProvider />
         <MudPopoverProvider />
     </Found>
 </Router>
+
+
+@code {
+    private readonly MudTheme _darkestTheme = new()
+    {
+        PaletteDark = new PaletteDark()
+        {
+            Background = "#1a0303",       
+            Surface = "#0d0d0d",         
+            Primary = "#5a1010",       
+            Secondary = "#cdb48d",      
+            TextPrimary = "#cdb48d",    
+            TextSecondary = "#9e8a70",
+            DrawerBackground = "#0a0a0a",
+            AppbarBackground = "#0d0d0d"
+        },
+        Typography = new Typography()
+        {
+            
+        }
+    };
+}
