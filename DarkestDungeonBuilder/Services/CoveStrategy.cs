@@ -4,28 +4,31 @@ namespace DarkestDungeonBuilder.Services;
 
 public class CoveStrategy : ILocationStrategy
 {
-    public List<string> AnalyzeTeamForLocation(Team team)
+    public AdvisorAnalysis AnalyzeTeamForLocation(Team team)
     {
-        var warnings = new List<string>();
+        var analysis = new AdvisorAnalysis();
 
-        var hasBleed = team.Slots.Values
+        var bleedHeroes = team.Slots.Values
             .Where(h => h != null)
             .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)))
+            .Select(h => h!.Name)
+            .Distinct()
             .ToList();
-        if (hasBleed.Count != 0)
+
+        if (bleedHeroes.Count > 0)
         {
-            var heroNames = string.Join(", ", hasBleed.Select(h => h?.Name));
-            warnings.Add("Bleed has no effect against monsters in Cove. Change skills of or remove them: " + heroNames);
+            analysis.AddSuggestion($"Bleed-focused skills are low value in Cove. Consider blight or armor piercing instead: {string.Join(", ", bleedHeroes)}.");
         }
 
-        var armorPiercing = team.Slots.Values
+        var hasArmorPiercing = team.Slots.Values
             .Where(h => h != null)
-            .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing)))
-            .ToList();
-        if (armorPiercing.Count > 0) return warnings;
+            .Any(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing)));
+
+        if (!hasArmorPiercing)
         {
-            warnings.Add("Cove has high protection enemies. Your team has no armor piercing skills.");
+            analysis.AddCritical("Cove has high protection enemies, but the team has no armor piercing skill.");
         }
-        return warnings;
+
+        return analysis;
     }
 }

@@ -4,19 +4,22 @@ namespace DarkestDungeonBuilder.Services;
 
 public class RuinsStrategy : ILocationStrategy
 {
-    public List<string> AnalyzeTeamForLocation(Team team)
+    public AdvisorAnalysis AnalyzeTeamForLocation(Team team)
     {
-        var warnings = new List<string>();
+        var analysis = new AdvisorAnalysis();
 
-        var hasBleed = team.Slots.Values
+        var bleedHeroes = team.Slots.Values
             .Where(h => h != null)
-            .Any(h => h != null && h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)));
+            .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)))
+            .Select(h => h!.Name)
+            .Distinct()
+            .ToList();
 
-        if (hasBleed)
+        if (bleedHeroes.Count > 0)
         {
-            warnings.Add("Most of the enemies are unholy, bleed doesn't work on them");
+            analysis.AddSuggestion($"Bleed-focused skills are low value in Ruins because many enemies are unholy: {string.Join(", ", bleedHeroes)}.");
         }
 
-        return warnings;
+        return analysis;
     }
 }

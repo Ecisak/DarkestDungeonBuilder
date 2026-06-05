@@ -4,5 +4,5 @@ namespace DarkestDungeonBuilder.Services;
 
 public interface ILocationStrategy
 {
-    List<string> AnalyzeTeamForLocation(Team team);
+    AdvisorAnalysis AnalyzeTeamForLocation(Team team);
 }

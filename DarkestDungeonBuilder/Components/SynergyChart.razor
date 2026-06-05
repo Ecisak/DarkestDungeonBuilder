@@ -69,19 +69,60 @@
     {
         _metrics.Clear();
 
-        var selectedSkills = CurrentTeam.Slots.Values
-            .Where(h => h != null)
-            .SelectMany(h => h!.SelectedSkills)
-            .ToList();
+        AddMetric("Healing",
+            h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Heal)),
+            GetBaseNeed("healing"));
 
-        var locationNeed = GetLocationNeeds(CurrentLocation?.Name);
+        AddMetric("Stress Relief",
+            h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.StressHeal)),
+            GetBaseNeed("stress"));
 
-        _metrics.Add(new MetricDisplay("Healing", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Heal))), locationNeed.Healing));
-        _metrics.Add(new MetricDisplay("Stress Relief", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.StressHeal))), locationNeed.StressRelief));
-        _metrics.Add(new MetricDisplay("Control", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Stun) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Move) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Guard))), locationNeed.Control));
-        _metrics.Add(new MetricDisplay("Damage Over Time", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight))), locationNeed.DamageOverTime));
-        _metrics.Add(new MetricDisplay("Utility", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Mark) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Cure) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Buff) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Debuff))), locationNeed.Utility));
-        _metrics.Add(new MetricDisplay("Armor Piercing", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing))), locationNeed.ArmorPiercing));
+        AddMetric("Control",
+            h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Stun) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Move) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Guard)),
+            GetBaseNeed("control"));
+
+        switch (CurrentLocation?.Name)
+        {
+            case "Ruins":
+                AddMetric("Blight",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)),
+                    1);
+                break;
+            case "Weald":
+                AddMetric("Bleed",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)),
+                    2);
+                break;
+            case "Warrens":
+                AddMetric("Bleed",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)),
+                    2);
+                AddMetric("Cure",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Cure)),
+                    1);
+                break;
+            case "Cove":
+                AddMetric("Blight",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)),
+                    2);
+                AddMetric("Armor Piercing",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing)),
+                    1);
+                break;
+            default:
+                AddMetric("Bleed",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed)),
+                    1);
+                AddMetric("Blight",
+                    h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)),
+                    1);
+                break;
+        }
+    }
+
+    private void AddMetric(string label, Func<Hero, bool> predicate, int needScore)
+    {
+        _metrics.Add(new MetricDisplay(label, CountHeroesWithCapability(predicate), needScore));
     }
 
     private int CountHeroesWithCapability(Func<Hero, bool> predicate)
@@ -93,6 +134,26 @@
 
         return Clamp(count);
     }
+
+    private int GetBaseNeed(string metric) => CurrentLocation?.Name switch
+    {
+        "Ruins" when metric == "healing" => 2,
+        "Ruins" when metric == "stress" => 2,
+        "Ruins" when metric == "control" => 3,
+        "Weald" when metric == "healing" => 2,
+        "Weald" when metric == "stress" => 1,
+        "Weald" when metric == "control" => 2,
+        "Warrens" when metric == "healing" => 2,
+        "Warrens" when metric == "stress" => 1,
+        "Warrens" when metric == "control" => 3,
+        "Cove" when metric == "healing" => 2,
+        "Cove" when metric == "stress" => 1,
+        "Cove" when metric == "control" => 3,
+        _ when metric == "healing" => 1,
+        _ when metric == "stress" => 1,
+        _ when metric == "control" => 1,
+        _ => 1
+    };
 
     private static int Clamp(int value) => Math.Min(MaxPips, value);
 
@@ -111,24 +172,4 @@
     private string GetCoverageCaption() => CurrentLocation == null
         ? "Current team capability overview."
         : $"Current team compared to {CurrentLocation.Name} requirements.";
-
-    private static LocationNeedProfile GetLocationNeeds(string? locationName)
-    {
-        return locationName?.ToLowerInvariant() switch
-        {
-            "ruins" => new LocationNeedProfile(2, 2, 3, 1, 2, 1),
-            "warrens" => new LocationNeedProfile(2, 1, 3, 3, 2, 1),
-            "cove" => new LocationNeedProfile(2, 1, 3, 2, 2, 3),
-            "weald" => new LocationNeedProfile(2, 1, 2, 3, 3, 1),
-            _ => new LocationNeedProfile(1, 1, 1, 1, 1, 1)
-        };
-    }
-
-    private sealed record LocationNeedProfile(
-        int Healing,
-        int StressRelief,
-        int Control,
-        int DamageOverTime,
-        int Utility,
-        int ArmorPiercing);
 }

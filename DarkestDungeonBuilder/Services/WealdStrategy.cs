@@ -4,20 +4,22 @@ namespace DarkestDungeonBuilder.Services;
 
 public class WealdStrategy : ILocationStrategy
 {
-    public List<string> AnalyzeTeamForLocation(Team team)
+    public AdvisorAnalysis AnalyzeTeamForLocation(Team team)
     {
-        var warnings = new List<string>();
+        var analysis = new AdvisorAnalysis();
 
-        var hasBlight = team.Slots.Values
+        var blightHeroes = team.Slots.Values
             .Where(h => h != null)
             .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)))
+            .Select(h => h!.Name)
+            .Distinct()
             .ToList();
-        if (hasBlight.Count <= 0) return warnings;
+
+        if (blightHeroes.Count > 0)
         {
-            var heroNames = string.Join(", ", hasBlight.Select(h => h?.Name));
-            warnings.Add("Blight has no effect against monsters in Weald. Change skills of or remove them: " + heroNames);
+            analysis.AddSuggestion($"Blight is weaker in Weald, so these heroes may have less efficient loadouts there: {string.Join(", ", blightHeroes)}.");
         }
 
-        return warnings;
+        return analysis;
     }
 }

@@ -20,7 +20,7 @@ public partial class Home : ComponentBase
     [Inject] private TeamAdvisorService Advisor { get; set; } = null!;
     [Inject] protected IJSRuntime JsRuntime { get; set; } = null!;
     [Inject] protected ISnackbar Snackbar { get; set; } = null!;
-    
+
     private List<Hero> _roster = null!;
     private List<DungeonLocation> _locations = null!;
     private List<Trinket> _trinkets = null!;
@@ -28,16 +28,16 @@ public partial class Home : ComponentBase
     private DungeonLocation? _selectedLocation;
     private int? _draggedSlotKey;
     private Team _currentTeam = new();
-    private List<string> _currentWarnings = [];
-    
+    private AdvisorAnalysis _advisorAnalysis = new();
+
     protected override async Task OnInitializedAsync()
     {
         _roster = await HeroDb.GetHeroesAsync();
         _locations = await LocationDb.GetLocationsAsync();
         _trinkets = await TrinketDb.GetTrinketsAsync();
         GetHeroesForLocation();
-        
-        
+
+
         try
         {
             _currentTeam = await LocalStorage.GetItemAsync<Team>("currentTeam") ?? new Team();
@@ -81,46 +81,46 @@ public partial class Home : ComponentBase
         await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
         UpdateAdvisor();
     }
-    
+
     private async Task ResetBuilderAsync()
     {
         var result = await DialogService.ShowMessageBoxAsync(
-            "Irreversible action", 
-            "Do you really want to reset? This action is not reversible..", 
-            yesText: "YES", 
+            "Irreversible action",
+            "Do you really want to reset? This action is not reversible..",
+            yesText: "YES",
             cancelText: "NO"
         );
 
         if (result != true)
         {
-            return; 
+            return;
         }
 
         _currentTeam.ClearAll();
-    
-        _selectedLocation = null; 
-    
+
+        _selectedLocation = null;
+
         await SaveTeam();
         await LocalStorage.RemoveItemAsync("savedLocation");
-        
+
         UpdateAdvisor();
     }
-    
+
     private async Task ExportTeamAsync()
     {
         // setup formating
         var options = new JsonSerializerOptions { WriteIndented = true };
-    
+
         // serialize team into string
         string jsonString = JsonSerializer.Serialize(_currentTeam, options);
-    
+
         // generate name of the file
         string fileName = $"dd_team_{DateTime.Now:yyyyMMdd_HHmmss}.json";
-    
+
         // downloads file
         await JsRuntime.InvokeVoidAsync("downloadJsonFile", fileName, jsonString);
     }
-    
+
     private async Task ImportTeamAsync(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -129,12 +129,12 @@ public partial class Home : ComponentBase
         {
             // open stream (limit size for security)
             await using var stream = file.OpenReadStream(maxAllowedSize: 512000);
-        
+
             // set options with convertor for enums and bitfields
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() } 
+                Converters = { new JsonStringEnumConverter() }
             };
 
             // deserialize JSON back to Team object
@@ -144,16 +144,16 @@ public partial class Home : ComponentBase
             {
                 // overwrite current team
                 _currentTeam = importedTeam;
-                
+
                 _selectedLocation = _locations.FirstOrDefault(l => l.Name == _currentTeam.CurrentLocationName);
-                
+
                 await SaveTeam();
-                
+
                 if (_selectedLocation != null)
                 {
                     await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
                 }
-            
+
                 UpdateAdvisor();
                 Snackbar.Add("Import successful!", Severity.Success);
                 StateHasChanged();
@@ -163,7 +163,7 @@ public partial class Home : ComponentBase
         {
             Console.WriteLine($"Import Error: {ex.Message}\n{ex.StackTrace}");
             await DialogService.ShowMessageBoxAsync(
-                "Import Error", 
+                "Import Error",
                 $"Failed to load team. Check if the JSON file is valid."
             );
         }
@@ -177,12 +177,12 @@ public partial class Home : ComponentBase
         _currentTeam.CurrentLocationName = null;
         StateHasChanged();
     }
-    
+
 
     private async Task AssignHeroToSlotAsync(Hero? heroToAssign, int targetSlotKey)
     {
         if (heroToAssign == null) return;
-        
+
         var result = _currentTeam.TryAssignHero(heroToAssign, targetSlotKey);
 
         // if full, pop modal
@@ -192,38 +192,38 @@ public partial class Home : ComponentBase
                 "Slot is full.",
                 "The slot and all adjacent slots are full. Do you want to replace the hero with a new one?",
                 yesText: "Replace", cancelText: "Cancel");
-            
+
             if (dialogResult == true)
             {
                 _currentTeam.ForceReplaceHero(heroToAssign, targetSlotKey);
             }
             else
             {
-                return; 
+                return;
             }
         }
         UpdateAdvisor();
         await SaveTeam();
     }
-    
+
     private async Task HandleDropToRoster()
     {
         if (_draggedSlotKey.HasValue)
         {
             _currentTeam.RemoveHero(_draggedSlotKey.Value);
-        
+
             _draggedSlotKey = null;
-        
+
             await SaveTeam();
             UpdateAdvisor();
         }
     }
-    
+
     private async Task SaveTeam()
     {
         await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
     }
-    
+
     private void GetHeroesForLocation()
     {
         foreach (var location in _locations)
@@ -255,10 +255,10 @@ public partial class Home : ComponentBase
         {
             var sourceHero = _currentTeam.Slots[_draggedSlotKey.Value];
             var targetHero = _currentTeam.Slots[targetSlotKey];
-        
+
             _currentTeam.Slots[targetSlotKey] = sourceHero;
             _currentTeam.Slots[_draggedSlotKey.Value] = targetHero;
-        
+
             _draggedSlotKey = null;
             await SaveTeam();
         }
@@ -277,7 +277,7 @@ public partial class Home : ComponentBase
         var result = await dialog.Result;
 
         if (result is { Canceled: false })
-        { 
+        {
             await SaveTeam();
             UpdateAdvisor();
             StateHasChanged();
@@ -303,13 +303,13 @@ public partial class Home : ComponentBase
         await SaveTeam();
         UpdateAdvisor();
     }
-    
+
     private void UpdateAdvisor()
     {
-        
+
         if (_selectedLocation == null)
         {
-            _currentWarnings.Clear();
+            _advisorAnalysis = new AdvisorAnalysis();
             return;
         }
 
@@ -321,8 +321,9 @@ public partial class Home : ComponentBase
             "Cove" => new CoveStrategy(),
             _ => null
         };
-        if (strategy != null) _currentWarnings = Advisor.EvaluateTeam(_currentTeam, strategy);
-
+        _advisorAnalysis = strategy != null
+            ? Advisor.EvaluateTeam(_currentTeam, strategy)
+            : new AdvisorAnalysis();
 
         StateHasChanged();
     }

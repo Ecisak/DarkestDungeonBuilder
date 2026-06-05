@@ -4,27 +4,31 @@ namespace DarkestDungeonBuilder.Services;
 
 public class WarrensStrategy : ILocationStrategy
 {
-    public List<string> AnalyzeTeamForLocation(Team team)
+    public AdvisorAnalysis AnalyzeTeamForLocation(Team team)
     {
-        var warnings = new List<string>();
+        var analysis = new AdvisorAnalysis();
 
-        var hasBlight = team.Slots.Values
+        var blightHeroes = team.Slots.Values
             .Where(h => h != null)
             .Where(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight)))
+            .Select(h => h!.Name)
+            .Distinct()
             .ToList();
-        if (hasBlight.Count != 0)
+
+        if (blightHeroes.Count > 0)
         {
-            var heroNames = string.Join(", ", hasBlight.Select(h => h?.Name));
-            warnings.Add("Blight has no effect against monsters in Warrens. Change skills of or remove them: " + heroNames);
+            analysis.AddSuggestion($"Blight is less effective in Warrens, so these heroes may be underperforming there: {string.Join(", ", blightHeroes)}.");
         }
-        
+
         var hasCure = team.Slots.Values
             .Where(h => h != null)
             .Any(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Cure)));
+
         if (!hasCure)
         {
-            warnings.Add("Warrens has high disease rates. Your team has no cure skills.");
+            analysis.AddSuggestion("Warrens often inflicts disease. Bringing at least one cure skill would make the team safer.");
         }
-        return warnings;
+
+        return analysis;
     }
 }
