@@ -15,9 +15,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddMudServices();
 
-builder.Services.AddSingleton<IHeroDatabase, HeroDatabase>();
-builder.Services.AddSingleton<ITrinketDatabase, TrinketDatabase>();
-builder.Services.AddSingleton<IDungeonLocationDatabase, DungeonLocationDatabase>();
+builder.Services.AddScoped<IHeroDatabase, HeroDatabase>();
+builder.Services.AddScoped<IDungeonLocationDatabase, DungeonLocationDatabase>();
+builder.Services.AddScoped<ITrinketDatabase, TrinketDatabase>();
 builder.Services.AddScoped<TeamAdvisorService>();
 
 builder.Services.AddBlazoredLocalStorage();

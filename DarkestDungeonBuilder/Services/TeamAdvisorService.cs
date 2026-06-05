@@ -1,4 +1,6 @@
-namespace DarkestDungeonBuilder.Models;
+using DarkestDungeonBuilder.Models;
+using Team = DarkestDungeonBuilder.Models.Team;
+namespace DarkestDungeonBuilder.Services;
 
 public class TeamAdvisorService
 {
@@ -41,7 +43,7 @@ public class TeamAdvisorService
         return warnings;
     }
 
-    private static List<(int Rank, Hero Hero)> GetHeroesWithMissingSkills(Team team)
+    private static List<(int Rank, Models.Hero Hero)> GetHeroesWithMissingSkills(Team team)
     {
         return team.Slots
             .Where(slot => slot.Value != null)

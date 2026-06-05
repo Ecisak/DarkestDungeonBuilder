@@ -25,6 +25,7 @@ public class Hero : IPrototype<Hero>
             Health = this.Health,
             Skills = [],
             SelectedSkills = [],
+            PreferredPositions = new List<int>(this.PreferredPositions),
             EquippedTrinkets = new Trinket?[2]
         };
 

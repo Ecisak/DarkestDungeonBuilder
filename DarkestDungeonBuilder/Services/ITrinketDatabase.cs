@@ -4,5 +4,5 @@ namespace DarkestDungeonBuilder.Services;
 
 public interface ITrinketDatabase
 {
-    List<Trinket> GetMockTrinkets();
+    Task<List<Trinket>> GetTrinketsAsync();
 }

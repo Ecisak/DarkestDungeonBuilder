@@ -4,5 +4,5 @@ namespace DarkestDungeonBuilder.Services;
 
 public interface IHeroDatabase
 {
-    List<Hero> GetInitialRoster();
+    Task<List<Hero>> GetHeroesAsync(); 
 }

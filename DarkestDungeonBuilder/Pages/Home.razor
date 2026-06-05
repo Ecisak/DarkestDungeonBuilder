@@ -1,146 +1,69 @@
 ﻿@page "/"
 @using DarkestDungeonBuilder.Components
 
-
 <PageTitle>Darkest Dungeon Builder</PageTitle>
-
-@if (_selectedLocation == null)
+@if (_locations == null || _roster == null || _trinkets == null)
 {
-    <LocationSelector
-        Locations="_locations"
-        OnLocationSelected="SetLocation" />
+    <MudContainer Class="d-flex justify-center align-center dd-fullscreen">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+    </MudContainer>
 }
 else
 {
-    <MudGrid>
-        <!-- left panel: list of heroes -->
-        <MudItem xs="3">
-            <MudText Typo="Typo.h5" Class="d-inline font-weight-bold" Style="color: #e5d1a5; font-family: 'Cinzel Decorative', serif;">@_selectedLocation.Name</MudText>
-            <MudButton Variant="Variant.Filled" Size="Size.Small" Style="background-color: #5a1010; color: #cdb48d; font-family: 'Cinzel', serif; margin-left: 8px;" OnClick="@(ChangeLocation)">
-                Change
+    @if (_selectedLocation == null)
+    {
+        <InputFile id="importInput" OnChange="ImportTeamAsync" accept=".json" hidden />
+        <div class="dd-import-wrapper">
+            <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-inline-action-button">
+                Import Team
             </MudButton>
 
-            <div class="d-flex justify-space-between align-end mb-2 mt-4 pb-1">
-                <MudText Typo="Typo.subtitle1" Style="color: #cdb48d; font-family: 'Cinzel', serif;">Available Heroes</MudText>
-                <MudText Typo="Typo.caption" Style="color: #9e8a70; font-style: italic;">* Hold to drag</MudText>
-            </div>
+            <InputFile OnChange="ImportTeamAsync"
+                       accept=".json"
+                       class="dd-file-overlay-input" />
+        </div>
+        <LocationSelector
+            Locations="_locations"
+            OnLocationSelected="SetLocation" />
+    }
+    else
+    {
+        <MudGrid>
+            <!-- left panel: list of heroes -->
 
-            <MudDataGrid Items="@_roster" Hover="true" Dense="true" Style="background-color: #0d0d0d; border: 1px solid #3a0a0a;">
-                <Columns>
-                    <TemplateColumn>
-                            <CellTemplate>
-                                <div @ondragstart="@(() => { _heroToAssign = context.Item; _draggedSlotKey = null; })">
-                                    <div draggable="true"
-                                         data-drag-image="@context.Item.Sprite"
-                                         ondragstart="setCustomDragImage(event, '@context.Item.Sprite')"
-                                         style="cursor: grab;"
-                                         class="d-flex align-center justify-space-between w-100 pa-2">
+            <!-- center panel, team composition -->
+            <RosterPanel
+                SelectedLocation="@_selectedLocation"
+                Roster="@_roster"
+                OnChangeLocation="ChangeLocation"
+                OnResetBuilder="ResetBuilderAsync"
+                OnExportTeam="ExportTeamAsync"
+                OnHeroDragStart="HandleSlotDragStartFromPanel"
+                OnAddHero="HandleAddHeroFromPanel"
+                OnDropToRoster="HandleDropToRoster"/>
 
-                                        @*drag and drop fix*@
-                                        <img src="@context.Item.Sprite"
-                                             class="drag-ghost-img"
-                                             width="170"
-                                             height="334"
-                                             alt="sprite of @context.Item.Sprite"
-                                             style="position: absolute; z-index: -100; opacity: 0.01; pointer-events: none;"/>
-                                        <div class="d-block">
-                                            <MudAvatar>
-                                                <MudImage Src=@context.Item.Portrait></MudImage>
-                                            </MudAvatar>
-                                            <div class="d-inline">
-                                                <MudText Typo="Typo.body1" class="d-inline">
-                                                    <strong
-                                                        class="d-inline">@context.Item.Name</strong></MudText>
-                                                @if (_selectedLocation.RecommendedHeroes != null && _selectedLocation.RecommendedHeroes.Contains(context.Item))
-                                                {
-                                                    <MudTooltip Text="@($"Recommended hero for {_selectedLocation.Name}")">
-                                                        <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary"
-                                                                 Size="Size.Small"></MudIcon>
-                                                    </MudTooltip>
-                                                }
-                                            </div>
-                                            <div class="d-block">
-                                                <MudText Typo="Typo.caption">@context.Item.Role</MudText>
-                                            </div>
-                                        </div>
-
-                                        <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary"
-                                                 TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.BottomRight"
-                                                 Dense="true">
-                                            <MudMenuItem @onclick="@(() => AddHero(context.Item, 1))">1</MudMenuItem>
-                                            <MudMenuItem @onclick="@(() => AddHero(context.Item, 2))">2</MudMenuItem>
-                                            <MudMenuItem @onclick="@(() => AddHero(context.Item, 3))">3</MudMenuItem>
-                                            <MudMenuItem @onclick="@(() => AddHero(context.Item, 4))">4</MudMenuItem>
-                                        </MudMenu>
-                                    </div>
-                                </div>
-
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                </MudDataGrid>
-        </MudItem>
-
-        <!-- center panel, team composition -->
-        <MudItem xs="6">
-            <MudGrid>
-                @foreach (var slot in _currentTeam.Slots.Reverse())
-                {
-                    <MudItem xs="3">
-                        <TeamSlot
-                            @key="slot.Key"
-                            Hero="slot.Value"
-                            AvailableTrinkets="@_trinkets"
-                            SlotKey="slot.Key"
-                            OnDragStart="HandleSlotDragStart"
-                            OnDrop="HandleDrop"
-                            OnRemove="RemoveHero"
-                            OnEdit="OpenDialogAsync"
-                            OnLoadoutChanged="SaveTeam"
-                            />
-                    </MudItem>
-                }
-            </MudGrid>
-        </MudItem>
-
-        <!-- right panel: stats and warnings -->
-        <MudItem xs="3">
-            <MudPaper Class="pa-4" Style="height: 100%; background-color: #0d0d0d; border: 2px solid #5a1010;">
-                <MudText Typo="Typo.h5" Class="mb-4 font-weight-bold" Style="color: #e5d1a5; font-family: 'Cinzel Decorative', serif; text-transform: uppercase;">Advisor</MudText>
-
-                <div class="d-flex justify-center mb-6 pa-4 rounded" style="background-color: #0a0a0a; border: 1px solid #3a0a0a;">
-                    <MudIcon Icon="@Icons.Material.Filled.Radar" Size="Size.Large" Style="color: #a84b4b;" />
-                    <MudText Typo="Typo.caption" Class="ml-2 align-self-center" Style="color: #9e8a70;">Synergy graph (tbd)</MudText>
-                </div>
-
-                <MudText Typo="Typo.h6" Class="mb-2 font-weight-bold" Style="color: #cdb48d; font-family: 'Cinzel', serif;">Warnings and tips:</MudText>
-
-                @switch (_currentWarnings.Count)
-                {
-                    case 0 when _currentTeam.Slots.Values.Any(h => h != null):
-                        <MudAlert Severity="Severity.Success" Variant="Variant.Filled" Style="background-color: #1b4b1b; color: #a5d1a5; border: 1px solid #2b5b2b;">
-                            Looks good!
-                        </MudAlert>
-                        break;
-                    case 0:
-                        <MudText Typo="Typo.body2" Style="color: #9e8a70; font-style: italic;">Add heroes to start the analysis.</MudText>
-                        break;
-                    default:
-                    {
-                        <div class="d-flex flex-column gap-2">
-                            @foreach (var warning in _currentWarnings)
-                            {
-                                <MudAlert Severity="Severity.Warning" Dense="true" Icon="@Icons.Material.Filled.WarningAmber" Style="background-color: #5a3b10; color: #d1b4a5; border: 1px solid #6a4b20;">
-                                    @warning
-                                </MudAlert>
-                            }
-                        </div>
-                        break;
-                    }
-                }
-            </MudPaper>
-        </MudItem>
-
-
-    </MudGrid>
+            <MudItem xs="12" md="6">
+                    <MudGrid>
+                        @foreach (var slot in _currentTeam.Slots.OrderByDescending(x => x.Key))
+                        {
+                            <MudItem xs="6" lg="3">
+                                <TeamSlot
+                                    @key="slot.Key"
+                                    Hero="slot.Value"
+                                    AvailableTrinkets="@_trinkets"
+                                    SlotKey="slot.Key"
+                                    OnDragStart="HandleSlotDragStart"
+                                    OnDrop="HandleDrop"
+                                    OnRemove="RemoveHero"
+                                    OnEdit="OpenDialogAsync"
+                                    OnLoadoutChanged="SaveTeam"
+                                />
+                            </MudItem>
+                        }
+                    </MudGrid>
+            </MudItem>
+            <!-- right panel: stats and warnings -->
+            <AdvisorPanel Warnings="@_currentWarnings" CurrentTeam="@_currentTeam" CurrentLocation="@_selectedLocation" />
+        </MudGrid>
+    }
 }

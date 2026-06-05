@@ -1,0 +1,482 @@
+[
+  {
+    "Name": "Crusader",
+    "Portrait": "/images/heroes/crusader/crusader_icon.png",
+    "Sprite": "/images/heroes/crusader/crusader_sprite.webp",
+    "Role": "Frontline",
+    "Health": 33,
+    "Skills": [
+      {
+        "Name": "Smite",
+        "SkillImage": "/images/heroes/crusader/spells/smite.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage to front lines",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Unholy",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Zealous Accusation",
+        "SkillImage": "/images/heroes/crusader/spells/zealous_accusation.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "AoE Damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Stunning Blow",
+        "SkillImage": "/images/heroes/crusader/spells/stunning_blow.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage + Stun",
+        "EffectsBitfield": "Damage, Stun",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bulwark of Faith",
+        "SkillImage": "/images/heroes/crusader/spells/bulwark_of_faith.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Prot Buff + Mark",
+        "EffectsBitfield": "Buff, Mark, Torch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Battle Heal",
+        "SkillImage": "/images/heroes/crusader/spells/battle_heal.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Small Heal",
+        "EffectsBitfield": "Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Holy Lance",
+        "SkillImage": "/images/heroes/crusader/spells/holy_lance.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Damage + Move Forward 1",
+        "EffectsBitfield": "Damage, Move",
+        "BonusAgainst": "Unholy",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Inspiring Cry",
+        "SkillImage": "/images/heroes/crusader/spells/inspiring_cry.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal + Stress Heal + Torch",
+        "EffectsBitfield": "Heal, StressHeal, Torch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Zealous Vigil",
+        "SkillImage": "/images/heroes/crusader/spells/zealous_vigil.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Stress Heal, Prevents Nighttime Ambush",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Zealous Speech",
+        "SkillImage": "/images/heroes/crusader/spells/zealous_speech.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party Stress Heal + Stress Resist",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Stand Tall",
+        "SkillImage": "/images/heroes/crusader/spells/stand_tall.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Stress Heal + Remove Mortality Debuffs",
+        "EffectsBitfield": "StressHeal, Buff, Cure",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Unshakeable Leader",
+        "SkillImage": "/images/heroes/crusader/spells/unshakeable_leader.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Stress Resist",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Plague Doctor",
+    "Portrait": "/images/heroes/plague_doctor/pd_hero.png",
+    "Sprite": "/images/heroes/plague_doctor/pd_sprite.webp",
+    "Role": "Support",
+    "Health": 22,
+    "Skills": [
+      {
+        "Name": "Noxious Blast",
+        "SkillImage": "/images/heroes/plague_doctor/spells/noxious_blast.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage + Blight",
+        "EffectsBitfield": "Damage, Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Plague Grenade",
+        "SkillImage": "/images/heroes/plague_doctor/spells/plague_grenade.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE Blight",
+        "EffectsBitfield": "Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Blinding Gas",
+        "SkillImage": "/images/heroes/plague_doctor/spells/blinding_gas.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE Stun",
+        "EffectsBitfield": "Stun",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Incision",
+        "SkillImage": "/images/heroes/plague_doctor/spells/incision.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage + Bleed",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Battlefield Medicine",
+        "SkillImage": "/images/heroes/plague_doctor/spells/battlefield_medicine.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal + Cure Bleed/Blight",
+        "EffectsBitfield": "Heal, Cure",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Emboldening Vapours",
+        "SkillImage": "/images/heroes/plague_doctor/spells/emboldening_vapours.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Damage Buff + SPD Buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Disorienting Blast",
+        "SkillImage": "/images/heroes/plague_doctor/spells/disorienting_blast.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Stun + Shuffle + Clear Corpses",
+        "EffectsBitfield": "Stun, Move, ClearCorpse",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Experimental Vapours",
+        "SkillImage": "/images/heroes/plague_doctor/spells/experimental_vapours.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Huge Heal on One Ally",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Leeches",
+        "SkillImage": "/images/heroes/plague_doctor/spells/leeches.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal + Cure Disease/Blight",
+        "EffectsBitfield": "Heal, Disease, Cure",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Self-Medicate",
+        "SkillImage": "/images/heroes/plague_doctor/spells/self-medicate.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Heal + Disease Resist",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "The Cure",
+        "SkillImage": "/images/heroes/plague_doctor/spells/the_cure.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Cure Disease on Self",
+        "EffectsBitfield": "Disease, Cure",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Highwayman",
+    "Portrait": "/images/heroes/highwayman/hwm-icon.webp",
+    "Sprite": "/images/heroes/highwayman/hwm-sprite.webp",
+    "Role": "Damage",
+    "Health": 23,
+    "Skills": [
+      {
+        "Name": "Wicked Slice",
+        "SkillImage": "/images/heroes/highwayman/spells/wicked_slice.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "High Melee Damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Pistol Shot",
+        "SkillImage": "/images/heroes/highwayman/spells/pistol_shot.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Ranged Damage",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Point Blank Shot",
+        "SkillImage": "/images/heroes/highwayman/spells/point_blank_shot.webp",
+        "CastablePositions": [1],
+        "Targets": [1],
+        "IsFriendly": false,
+        "Effects": "Massive Damage + Push Self Back 1",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Duelist's Advance",
+        "SkillImage": "/images/heroes/highwayman/spells/duelists_advance.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Damage + Move Forward 1 + Riposte",
+        "EffectsBitfield": "Damage, Move, Riposte",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Tracking Shot",
+        "SkillImage": "/images/heroes/highwayman/spells/tracking_shot.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Buff Damage/Crit + De-Stealth",
+        "EffectsBitfield": "Buff, DeStealth",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Grapeshot Blast",
+        "SkillImage": "/images/heroes/highwayman/spells/grapeshot_blast.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "AoE Damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Open Vein",
+        "SkillImage": "/images/heroes/highwayman/spells/open_vein.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage + Bleed + Debuff Speed",
+        "EffectsBitfield": "Damage, Bleed, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bandit's Sense",
+        "SkillImage": "/images/heroes/highwayman/spells/bandits_sense.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Prevents Nighttime Ambush",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Clean Guns",
+        "SkillImage": "/images/heroes/highwayman/spells/clean_guns.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff Ranged Damage and ACC",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Gallows Humor",
+        "SkillImage": "/images/heroes/highwayman/spells/gallows_humor.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Self: -25 Stress. Party: -20 Stress (75%) or +10 Stress (25%)",
+        "EffectsBitfield": "StressHeal, StressDamage",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Unparalleled Finesse",
+        "SkillImage": "/images/heroes/highwayman/spells/unparalleled_finesse.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "+10 DODGE, +2 SPD, +20% Melee DMG, +10 Melee ACC (4 Battles)",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Vestal",
+    "Portrait": "/images/heroes/vestal/vestal-icon.webp",
+    "Sprite": "/images/heroes/vestal/vestal-sprite.webp",
+    "Role": "Healer",
+    "Health": 24,
+    "Skills": [
+      {
+        "Name": "Mace Bash",
+        "SkillImage": "/images/heroes/vestal/spells/mace_bash.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Melee Damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Judgement",
+        "SkillImage": "/images/heroes/vestal/spells/judgement.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Damage + Self Heal",
+        "EffectsBitfield": "Damage, Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Dazzling Light",
+        "SkillImage": "/images/heroes/vestal/spells/dazzling_light.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Stun + Torch",
+        "EffectsBitfield": "Stun, Torch, Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Divine Grace",
+        "SkillImage": "/images/heroes/vestal/spells/divine_grace.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Strong Single Target Heal",
+        "EffectsBitfield": "Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Divine Comfort",
+        "SkillImage": "/images/heroes/vestal/spells/divine_comfort.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party AoE Heal",
+        "EffectsBitfield": "Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Illumination",
+        "SkillImage": "/images/heroes/vestal/spells/illumination.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "De-Stealth + Debuff Dodge + Torch",
+        "EffectsBitfield": "DeStealth, Debuff, Torch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Hand of Light",
+        "SkillImage": "/images/heroes/vestal/spells/hand_of_light.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Damage + Buff Self Damage/ACC",
+        "EffectsBitfield": "Damage, Buff",
+        "BonusAgainst": "Unholy",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Sanctuary",
+        "SkillImage": "/images/heroes/vestal/spells/sanctuary.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Prevents Nighttime Ambush + Heal",
+        "EffectsBitfield": "Buff, Heal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Bless",
+        "SkillImage": "/images/heroes/vestal/spells/bless.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Buff ACC and Dodge",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Chant",
+        "SkillImage": "/images/heroes/vestal/spells/chant.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Target: -15 Stress (-5 if not religious), -20% Stress Resist (-10% if not religious)",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Pray",
+        "SkillImage": "/images/heroes/vestal/spells/pray.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party: -15 Stress (-5 if not religious), +15% PROT (+5% if not religious)",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      }
+    ]
+  }
+]

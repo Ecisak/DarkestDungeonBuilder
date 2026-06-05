@@ -15,7 +15,7 @@ public class Team
         { 3, null }, 
         { 4, null }
     };
-    
+    public string? CurrentLocationName { get; set; }
     public AssignResult TryAssignHero(Hero newHero, int targetSlotKey)
     {
         // slot is empty
@@ -51,5 +51,18 @@ public class Team
     public void ForceReplaceHero(Hero newHero, int targetSlotKey)
     {
         Slots[targetSlotKey] = newHero.Clone();
+    }
+    
+    public void RemoveHero(int slotKey)
+    {
+        Slots[slotKey] = null;
+    }
+    
+    public void ClearAll()
+    {
+        foreach (var key in Slots.Keys.ToList())
+        {
+            Slots[key] = null;
+        }
     }
 }

@@ -20,7 +20,7 @@ public class WarrensStrategy : ILocationStrategy
         
         var hasCure = team.Slots.Values
             .Where(h => h != null)
-            .Any(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Disease)));
+            .Any(h => h!.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Cure)));
         if (!hasCure)
         {
             warnings.Add("Warrens has high disease rates. Your team has no cure skills.");

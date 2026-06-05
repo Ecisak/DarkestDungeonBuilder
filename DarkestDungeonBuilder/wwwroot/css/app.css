@@ -1,4 +1,22 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+:root {
+    --dd-bg-main: #0d0d0d;
+    --dd-bg-deep: #0a0a0a;
+    --dd-bg-panel: #140202;
+    --dd-border-primary: #5a1010;
+    --dd-border-secondary: #3a0a0a;
+    --dd-title: #e5d1a5;
+    --dd-text: #cdb48d;
+    --dd-text-soft: #c9b08b;
+    --dd-text-muted: #9e8a70;
+    --dd-accent: #a84b4b;
+    --dd-danger: #800a0a;
+    --dd-success-bg: #1b4b1b;
+    --dd-success-text: #a5d1a5;
+    --dd-success-border: #2b5b2b;
+    --dd-warning-bg: #5a3b10;
+    --dd-warning-text: #d1b4a5;
+    --dd-warning-border: #6a4b20;
+}
 
 *,
 html,
@@ -11,9 +29,10 @@ body,
     font-weight: 700;
     font-style: normal;
 }
+
 body {
-    background-color: #0d0d0d !important;
-    color: #c9b08b !important;
+    background-color: var(--dd-bg-main) !important;
+    color: var(--dd-text-soft) !important;
 }
 
 h1,
@@ -23,9 +42,10 @@ h4,
 h5,
 h6 {
     font-family: "Cinzel Decorative", serif !important;
-    color: #e5d1a5;
+    color: var(--dd-title);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
+
 h1:focus {
     outline: none;
 }
@@ -149,4 +169,448 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder,
 .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.dd-fullscreen {
+    min-height: 100vh;
+}
+
+.dd-btn-primary {
+    background-color: var(--dd-border-primary) !important;
+    color: var(--dd-text) !important;
+    font-family: "Cinzel", serif !important;
+}
+
+.dd-inline-action-button {
+    margin-left: 8px;
+}
+
+.dd-import-wrapper {
+    position: relative;
+    display: inline-flex;
+}
+
+.dd-file-overlay-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.dd-title-inline,
+.dd-destination-title,
+.dd-advisor-title,
+.dd-dialog-title,
+.dd-rarity-title {
+    color: var(--dd-title);
+    font-family: "Cinzel Decorative", serif !important;
+}
+
+.dd-text-heading,
+.dd-dialog-section-title,
+.dd-trinket-name {
+    color: var(--dd-text) !important;
+    font-family: "Cinzel", serif !important;
+}
+
+.dd-text-muted,
+.dd-role-text,
+.dd-slot-rank-label,
+.dd-slot-empty-text,
+.dd-advisor-caption,
+.dd-location-body,
+.dd-trinket-effects,
+.dd-cancel-button {
+    color: var(--dd-text-muted) !important;
+}
+
+.dd-text-muted-italic {
+    color: var(--dd-text-muted) !important;
+    font-style: italic;
+}
+
+.dd-roster-table,
+.dd-advisor-panel {
+    background-color: var(--dd-bg-main);
+    border: 1px solid var(--dd-border-secondary);
+}
+
+.dd-advisor-panel {
+    height: 100%;
+    border-width: 2px;
+    border-color: var(--dd-border-primary);
+}
+
+.dd-filter-select {
+    width: 220px;
+}
+
+.dd-filter-select,
+.dd-filter-select .mud-input,
+.dd-filter-select .mud-select-input,
+.dd-filter-select .mud-input-slot,
+.dd-input-text,
+.dd-input-text .mud-input,
+.dd-input-text .mud-input-slot,
+.dd-trinket-search,
+.dd-trinket-search .mud-input,
+.dd-trinket-search .mud-input-slot,
+.dd-sort-label {
+    color: var(--dd-text) !important;
+}
+
+.dd-drag-handle {
+    cursor: grab;
+}
+
+.dd-drag-ghost-img {
+    position: absolute;
+    z-index: -100;
+    opacity: 0.01;
+    pointer-events: none;
+}
+
+.dd-hero-name-strong,
+.dd-dialog-hero-name,
+.dd-location-name {
+    color: var(--dd-title);
+}
+
+.dd-advisor-graph-card {
+    background-color: var(--dd-bg-deep);
+    border: 1px solid var(--dd-border-secondary);
+}
+
+.dd-advisor-icon,
+.dd-location-label,
+.dd-rarity-icon,
+.dd-trinket-add-icon,
+.dd-slot-rank-number {
+    color: var(--dd-accent) !important;
+}
+
+.dd-success-alert {
+    background-color: var(--dd-success-bg) !important;
+    color: var(--dd-success-text) !important;
+    border: 1px solid var(--dd-success-border);
+}
+
+.dd-warning-alert {
+    background-color: var(--dd-warning-bg) !important;
+    color: var(--dd-warning-text) !important;
+    border: 1px solid var(--dd-warning-border);
+}
+
+.dd-location-card {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    background-color: var(--dd-bg-main);
+    border: 2px solid var(--dd-border-primary);
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.dd-location-banner {
+    width: 100%;
+    height: 180px;
+    background-image: var(--dd-location-image);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-bottom: 1px solid var(--dd-border-secondary);
+}
+
+.dd-location-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(13, 13, 13, 0) 50%,
+        rgba(13, 13, 13, 1) 100%
+    );
+}
+
+.dd-location-content {
+    margin-top: -40px;
+    z-index: 1;
+}
+
+.dd-location-name {
+    font-family: "Cinzel", serif !important;
+    text-shadow:
+        2px 2px 6px #000,
+        0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.dd-recommended-header {
+    color: var(--dd-text) !important;
+    border-bottom: 1px solid var(--dd-border-primary);
+    padding-bottom: 4px;
+}
+
+.dd-location-avatar {
+    border: 1px solid var(--dd-border-primary);
+}
+
+.dd-avatar-image-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dd-embark-button {
+    width: 80%;
+    font-weight: bold;
+}
+
+.dd-slot-empty,
+.dd-slot-occupied {
+    min-height: 500px;
+}
+
+.dd-slot-empty {
+    border: 2px dashed var(--dd-border-primary);
+    background-color: var(--dd-bg-deep);
+}
+
+.dd-slot-occupied {
+    background-color: var(--dd-bg-main);
+    border: 1px solid var(--dd-border-secondary);
+}
+
+.dd-slot-rank-number {
+    font-family: "Cinzel", serif !important;
+}
+
+.dd-slot-position-row {
+    height: 30px;
+}
+
+.dd-position-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--dd-border-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+}
+
+.dd-position-circle-inner {
+    width: var(--dd-position-size, 0px);
+    height: var(--dd-position-size, 0px);
+    border-radius: 50%;
+    background-color: var(--dd-accent);
+    opacity: var(--dd-position-opacity, 0.3);
+    transition: all 0.2s ease-in-out;
+}
+
+.dd-slot-name-wrap {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dd-slot-hero-name {
+    color: var(--dd-title) !important;
+    font-family: "Cinzel Decorative", serif !important;
+    white-space: nowrap;
+    font-size: var(--dd-hero-name-size, 1.25rem);
+}
+
+.dd-slot-sprite-wrap {
+    height: 320px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.8));
+}
+
+.dd-slot-sprite {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: bottom;
+}
+
+.dd-trinket-slot {
+    border-color: var(--dd-border-primary) !important;
+    background: var(--dd-bg-deep);
+}
+
+.dd-skill-column {
+    max-width: 120px;
+}
+
+.dd-tooltip-separator {
+    color: var(--dd-text) !important;
+}
+
+.dd-delete-button {
+    background-color: var(--dd-danger) !important;
+    color: #fff !important;
+}
+
+.dd-edit-button {
+    background-color: var(--dd-border-primary) !important;
+    color: var(--dd-text) !important;
+}
+
+.dd-skill-toggle {
+    transition:
+        filter 0.3s,
+        opacity 0.3s;
+}
+
+.dd-skill-toggle-selected {
+    filter: none;
+    opacity: 1;
+}
+
+.dd-skill-toggle-unselected {
+    filter: grayscale(100%);
+    opacity: 0.4;
+}
+
+.dd-tree-fullwidth {
+    width: 100%;
+}
+
+.dd-trinket-item {
+    cursor: pointer;
+}
+
+.dd-trinket-item-disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.dd-equipped-note {
+    color: var(--dd-accent) !important;
+}
+
+.dd-synergy-panel {
+    padding: 1rem;
+}
+
+.dd-synergy-header-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.dd-synergy-caption {
+    display: block;
+    margin-bottom: 0.85rem;
+    color: var(--dd-text-muted) !important;
+}
+
+.dd-synergy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.dd-synergy-metric-row {
+    padding: 0.55rem 0.65rem;
+    border: 1px solid rgba(90, 16, 16, 0.55);
+    background: rgba(10, 10, 10, 0.45);
+    border-radius: 6px;
+}
+
+.dd-synergy-metric-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.45rem;
+}
+
+.dd-synergy-metric-title {
+    color: var(--dd-title) !important;
+    font-family: "Cinzel", serif !important;
+}
+
+.dd-synergy-metric-status {
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+}
+
+.dd-synergy-good {
+    color: #86b38f !important;
+}
+
+.dd-synergy-adequate {
+    color: #cdb48d !important;
+}
+
+.dd-synergy-weak {
+    color: #c7886e !important;
+}
+
+.dd-synergy-side {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.dd-synergy-side + .dd-synergy-side {
+    margin-top: 0.35rem;
+}
+
+.dd-synergy-side-label {
+    width: 3rem;
+    flex-shrink: 0;
+    color: var(--dd-text-muted) !important;
+}
+
+.dd-synergy-pips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.dd-synergy-pip {
+    width: 0.95rem;
+    height: 0.95rem;
+    border-radius: 3px;
+    border: 1px solid rgba(90, 16, 16, 0.6);
+    background: rgba(30, 10, 10, 0.28);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.45);
+}
+
+.dd-synergy-pip-team {
+    background: linear-gradient(180deg, #cdb48d 0%, #8d7352 100%);
+    border-color: #cdb48d;
+    box-shadow: 0 0 6px rgba(205, 180, 141, 0.25);
+}
+
+.dd-synergy-pip-need {
+    background: linear-gradient(180deg, #a84b4b 0%, #6f2323 100%);
+    border-color: #a84b4b;
+    box-shadow: 0 0 6px rgba(168, 75, 75, 0.28);
+}
+
+.dd-synergy-pip-empty {
+    opacity: 0.55;
+}
+
+@media (max-width: 960px) {
+    .dd-synergy-side-label {
+        width: 2.5rem;
+    }
+
+    .dd-synergy-pip {
+        width: 0.85rem;
+        height: 0.85rem;
+    }
 }

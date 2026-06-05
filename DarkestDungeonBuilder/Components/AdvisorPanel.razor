@@ -1,0 +1,43 @@
+@using DarkestDungeonBuilder.Models
+
+<MudItem xs="12" md="3">
+    <MudPaper Class="pa-4 dd-advisor-panel">
+        <MudText Typo="Typo.h5" Class="mb-4 font-weight-bold dd-advisor-title">Advisor</MudText>
+        
+        <SynergyChart CurrentTeam="CurrentTeam" CurrentLocation="CurrentLocation" />
+        <MudText Typo="Typo.h6" Class="mb-2 font-weight-bold dd-text-heading">Warnings and tips:</MudText>
+
+        @switch (Warnings.Count)
+        {
+            case 0 when CurrentTeam.Slots.Values.Any(h => h != null):
+                <MudAlert Severity="Severity.Success" Variant="Variant.Filled" Class="dd-success-alert">
+                    Looks good!
+                </MudAlert>
+                break;
+            case 0:
+                <MudText Typo="Typo.body2" Class="dd-text-muted-italic">Add heroes to start the analysis.</MudText>
+                break;
+            default:
+            {
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var warning in Warnings)
+                    {
+                        <MudAlert Severity="Severity.Warning" Dense="true" Icon="@Icons.Material.Filled.WarningAmber" Class="dd-warning-alert">
+                            @warning
+                        </MudAlert>
+                    }
+                </div>
+                break;
+            }
+        }
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter, EditorRequired]
+    public List<string> Warnings { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public Team CurrentTeam { get; set; } = null!;
+    [Parameter] public DungeonLocation? CurrentLocation { get; set; }
+}

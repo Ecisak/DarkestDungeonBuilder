@@ -1,4 +1,6 @@
-namespace DarkestDungeonBuilder.Models;
+using DarkestDungeonBuilder.Models;
+
+namespace DarkestDungeonBuilder.Services;
 
 public interface ILocationStrategy
 {

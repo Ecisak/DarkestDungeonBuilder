@@ -1,0 +1,30 @@
+[
+  {
+    "Name": "Ruins",
+    "Image": "/images/locations/ruins.webp",
+    "Strengths": "High Bleed Resist, Heavy Stress Damage",
+    "Weaknesses": "Vulnerable to Blight, Weak to +Unholy Damage",
+    "DominantEnemyTypes": "Unholy, Human"
+  },
+  {
+    "Name": "Warrens",
+    "Image": "/images/locations/warrens.webp",
+    "Strengths": "High Blight Resist, High Disease Chance",
+    "Weaknesses": "Vulnerable to Bleed, Weak to +Beast Damage",
+    "DominantEnemyTypes": "Beast, Human"
+  },
+  {
+    "Name": "Weald",
+    "Image": "/images/locations/weald.webp",
+    "Strengths": "High Blight Resist, High Enemy Dodge & PROT",
+    "Weaknesses": "Vulnerable to Bleed, Weak to +Human Damage",
+    "DominantEnemyTypes": "Eldritch, Beast, Human"
+  },
+  {
+    "Name": "Cove",
+    "Image": "/images/locations/cove.webp",
+    "Strengths": "High Bleed Resist, Heavy Enemy Damage & PROT",
+    "Weaknesses": "Vulnerable to Blight, Weak to +Eldritch Damage",
+    "DominantEnemyTypes": "Eldritch"
+  }
+]

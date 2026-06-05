@@ -4,5 +4,5 @@ namespace DarkestDungeonBuilder.Services;
 
 public interface IDungeonLocationDatabase
 {
-    List<DungeonLocation> GetInitialDungeonLocations();
+    Task<List<DungeonLocation>> GetLocationsAsync();
 }

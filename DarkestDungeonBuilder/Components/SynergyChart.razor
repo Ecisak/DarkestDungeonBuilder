@@ -1,0 +1,134 @@
+@using DarkestDungeonBuilder.Models
+
+<div class="mb-6 rounded dd-advisor-graph-card dd-synergy-panel">
+    <div class="dd-synergy-header-row">
+        <MudIcon Icon="@Icons.Material.Filled.AutoGraph" Class="dd-advisor-icon" />
+        <MudText Typo="Typo.subtitle2" Class="dd-text-heading">Team coverage</MudText>
+    </div>
+
+    <MudText Typo="Typo.caption" Class="dd-synergy-caption">@GetCoverageCaption()</MudText>
+
+    @if (_metrics.Count == 0)
+    {
+        <MudText Typo="Typo.caption" Class="dd-text-muted-italic">Add heroes to see the team capability breakdown.</MudText>
+    }
+    else
+    {
+        <div class="dd-synergy-list">
+            @foreach (var metric in _metrics)
+            {
+                <div class="dd-synergy-metric-row">
+                    <div class="dd-synergy-metric-title-row">
+                        <MudText Typo="Typo.caption" Class="dd-synergy-metric-title">@metric.Label</MudText>
+                        <MudText Typo="Typo.caption" Class="@($"dd-synergy-metric-status {GetMetricStatusClass(metric)}")">
+                            @GetMetricStatusText(metric)
+                        </MudText>
+                    </div>
+
+                    <div class="dd-synergy-side">
+                        <MudText Typo="Typo.caption" Class="dd-synergy-side-label">Team</MudText>
+                        <div class="dd-synergy-pips">
+                            @for (var i = 0; i < MaxPips; i++)
+                            {
+                                <span class="@(i < metric.TeamScore ? "dd-synergy-pip dd-synergy-pip-team" : "dd-synergy-pip dd-synergy-pip-empty")"></span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="dd-synergy-side">
+                        <MudText Typo="Typo.caption" Class="dd-synergy-side-label">Need</MudText>
+                        <div class="dd-synergy-pips">
+                            @for (var i = 0; i < MaxPips; i++)
+                            {
+                                <span class="@(i < metric.NeedScore ? "dd-synergy-pip dd-synergy-pip-need" : "dd-synergy-pip dd-synergy-pip-empty")"></span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private const int MaxPips = 5;
+
+    [Parameter, EditorRequired] public Team CurrentTeam { get; set; } = null!;
+    [Parameter] public DungeonLocation? CurrentLocation { get; set; }
+
+    private readonly List<MetricDisplay> _metrics = [];
+
+    private sealed record MetricDisplay(string Label, int TeamScore, int NeedScore);
+
+    protected override void OnParametersSet()
+    {
+        CalculateMetrics();
+    }
+
+    private void CalculateMetrics()
+    {
+        _metrics.Clear();
+
+        var selectedSkills = CurrentTeam.Slots.Values
+            .Where(h => h != null)
+            .SelectMany(h => h!.SelectedSkills)
+            .ToList();
+
+        var locationNeed = GetLocationNeeds(CurrentLocation?.Name);
+
+        _metrics.Add(new MetricDisplay("Healing", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Heal))), locationNeed.Healing));
+        _metrics.Add(new MetricDisplay("Stress Relief", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.StressHeal))), locationNeed.StressRelief));
+        _metrics.Add(new MetricDisplay("Control", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Stun) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Move) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Guard))), locationNeed.Control));
+        _metrics.Add(new MetricDisplay("Damage Over Time", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight))), locationNeed.DamageOverTime));
+        _metrics.Add(new MetricDisplay("Utility", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.Mark) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Cure) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Buff) || s.EffectsBitfield.HasFlag(Skill.SkillEffect.Debuff))), locationNeed.Utility));
+        _metrics.Add(new MetricDisplay("Armor Piercing", CountHeroesWithCapability(h => h.SelectedSkills.Any(s => s.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing))), locationNeed.ArmorPiercing));
+    }
+
+    private int CountHeroesWithCapability(Func<Hero, bool> predicate)
+    {
+        var count = CurrentTeam.Slots.Values
+            .Where(h => h != null)
+            .Select(h => h!)
+            .Count(predicate);
+
+        return Clamp(count);
+    }
+
+    private static int Clamp(int value) => Math.Min(MaxPips, value);
+
+    private static string GetMetricStatusClass(MetricDisplay metric) => metric.TeamScore >= metric.NeedScore + 1
+        ? "dd-synergy-good"
+        : metric.TeamScore >= metric.NeedScore
+            ? "dd-synergy-adequate"
+            : "dd-synergy-weak";
+
+    private static string GetMetricStatusText(MetricDisplay metric) => metric.TeamScore >= metric.NeedScore + 1
+        ? "Strong"
+        : metric.TeamScore >= metric.NeedScore
+            ? "Adequate"
+            : "Weak";
+
+    private string GetCoverageCaption() => CurrentLocation == null
+        ? "Current team capability overview."
+        : $"Current team compared to {CurrentLocation.Name} requirements.";
+
+    private static LocationNeedProfile GetLocationNeeds(string? locationName)
+    {
+        return locationName?.ToLowerInvariant() switch
+        {
+            "ruins" => new LocationNeedProfile(2, 2, 3, 1, 2, 1),
+            "warrens" => new LocationNeedProfile(2, 1, 3, 3, 2, 1),
+            "cove" => new LocationNeedProfile(2, 1, 3, 2, 2, 3),
+            "weald" => new LocationNeedProfile(2, 1, 2, 3, 3, 1),
+            _ => new LocationNeedProfile(1, 1, 1, 1, 1, 1)
+        };
+    }
+
+    private sealed record LocationNeedProfile(
+        int Healing,
+        int StressRelief,
+        int Control,
+        int DamageOverTime,
+        int Utility,
+        int ArmorPiercing);
+}
