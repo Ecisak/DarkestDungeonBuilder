@@ -1,7 +1,7 @@
 @using DarkestDungeonBuilder.Models
 @using DarkestDungeonBuilder.Services
 
-<MudItem xs="12" md="3">
+<MudItem xs="12" md="3" Class="dd-advisor-column">
     <MudPaper Class="pa-4 dd-advisor-panel">
         <MudText Typo="Typo.h5" Class="mb-4 font-weight-bold dd-advisor-title">Advisor</MudText>
 
@@ -9,7 +9,7 @@
 
         <MudText Typo="Typo.h6" Class="mb-2 font-weight-bold dd-text-heading">Warnings and tips:</MudText>
 
-        @if (!CurrentTeam.Slots.Values.Any(h => h != null))
+        @if (CurrentTeam.Slots.Values.All(h => h == null))
         {
             <MudText Typo="Typo.body2" Class="dd-text-muted-italic">Add heroes to start the analysis.</MudText>
         }

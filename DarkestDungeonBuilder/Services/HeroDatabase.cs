@@ -5,15 +5,8 @@ using DarkestDungeonBuilder.Models;
 
 namespace DarkestDungeonBuilder.Services;
 
-public class HeroDatabase : IHeroDatabase
+public class HeroDatabase(HttpClient http) : IHeroDatabase
 {
-    private readonly HttpClient _http;
-
-    public HeroDatabase(HttpClient http)
-    {
-        _http = http;
-    }
-
     public async Task<List<Hero>> GetHeroesAsync()
     {
         var options = new JsonSerializerOptions
@@ -21,7 +14,7 @@ public class HeroDatabase : IHeroDatabase
             Converters = { new JsonStringEnumConverter() }
         };
 
-        var heroes = await _http.GetFromJsonAsync<List<Hero>>("data/heroes.json", options);
+        var heroes = await http.GetFromJsonAsync<List<Hero>>("data/heroes.json", options);
         return heroes ?? new List<Hero>();
     }
 }

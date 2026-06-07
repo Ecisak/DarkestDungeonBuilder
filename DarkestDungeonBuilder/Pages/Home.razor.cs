@@ -32,37 +32,74 @@ public partial class Home : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadGameDataAsync();
+        var restoredSavedState = await RestoreBuilderStateAsync();
+
+        UpdateAdvisor();
+
+        if (restoredSavedState)
+        {
+            Snackbar.Add("Restored previous team state.", Severity.Info);
+        }
+    }
+
+    private async Task LoadGameDataAsync()
+    {
         _roster = await HeroDb.GetHeroesAsync();
         _locations = await LocationDb.GetLocationsAsync();
         _trinkets = await TrinketDb.GetTrinketsAsync();
         GetHeroesForLocation();
+    }
 
+    private async Task<bool> RestoreBuilderStateAsync()
+    {
+        var restoredSavedState = await RestoreTeamStateAsync();
+        restoredSavedState |= await RestoreSelectedLocationAsync();
+        return restoredSavedState;
+    }
 
+    private async Task<bool> RestoreTeamStateAsync()
+    {
         try
         {
-            _currentTeam = await LocalStorage.GetItemAsync<Team>("currentTeam") ?? new Team();
+            var storedTeam = await LocalStorage.GetItemAsync<Team>("currentTeam");
+            if (storedTeam != null && TryBuildImportedTeam(storedTeam, out var normalizedStoredTeam, out _, out _))
+            {
+                _currentTeam = normalizedStoredTeam;
+                return _currentTeam.Slots.Values.Any(h => h != null) || !string.IsNullOrWhiteSpace(_currentTeam.CurrentLocationName);
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Cannot load team from LocalStorage: {ex.Message}");
-            _currentTeam = new Team();
         }
 
+        _currentTeam = new Team();
+        return false;
+    }
+
+    private async Task<bool> RestoreSelectedLocationAsync()
+    {
         if (!string.IsNullOrEmpty(_currentTeam.CurrentLocationName))
         {
             _selectedLocation = _locations.FirstOrDefault(l => l.Name == _currentTeam.CurrentLocationName);
-        }
-        else
-        {
-            var savedLocationName = await LocalStorage.GetItemAsync<string>("savedLocation");
-            if (!string.IsNullOrEmpty(savedLocationName))
-            {
-                _selectedLocation = _locations.FirstOrDefault(l => l.Name == savedLocationName);
-                _currentTeam.CurrentLocationName = savedLocationName;
-            }
+            return _selectedLocation != null;
         }
 
-        UpdateAdvisor();
+        var savedLocationName = await LocalStorage.GetItemAsync<string>("savedLocation");
+        if (string.IsNullOrEmpty(savedLocationName))
+        {
+            return false;
+        }
+
+        _selectedLocation = _locations.FirstOrDefault(l => l.Name == savedLocationName);
+        if (_selectedLocation == null)
+        {
+            return false;
+        }
+
+        _currentTeam.CurrentLocationName = savedLocationName;
+        return true;
     }
     private async Task AddHero(Hero clickedHero, int slotKey)
     {
@@ -78,8 +115,9 @@ public partial class Home : ComponentBase
         _selectedLocation = loc;
         _currentTeam.CurrentLocationName = loc.Name;
         await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
-        await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
+        await SaveTeam();
         UpdateAdvisor();
+        Snackbar.Add($"Location set to {_selectedLocation.Name}.", Severity.Info);
     }
 
     private async Task ResetBuilderAsync()
@@ -97,17 +135,20 @@ public partial class Home : ComponentBase
         }
 
         _currentTeam.ClearAll();
-
+        _currentTeam.CurrentLocationName = null;
         _selectedLocation = null;
 
         await SaveTeam();
         await LocalStorage.RemoveItemAsync("savedLocation");
 
         UpdateAdvisor();
+        Snackbar.Add("Builder reset successfully.", Severity.Success);
     }
 
     private async Task ExportTeamAsync()
     {
+        _currentTeam.SaveVersion = Team.CurrentSaveVersion;
+
         // setup formating
         var options = new JsonSerializerOptions { WriteIndented = true };
 
@@ -119,6 +160,7 @@ public partial class Home : ComponentBase
 
         // downloads file
         await JsRuntime.InvokeVoidAsync("downloadJsonFile", fileName, jsonString);
+        Snackbar.Add($"Team exported to {fileName}.", Severity.Success);
     }
 
     private async Task ImportTeamAsync(InputFileChangeEventArgs e)
@@ -140,24 +182,38 @@ public partial class Home : ComponentBase
             // deserialize JSON back to Team object
             var importedTeam = await JsonSerializer.DeserializeAsync<Team>(stream, options);
 
-            if (importedTeam != null)
+            if (!TryBuildImportedTeam(importedTeam, out var normalizedTeam, out var validationMessage, out var validationWarnings))
             {
-                // overwrite current team
-                _currentTeam = importedTeam;
-
-                _selectedLocation = _locations.FirstOrDefault(l => l.Name == _currentTeam.CurrentLocationName);
-
-                await SaveTeam();
-
-                if (_selectedLocation != null)
-                {
-                    await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
-                }
-
-                UpdateAdvisor();
-                Snackbar.Add("Import successful!", Severity.Success);
-                StateHasChanged();
+                await DialogService.ShowMessageBoxAsync("Import Error", validationMessage);
+                return;
             }
+
+            _currentTeam = normalizedTeam;
+            _selectedLocation = _locations.FirstOrDefault(l => l.Name == _currentTeam.CurrentLocationName);
+
+            await SaveTeam();
+
+            if (_selectedLocation != null)
+            {
+                await LocalStorage.SetItemAsync("savedLocation", _selectedLocation.Name);
+            }
+            else
+            {
+                await LocalStorage.RemoveItemAsync("savedLocation");
+            }
+
+            if (validationWarnings.Count > 0)
+            {
+                await DialogService.ShowMessageBoxAsync("Import Warnings", string.Join("\n", validationWarnings));
+                Snackbar.Add($"Import completed with {validationWarnings.Count} warning(s).", Severity.Warning);
+            }
+            else
+            {
+                Snackbar.Add("Import successful!", Severity.Success);
+            }
+
+            UpdateAdvisor();
+            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -172,9 +228,11 @@ public partial class Home : ComponentBase
     private async Task ChangeLocation()
     {
         _selectedLocation = null;
+        _currentTeam.CurrentLocationName = null;
         await SaveTeam();
         await LocalStorage.RemoveItemAsync("savedLocation");
-        _currentTeam.CurrentLocationName = null;
+        UpdateAdvisor();
+        Snackbar.Add("Location cleared. Choose a new destination.", Severity.Info);
         StateHasChanged();
     }
 
@@ -184,6 +242,12 @@ public partial class Home : ComponentBase
         if (heroToAssign == null) return;
 
         var result = _currentTeam.TryAssignHero(heroToAssign, targetSlotKey);
+
+        if (result == AssignResult.InvalidSlot)
+        {
+            Snackbar.Add("Invalid team slot selected.", Severity.Error);
+            return;
+        }
 
         // if full, pop modal
         if (result == AssignResult.RequiresReplacement)
@@ -221,6 +285,7 @@ public partial class Home : ComponentBase
 
     private async Task SaveTeam()
     {
+        _currentTeam.SaveVersion = Team.CurrentSaveVersion;
         await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
     }
 
@@ -244,14 +309,20 @@ public partial class Home : ComponentBase
 
     private async Task HandleDrop(int targetSlotKey)
     {
-        // Přetahování nového hrdiny z Rosteru
+        if (!Team.IsValidSlotKey(targetSlotKey))
+        {
+            Snackbar.Add("Invalid team slot selected.", Severity.Error);
+            return;
+        }
+
+        // dargging new hero to the roster
         if (_heroToAssign != null)
         {
             await AssignHeroToSlotAsync(_heroToAssign, targetSlotKey);
             _heroToAssign = null;
         }
-        // Prohazování dvou hrdinů už existujících v týmu
-        else if (_draggedSlotKey.HasValue && _draggedSlotKey != targetSlotKey)
+        // swapping 2 already existing heroes
+        else if (_draggedSlotKey.HasValue && _draggedSlotKey != targetSlotKey && Team.IsValidSlotKey(_draggedSlotKey.Value))
         {
             var sourceHero = _currentTeam.Slots[_draggedSlotKey.Value];
             var targetHero = _currentTeam.Slots[targetSlotKey];
@@ -270,8 +341,7 @@ public partial class Home : ComponentBase
     private async Task OpenDialogAsync(Hero hero)
     {
         var parameters = new DialogParameters<HeroDetailDialog> { { x => x.Hero, hero } };
-
-        // Tady už je opravená ta mezera z Fáze 1
+        
         var dialog = await DialogService.ShowAsync<HeroDetailDialog>($"Hero setup of {hero.Name}", parameters);
 
         var result = await dialog.Result;
@@ -299,9 +369,245 @@ public partial class Home : ComponentBase
         if (result == true)
         {
             _currentTeam.RemoveHero(slotKey);
+            await SaveTeam();
+            UpdateAdvisor();
+            Snackbar.Add($"Removed hero from rank {slotKey}.", Severity.Info);
         }
-        await SaveTeam();
-        UpdateAdvisor();
+    }
+
+    private bool TryBuildImportedTeam(Team? importedTeam, out Team normalizedTeam, out string validationMessage, out List<string> validationWarnings)
+    {
+        normalizedTeam = new Team();
+        validationMessage = string.Empty;
+        validationWarnings = [];
+
+        if (!ValidateImportedTeam(importedTeam, out validationMessage, validationWarnings))
+        {
+            return false;
+        }
+
+        if (!BuildImportedSlots(importedTeam!, out var normalizedSlots, out validationMessage, validationWarnings))
+        {
+            return false;
+        }
+
+        if (!ResolveImportedLocation(importedTeam!.CurrentLocationName, out var normalizedLocationName, out validationMessage))
+        {
+            return false;
+        }
+
+        normalizedTeam = new Team
+        {
+            SaveVersion = Team.CurrentSaveVersion,
+            Slots = normalizedSlots,
+            CurrentLocationName = normalizedLocationName
+        };
+
+        return true;
+    }
+
+    private bool ValidateImportedTeam(Team? importedTeam, out string validationMessage, List<string> validationWarnings)
+    {
+        validationMessage = string.Empty;
+
+        if (importedTeam == null)
+        {
+            validationMessage = "The selected file does not contain a valid team.";
+            return false;
+        }
+
+        if (importedTeam.SaveVersion > Team.CurrentSaveVersion)
+        {
+            validationMessage = $"This save file uses version {importedTeam.SaveVersion}, but the app supports up to version {Team.CurrentSaveVersion}.";
+            return false;
+        }
+
+        if (importedTeam.SaveVersion <= 0)
+        {
+            validationWarnings.Add("Legacy save format detected. The team was upgraded to the current save version.");
+        }
+
+        if (importedTeam.Slots == null)
+        {
+            validationMessage = "The imported file is missing team slot data.";
+            return false;
+        }
+
+        var invalidSlotKeys = importedTeam.Slots.Keys.Where(key => !Team.IsValidSlotKey(key)).OrderBy(key => key).ToList();
+        if (invalidSlotKeys.Count > 0)
+        {
+            validationWarnings.Add($"Ignored invalid slot keys in save file: {string.Join(", ", invalidSlotKeys)}.");
+        }
+
+        return true;
+    }
+
+    private bool BuildImportedSlots(Team importedTeam, out Dictionary<int, Hero?> normalizedSlots, out string validationMessage, List<string> validationWarnings)
+    {
+        normalizedSlots = CreateEmptySlots();
+        validationMessage = string.Empty;
+
+        foreach (var slotKey in normalizedSlots.Keys.ToList())
+        {
+            if (!importedTeam.Slots!.TryGetValue(slotKey, out var importedHero) || importedHero == null)
+            {
+                continue;
+            }
+
+            if (!BuildImportedHero(importedHero, slotKey, out var normalizedHero, out validationMessage, validationWarnings))
+            {
+                return false;
+            }
+
+            normalizedSlots[slotKey] = normalizedHero;
+        }
+
+        return true;
+    }
+
+    private static Dictionary<int, Hero?> CreateEmptySlots() => new()
+    {
+        [1] = null,
+        [2] = null,
+        [3] = null,
+        [4] = null
+    };
+
+    private bool ResolveImportedLocation(string? importedLocationName, out string? normalizedLocationName, out string validationMessage)
+    {
+        validationMessage = string.Empty;
+        normalizedLocationName = null;
+
+        if (string.IsNullOrWhiteSpace(importedLocationName))
+        {
+            return true;
+        }
+
+        var matchedLocation = _locations.FirstOrDefault(l =>
+            string.Equals(l.Name, importedLocationName, StringComparison.OrdinalIgnoreCase));
+
+        if (matchedLocation == null)
+        {
+            validationMessage = $"Unknown location '{importedLocationName}' in imported file.";
+            return false;
+        }
+
+        normalizedLocationName = matchedLocation.Name;
+        return true;
+    }
+
+    private bool BuildImportedHero(Hero importedHero, int slotKey, out Hero normalizedHero, out string validationMessage, List<string> validationWarnings)
+    {
+        validationMessage = string.Empty;
+        normalizedHero = null!;
+
+        if (!TryFindRosterHero(importedHero.Name, out var rosterHero))
+        {
+            validationMessage = $"Unknown hero '{importedHero.Name}' found in slot {slotKey}.";
+            return false;
+        }
+
+        normalizedHero = rosterHero.Clone();
+        ApplyImportedSelectedSkills(importedHero, normalizedHero, slotKey, validationWarnings);
+        ApplyImportedTrinkets(importedHero, normalizedHero, rosterHero, slotKey, validationWarnings);
+        return true;
+    }
+
+    private bool TryFindRosterHero(string heroName, out Hero hero)
+    {
+        hero = _roster.FirstOrDefault(h => string.Equals(h.Name, heroName, StringComparison.OrdinalIgnoreCase))!;
+        return hero != null;
+    }
+
+    private void ApplyImportedSelectedSkills(Hero importedHero, Hero normalizedHero, int slotKey, List<string> validationWarnings)
+    {
+        var importedSelectedSkills = importedHero.SelectedSkills?
+            .Where(s => s != null)
+            .ToList() ?? [];
+
+        var selectedSkillNames = importedSelectedSkills
+            .Select(s => s.Name)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var category in Enum.GetValues<Skill.SkillCategory>())
+        {
+            var categoryNames = selectedSkillNames
+                .Where(name => importedSelectedSkills.Any(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase) && s.Category == category))
+                .ToList();
+
+            if (categoryNames.Count > 4)
+            {
+                validationWarnings.Add($"{normalizedHero.Name} in slot {slotKey} had more than 4 {category.ToString().ToLowerInvariant()} skills. Extra skills were ignored.");
+            }
+
+            foreach (var skillName in categoryNames.Take(4))
+            {
+                var canonicalSkill = normalizedHero.Skills.FirstOrDefault(s =>
+                    s.Category == category && string.Equals(s.Name, skillName, StringComparison.OrdinalIgnoreCase));
+
+                if (canonicalSkill == null)
+                {
+                    validationWarnings.Add($"Ignored unknown skill '{skillName}' on {normalizedHero.Name} in slot {slotKey}.");
+                    continue;
+                }
+
+                normalizedHero.SelectedSkills.Add(canonicalSkill);
+            }
+        }
+    }
+
+    private void ApplyImportedTrinkets(Hero importedHero, Hero normalizedHero, Hero rosterHero, int slotKey, List<string> validationWarnings)
+    {
+        var normalizedTrinkets = new Trinket?[2];
+        var equippedTrinketNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var importedTrinkets = importedHero.EquippedTrinkets ?? [];
+
+        if (importedTrinkets.Length > 2)
+        {
+            validationWarnings.Add($"{rosterHero.Name} in slot {slotKey} had more than 2 trinket slots in the imported file. Extra slots were ignored.");
+        }
+
+        for (int i = 0; i < Math.Min(2, importedTrinkets.Length); i++)
+        {
+            var canonicalTrinket = ResolveImportedTrinket(importedTrinkets[i], rosterHero, equippedTrinketNames, slotKey, validationWarnings);
+            if (canonicalTrinket != null)
+            {
+                normalizedTrinkets[i] = canonicalTrinket;
+            }
+        }
+
+        normalizedHero.EquippedTrinkets = normalizedTrinkets;
+    }
+
+    private Trinket? ResolveImportedTrinket(Trinket? importedTrinket, Hero rosterHero, HashSet<string> equippedTrinketNames, int slotKey, List<string> validationWarnings)
+    {
+        if (importedTrinket == null)
+        {
+            return null;
+        }
+
+        var canonicalTrinket = _trinkets.FirstOrDefault(t => string.Equals(t.Name, importedTrinket.Name, StringComparison.OrdinalIgnoreCase));
+        if (canonicalTrinket == null)
+        {
+            validationWarnings.Add($"Ignored unknown trinket '{importedTrinket.Name}' on {rosterHero.Name} in slot {slotKey}.");
+            return null;
+        }
+
+        if (!equippedTrinketNames.Add(canonicalTrinket.Name))
+        {
+            validationWarnings.Add($"Ignored duplicate trinket '{canonicalTrinket.Name}' on {rosterHero.Name} in slot {slotKey}.");
+            return null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(canonicalTrinket.ClassTrinket) &&
+            !string.Equals(canonicalTrinket.ClassTrinket, rosterHero.Name, StringComparison.OrdinalIgnoreCase))
+        {
+            validationWarnings.Add($"Ignored class trinket '{canonicalTrinket.Name}' on {rosterHero.Name} because it belongs to {canonicalTrinket.ClassTrinket}.");
+            return null;
+        }
+
+        return canonicalTrinket;
     }
 
     private void UpdateAdvisor()

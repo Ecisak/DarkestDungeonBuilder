@@ -38,7 +38,15 @@ else
         </div>
 
         @* hero info *@
-        <MudText Typo="Typo.subtitle2" Class="dd-slot-rank-label">Rank @SlotKey</MudText>
+        <div class="d-flex align-center gap-1">
+            <MudText Typo="Typo.subtitle2" Class="dd-slot-rank-label">Rank @SlotKey</MudText>
+            @if (HasIncompleteLoadout)
+            {
+                <MudTooltip Text="@LoadoutWarningText">
+                    <MudIcon Icon="@Icons.Material.Filled.WarningAmber" Size="Size.Small" Style="color: #d0a44c;" />
+                </MudTooltip>
+            }
+        </div>
         <div class="dd-slot-name-wrap">
             <MudText Typo="Typo.h6" Class="font-weight-bold dd-slot-hero-name" style="@($"--dd-hero-name-size: {Math.Min(1.25, 12.0 / Hero.Name.Length).ToString(System.Globalization.CultureInfo.InvariantCulture)}rem;")">@Hero.Name</MudText>
         </div>
@@ -147,6 +155,11 @@ else
     [Parameter] public List<Trinket> AvailableTrinkets { get; set; } = new();
 
     [Parameter] public EventCallback<int> OnDragStart { get; set; }
+
+    private int CombatSkillCount => Hero?.SelectedSkills.Count(s => s.Category == Skill.SkillCategory.Combat) ?? 0;
+    private int CampingSkillCount => Hero?.SelectedSkills.Count(s => s.Category == Skill.SkillCategory.Camping) ?? 0;
+    private bool HasIncompleteLoadout => Hero != null && (CombatSkillCount < 4 || CampingSkillCount < 4);
+    private string LoadoutWarningText => $"Incomplete loadout: {CombatSkillCount}/4 combat skills, {CampingSkillCount}/4 camping skills.";
 
     private async Task HandleDragStart() => await OnDragStart.InvokeAsync(SlotKey);
 

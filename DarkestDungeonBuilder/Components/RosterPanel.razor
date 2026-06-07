@@ -1,54 +1,55 @@
 @using DarkestDungeonBuilder.Models
 
-            <MudItem xs="12" md="3" ondragover="event.preventDefault();" @ondrop="@(() => OnDropToRoster.InvokeAsync())">
-                <MudText Typo="Typo.h5" Class="d-inline font-weight-bold dd-title-inline">@SelectedLocation.Name</MudText>
-                <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-inline-action-button" OnClick="@(OnChangeLocation)">
-                    Change
-                </MudButton>
-                <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-inline-action-button"
-                           OnClick="OnResetBuilder">
-                    Reset
-                </MudButton>
-                <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-inline-action-button"
-                           OnClick="OnExportTeam">
-                    Export Team
-                </MudButton>
+            <MudItem xs="12" md="3" Class="dd-roster-panel-column" ondragover="event.preventDefault();" @ondrop="@(() => OnDropToRoster.InvokeAsync())">
+                <MudText Typo="Typo.h5" Class="font-weight-bold dd-title-inline dd-roster-location-title">@SelectedLocation.Name</MudText>
+                <div class="dd-roster-actions">
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-roster-action-button" OnClick="@(OnChangeLocation)">
+                        Change
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-roster-action-button"
+                               OnClick="OnResetBuilder">
+                        Reset
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Class="dd-btn-primary dd-roster-action-button"
+                               OnClick="OnExportTeam">
+                        Export Team
+                    </MudButton>
+                </div>
 
                 <div class="d-flex justify-space-between align-end mb-2 mt-4 pb-1">
                     <MudText Typo="Typo.subtitle1" Class="dd-text-heading">Available Heroes</MudText>
                     <MudText Typo="Typo.caption" Class="dd-text-muted-italic">* Hold to drag</MudText>
                 </div>
 
-                <MudTable Items="@Roster"
-                          Filter="new Func<Hero,bool>(FilterHeroes)"
-                          Hover="true"
-                          Dense="true"
-                          Elevation="0"
-                          Class="dd-roster-table">
+                <div class="dd-roster-filter-row">
+                    <MudSelect T="Skill.SkillEffect?" @bind-Value="_selectedEffectFilter" Placeholder="All Abilities" AnchorOrigin="Origin.BottomLeft" Class="dd-filter-select">
+                        <MudSelectItem T="Skill.SkillEffect?" Value="@(null)">All Abilities</MudSelectItem>
 
-                    <ToolBarContent>
-                        <MudSpacer />
-
-                        <MudSelect T="Skill.SkillEffect?" @bind-Value="_selectedEffectFilter" Placeholder="All Abilities" AnchorOrigin="Origin.BottomLeft" Class="mr-4 mt-0 dd-filter-select">
-                            <MudSelectItem T="Skill.SkillEffect?" Value="@(null)">All Abilities</MudSelectItem>
-
-                            @foreach (Skill.SkillEffect effect in Enum.GetValues<Skill.SkillEffect>())
+                        @foreach (Skill.SkillEffect effect in Enum.GetValues<Skill.SkillEffect>())
+                        {
+                            if (effect != Skill.SkillEffect.None)
                             {
-                                if (effect != Skill.SkillEffect.None)
-                                {
-                                    <MudSelectItem T="Skill.SkillEffect?" Value="@effect">@effect.ToString()</MudSelectItem>
-                                }
+                                <MudSelectItem T="Skill.SkillEffect?" Value="@effect">@effect.ToString()</MudSelectItem>
                             }
-                        </MudSelect>
+                        }
+                    </MudSelect>
 
-                        <MudTextField @bind-Value="_searchString"
-                                      Placeholder="Search by name..."
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Search"
-                                      IconSize="Size.Small"
-                                      Class="mt-0 dd-input-text">
-                        </MudTextField>
-                    </ToolBarContent>
+                    <MudTextField @bind-Value="_searchString"
+                                  Placeholder="Search..."
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  IconSize="Size.Small"
+                                  Class="dd-input-text">
+                    </MudTextField>
+                </div>
+
+                <div class="dd-roster-table-wrap">
+                    <MudTable Items="@Roster"
+                              Filter="new Func<Hero,bool>(FilterHeroes)"
+                              Hover="true"
+                              Dense="true"
+                              Elevation="0"
+                              Class="dd-roster-table">
 
                     <HeaderContent>
                         <MudTh></MudTh>
@@ -79,26 +80,31 @@
                             </div>
                         </MudTd>
 
-                        <MudTd DataLabel="Name">
-                            <MudText Typo="Typo.body1" Class="d-inline">
-                                <strong class="d-inline dd-hero-name-strong">@context.Name</strong>
-                            </MudText>
-                            @if (SelectedLocation.RecommendedHeroes != null && SelectedLocation.RecommendedHeroes.Contains(context))
-                            {
-                                <MudTooltip Text="@($"Recommended hero for {SelectedLocation.Name}")">
-                                    <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary" Size="Size.Small"></MudIcon>
+                        <MudTd DataLabel="Name" Class="dd-roster-name-cell">
+                            <div class="dd-roster-name-row">
+                                <MudTooltip Text="@context.Name">
+                                    <MudText Typo="Typo.body1" Class="dd-roster-name-text">
+                                        <strong class="dd-hero-name-strong dd-roster-name-strong">@context.Name</strong>
+                                    </MudText>
                                 </MudTooltip>
-                            }
+                                @if (SelectedLocation.RecommendedHeroes != null && SelectedLocation.RecommendedHeroes.Contains(context))
+                                {
+                                    <MudTooltip Text="@($"Recommended hero for {SelectedLocation.Name}")">
+                                        <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary" Size="Size.Small"></MudIcon>
+                                    </MudTooltip>
+                                }
+                            </div>
                         </MudTd>
 
-                        <MudTd DataLabel="Role">
-                            <MudText Typo="Typo.caption" Class="dd-role-text">@context.Role</MudText>
+                        <MudTd DataLabel="Role" Class="dd-roster-role-cell">
+                            <MudText Typo="Typo.caption" Class="dd-role-text dd-roster-role-text">@context.Role</MudText>
                         </MudTd>
 
-                        <MudTd DataLabel="Action">
+                        <MudTd DataLabel="Action" Class="dd-roster-action-cell">
                             <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary"
                                      TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.BottomRight"
-                                     Dense="true">
+                                     Dense="true"
+                                     Class="dd-roster-action-menu">
                                 <MudMenuItem @onclick="@(() => OnAddHero.InvokeAsync((context, 1)))">1</MudMenuItem>
                                 <MudMenuItem @onclick="@(() => OnAddHero.InvokeAsync((context, 2)))">2</MudMenuItem>
                                 <MudMenuItem @onclick="@(() => OnAddHero.InvokeAsync((context, 3)))">3</MudMenuItem>
@@ -107,6 +113,7 @@
                         </MudTd>
                     </RowTemplate>
                 </MudTable>
+                </div>
             </MudItem>
 
 @code {

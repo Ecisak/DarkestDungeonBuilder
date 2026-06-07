@@ -28,7 +28,7 @@ else
     }
     else
     {
-        <MudGrid>
+        <MudGrid Class="dd-builder-grid" Spacing="0">
             <!-- left panel: list of heroes -->
 
             <!-- center panel, team composition -->
@@ -42,11 +42,11 @@ else
                 OnAddHero="HandleAddHeroFromPanel"
                 OnDropToRoster="HandleDropToRoster"/>
 
-            <MudItem xs="12" md="6">
-                    <MudGrid>
+            <MudItem xs="12" md="6" Class="dd-center-column">
+                    <MudGrid Class="dd-team-grid" Spacing="0">
                         @foreach (var slot in _currentTeam.Slots.OrderByDescending(x => x.Key))
                         {
-                            <MudItem xs="6" lg="3">
+                            <MudItem xs="3">
                                 <TeamSlot
                                     @key="slot.Key"
                                     Hero="slot.Value"

@@ -30,9 +30,11 @@ body,
     font-style: normal;
 }
 
+html,
 body {
     background-color: var(--dd-bg-main) !important;
     color: var(--dd-text-soft) !important;
+    height: 100%;
 }
 
 h1,
@@ -72,7 +74,10 @@ a,
 }
 
 .content {
-    padding-top: 1.1rem;
+    padding-top: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    overflow-x: hidden;
 }
 
 .valid.modified:not([type="checkbox"]) {
@@ -185,6 +190,22 @@ code {
     margin-left: 8px;
 }
 
+.dd-roster-location-title {
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.dd-roster-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.dd-roster-action-button {
+    margin: 0 !important;
+}
+
 .dd-import-wrapper {
     position: relative;
     display: inline-flex;
@@ -236,6 +257,52 @@ code {
     border: 1px solid var(--dd-border-secondary);
 }
 
+.dd-roster-panel-column,
+.dd-advisor-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dd-builder-grid,
+.dd-team-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow-x: hidden;
+}
+
+.dd-center-column {
+    min-width: 0;
+}
+
+.dd-roster-table-wrap {
+    min-width: 0;
+    width: 100%;
+}
+
+.dd-roster-table {
+    width: 100%;
+}
+
+.dd-roster-table .mud-table-container {
+    overflow-x: hidden !important;
+}
+
+.dd-roster-table table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.dd-roster-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
 .dd-advisor-panel {
     height: 100%;
     border-width: 2px;
@@ -244,6 +311,28 @@ code {
 
 .dd-filter-select {
     width: 220px;
+    flex: 0 1 12rem;
+    min-width: 0;
+}
+
+.dd-input-text {
+    flex: 1 1 10rem;
+    min-width: 0;
+}
+
+@media (min-width: 960px) {
+    .dd-roster-panel-column,
+    .dd-advisor-column {
+        max-height: calc(100vh - 3.5rem - 3rem);
+    }
+
+    .dd-roster-table-wrap,
+    .dd-advisor-panel {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding-right: 0.25rem;
+    }
 }
 
 .dd-filter-select,
@@ -265,9 +354,10 @@ code {
 }
 
 .dd-drag-ghost-img {
-    position: absolute;
-    z-index: -100;
-    opacity: 0.01;
+    position: fixed;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
     pointer-events: none;
 }
 
@@ -275,6 +365,78 @@ code {
 .dd-dialog-hero-name,
 .dd-location-name {
     color: var(--dd-title);
+}
+
+.dd-roster-table .mud-table-cell:nth-child(1),
+.dd-roster-table .mud-table-head:nth-child(1) {
+    width: 4.25rem;
+}
+
+.dd-roster-table .mud-table-cell:nth-child(3),
+.dd-roster-table .mud-table-head:nth-child(3) {
+    width: 6.25rem;
+}
+
+.dd-roster-name-cell {
+    min-width: 0;
+    max-width: 0;
+}
+
+.dd-roster-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.dd-roster-name-text {
+    min-width: 0;
+    flex: 1 1 auto;
+    max-width: 100%;
+}
+
+.dd-roster-name-strong {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dd-roster-role-cell {
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.dd-roster-role-text {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dd-roster-action-cell,
+.dd-roster-table .mud-table-cell:last-child,
+.dd-roster-table .mud-table-head:last-child {
+    width: 2.25rem;
+    min-width: 2.25rem;
+    max-width: 2.25rem;
+    text-align: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.dd-roster-action-menu {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    transform: translateX(-2px);
+}
+
+.dd-roster-action-menu .mud-button-root {
+    min-width: 0 !important;
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 !important;
 }
 
 .dd-advisor-graph-card {
@@ -306,6 +468,21 @@ code {
     background-color: rgba(36, 47, 54, 0.92) !important;
     color: #c9d4de !important;
     border: 1px solid rgba(106, 130, 148, 0.55);
+}
+
+.dd-success-alert,
+.dd-warning-alert,
+.dd-tip-alert {
+    font-family: "Crimson Text", serif !important;
+    font-size: 0.98rem;
+    line-height: 1.25;
+}
+
+.dd-success-alert .mud-alert-message,
+.dd-warning-alert .mud-alert-message,
+.dd-tip-alert .mud-alert-message {
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 .dd-advisor-section-title {
@@ -383,6 +560,7 @@ code {
 .dd-slot-empty,
 .dd-slot-occupied {
     min-height: 500px;
+    width: 100%;
 }
 
 .dd-slot-empty {

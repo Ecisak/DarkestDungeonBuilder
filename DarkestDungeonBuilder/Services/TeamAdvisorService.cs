@@ -11,19 +11,44 @@ public class TeamAdvisorService
 
         if (team.Slots.Values.Any(h => h == null))
         {
-            analysis.AddCritical("The team is not complete. Fill all four ranks for a full analysis.");
+            analysis.AddCritical("The team is incomplete. Fill all four ranks.");
         }
 
         if (!HasHealer(team))
         {
-            analysis.AddCritical("The team has no reliable healing.");
+            analysis.AddCritical("The team has no reliable healer.");
+        }
+
+        if (!HasStressHeal(team))
+        {
+            analysis.AddSuggestion("The team has no stress heal.");
+        }
+
+        if (!HasControl(team))
+        {
+            analysis.AddSuggestion("The team lacks control skills (stun, move, guard).");
+        }
+
+        if (!HasBacklineReach(team))
+        {
+            analysis.AddCritical("Poor reach to enemy back ranks (3-4).");
+        }
+
+        if (!HasFrontlinePresence(team))
+        {
+            analysis.AddCritical("Ranks 1-2 lack a frontline hero.");
+        }
+
+        if (!HasEnoughDamageProfiles(team))
+        {
+            analysis.AddSuggestion("The team has too little direct damage pressure.");
         }
 
         var heroesMissingSkills = GetHeroesWithMissingSkills(team);
         if (heroesMissingSkills.Count != 0)
         {
             var formattedNames = heroesMissingSkills.Select(x => $"{x.Hero.Name} (Rank {x.Rank})");
-            analysis.AddSuggestion("Some heroes have incomplete loadouts, so the analysis may be inaccurate: " + string.Join(", ", formattedNames) + ".");
+            analysis.AddSuggestion("Incomplete loadouts: " + string.Join(", ", formattedNames) + ".");
         }
 
         CheckHeroPositions(team, analysis);
@@ -52,6 +77,56 @@ public class TeamAdvisorService
             .Any(hero => hero!.SelectedSkills.Any(skill => skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Heal)));
     }
 
+    private static bool HasStressHeal(Team team)
+    {
+        return team.Slots.Values
+            .Where(hero => hero != null)
+            .Any(hero => hero!.SelectedSkills.Any(skill => skill.EffectsBitfield.HasFlag(Skill.SkillEffect.StressHeal)));
+    }
+
+    private static bool HasControl(Team team)
+    {
+        return team.Slots.Values
+            .Where(hero => hero != null)
+            .Any(hero => hero!.SelectedSkills.Any(skill =>
+                skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Stun) ||
+                skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Move) ||
+                skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Guard)));
+    }
+
+    private static bool HasBacklineReach(Team team)
+    {
+        return team.Slots.Values
+            .Where(hero => hero != null)
+            .Any(hero => hero!.SelectedSkills.Any(skill =>
+                skill.Category == Skill.SkillCategory.Combat &&
+                !skill.IsFriendly &&
+                skill.Targets.Any(target => target is 3 or 4)));
+    }
+
+    private static bool HasFrontlinePresence(Team team)
+    {
+        return team.Slots
+            .Where(slot => slot.Key is 1 or 2)
+            .Select(slot => slot.Value)
+            .Where(hero => hero != null)
+            .Any(hero => string.Equals(hero!.Role, "Frontline", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool HasEnoughDamageProfiles(Team team)
+    {
+        var damageCapableHeroes = team.Slots.Values
+            .Where(hero => hero != null)
+            .Count(hero => hero!.SelectedSkills.Any(skill =>
+                skill.Category == Skill.SkillCategory.Combat &&
+                (skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Damage) ||
+                 skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Bleed) ||
+                 skill.EffectsBitfield.HasFlag(Skill.SkillEffect.Blight) ||
+                 skill.EffectsBitfield.HasFlag(Skill.SkillEffect.ArmorPiercing))));
+
+        return damageCapableHeroes >= 2;
+    }
+
     private static void CheckHeroPositions(Team team, AdvisorAnalysis analysis)
     {
         foreach (var (currentRank, hero) in team.Slots.Where(s => s.Value != null))
@@ -66,7 +141,7 @@ public class TeamAdvisorService
 
             if (currentScore == 0)
             {
-                analysis.AddCritical($"{hero!.Name} cannot use any selected combat skill effectively from rank {currentRank}.");
+                analysis.AddCritical($"{hero!.Name} cannot use selected combat skills from rank {currentRank}.");
             }
             else if (currentScore < maxScore)
             {
@@ -98,7 +173,7 @@ public class TeamAdvisorService
 
                 if (betterRanks.Count == 0) continue;
 
-                analysis.AddSuggestion($"{hero!.Name} would perform better in rank {string.Join(" or ", betterRanks)}.");
+                analysis.AddSuggestion($"{hero!.Name} would work better in rank {string.Join(" or ", betterRanks)}.");
             }
         }
     }

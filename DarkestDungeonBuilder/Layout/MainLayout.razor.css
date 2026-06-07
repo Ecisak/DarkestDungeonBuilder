@@ -26,6 +26,7 @@ body {
 main {
     flex: 1;
     background-color: #0d0d0d;
+    min-width: 0;
 }
 
 .sidebar {
@@ -78,6 +79,18 @@ main {
     .top-row ::deep a,
     .top-row ::deep .btn-link {
         margin-left: 0;
+    }
+}
+
+@media (min-width: 960px) {
+    .page {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    main {
+        height: 100vh;
+        overflow: hidden;
     }
 }
 

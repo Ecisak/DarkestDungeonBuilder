@@ -5,7 +5,7 @@
         <MudStack AlignItems="AlignItems.Center">
             <MudTextField T="string" Label="Search Trinkets" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" TextChanged="OnTextChanged!" Immediate="true" Clearable="true"
                           Class="dd-trinket-search" />
-            <MudTreeView Items="@_treeItemData" @ref="_treeView" ExpandOnClick="true" FilterFunc="MatchesName!" Class="dd-tree-fullwidth">
+            <MudTreeView Items="@_treeItemData" @ref="_treeView" ExpandOnClick="true" FilterFunc="MatchesName" Class="dd-tree-fullwidth">
                 <ItemTemplate>
                     @{
                         var item = (TrinketTreeItem)context;
@@ -97,7 +97,7 @@
                 _treeItemData.Add(new TrinketTreeItem($"{CurrentHero.Name} Specific", Icons.Material.Filled.Shield)
                 {
                     Expanded = true,
-                    Children = classTrinkets.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string?>>().ToList()!
+                    Children = classTrinkets.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string?>>().ToList()
                 });
             }
         }
@@ -111,7 +111,7 @@
             _treeItemData.Add(new TrinketTreeItem(group.Key, Icons.Material.Filled.Label)
             {
                 Expanded = false,
-                Children = group.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string?>>().ToList()!
+                Children = group.Select(t => new TrinketTreeItem(t.Name) { TrinketData = t }).Cast<TreeItemData<string?>>().ToList()
             });
         }
     }

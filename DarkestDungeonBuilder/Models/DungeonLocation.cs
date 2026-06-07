@@ -6,7 +6,7 @@ public class DungeonLocation
     public required string Image { get; set; }
     public string? Strengths { get; set; }
     public string? Weaknesses { get; set; }
-    
+
     public List<Hero>? RecommendedHeroes { get; set; }
 
     public Skill.BonusTarget DominantEnemyTypes { get; set; } = Skill.BonusTarget.None;

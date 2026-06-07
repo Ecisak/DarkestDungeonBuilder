@@ -478,5 +478,1680 @@
         "Category": "Camping"
       }
     ]
+  },
+  {
+    "Name": "Hellion",
+    "Portrait": "/images/heroes/hellion/hellion_icon.webp",
+    "Sprite": "/images/heroes/hellion/hellion_sprite.webp",
+    "Role": "Frontline",
+    "Health": 26,
+    "Skills": [
+      {
+        "Name": "Wicked Hack",
+        "SkillImage": "/images/heroes/hellion/spells/wicked_hack.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Heavy front-rank damage",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Beast",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Iron Swan",
+        "SkillImage": "/images/heroes/hellion/spells/iron_swan.webp",
+        "CastablePositions": [1],
+        "Targets": [4],
+        "IsFriendly": false,
+        "Effects": "Damage to the back rank",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Barbaric Yawp",
+        "SkillImage": "/images/heroes/hellion/spells/barbaric_yawp.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Double stun on the front ranks",
+        "EffectsBitfield": "Stun",
+        "Category": "Combat"
+      },
+      {
+        "Name": "If It Bleeds",
+        "SkillImage": "/images/heroes/hellion/spells/if_it_bleeds.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [2, 3],
+        "IsFriendly": false,
+        "Effects": "Damage and bleed to mid ranks",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Breakthrough",
+        "SkillImage": "/images/heroes/hellion/spells/breakthrough.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Forward cleave attack",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Adrenaline Rush",
+        "SkillImage": "/images/heroes/hellion/spells/adrenaline_rush.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self heal and cure bleed/blight",
+        "EffectsBitfield": "Heal, Cure, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bleed Out",
+        "SkillImage": "/images/heroes/hellion/spells/bleed_out.webp",
+        "CastablePositions": [1],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Massive damage and bleed",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Battle Trance",
+        "SkillImage": "/images/heroes/hellion/spells/battle_trance.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff damage and speed",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Revel",
+        "SkillImage": "/images/heroes/hellion/spells/revel.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party stress heal and heal over time",
+        "EffectsBitfield": "StressHeal, Heal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Sharpen Spear",
+        "SkillImage": "/images/heroes/hellion/spells/sharpen_spear.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff bleed skill chance",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Reject the Gods",
+        "SkillImage": "/images/heroes/hellion/spells/reject_the_gods.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Stress heal and resist debuffs",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Jester",
+    "Portrait": "/images/heroes/jester/jester_icon.webp",
+    "Sprite": "/images/heroes/jester/jester_sprite.webp",
+    "Role": "Support",
+    "Health": 19,
+    "Skills": [
+      {
+        "Name": "Dirk Stab",
+        "SkillImage": "/images/heroes/jester/spells/dirk_stab.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Damage and move forward",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Harvest",
+        "SkillImage": "/images/heroes/jester/spells/harvest.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [2, 3],
+        "IsFriendly": false,
+        "Effects": "AoE damage and bleed",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Slice Off",
+        "SkillImage": "/images/heroes/jester/spells/slice_off.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Backline bleed attack",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Battle Ballad",
+        "SkillImage": "/images/heroes/jester/spells/battle_ballad.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party speed and crit buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Inspiring Tune",
+        "SkillImage": "/images/heroes/jester/spells/inspiring_tune.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Strong stress heal",
+        "EffectsBitfield": "StressHeal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Solo",
+        "SkillImage": "/images/heroes/jester/spells/solo.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Move forward and self buff",
+        "EffectsBitfield": "Move, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Finale",
+        "SkillImage": "/images/heroes/jester/spells/finale.webp",
+        "CastablePositions": [1],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Massive finisher attack",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Every Rose Has Its Thorn",
+        "SkillImage": "/images/heroes/jester/spells/every_rose_has_its_thorn.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party stress heal with risk",
+        "EffectsBitfield": "StressHeal, StressDamage",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Turn Back Time",
+        "SkillImage": "/images/heroes/jester/spells/turn_back_time.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Large single-target stress heal",
+        "EffectsBitfield": "StressHeal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Tiger's Eye",
+        "SkillImage": "/images/heroes/jester/spells/tigers_eye.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff crit and accuracy",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Mockery",
+        "SkillImage": "/images/heroes/jester/spells/mockery.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Prevents nighttime ambush and buffs party",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Man-at-Arms",
+    "Portrait": "/images/heroes/man_at_arms/man_at_arms_icon.webp",
+    "Sprite": "/images/heroes/man_at_arms/man_at_arms_sprite.webp",
+    "Role": "Frontline",
+    "Health": 31,
+    "Skills": [
+      {
+        "Name": "Crush",
+        "SkillImage": "/images/heroes/man_at_arms/spells/crush.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Reliable melee damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Rampart",
+        "SkillImage": "/images/heroes/man_at_arms/spells/rampart.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Stun and knockback",
+        "EffectsBitfield": "Damage, Stun, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Defender",
+        "SkillImage": "/images/heroes/man_at_arms/spells/defender.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Guard ally and raise protection",
+        "EffectsBitfield": "Guard, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bolster",
+        "SkillImage": "/images/heroes/man_at_arms/spells/bolster.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party dodge and stress resist buff",
+        "EffectsBitfield": "Buff, StressHeal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Retribution",
+        "SkillImage": "/images/heroes/man_at_arms/spells/retribution.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage and riposte stance",
+        "EffectsBitfield": "Damage, Riposte, Mark",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Command",
+        "SkillImage": "/images/heroes/man_at_arms/spells/command.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Buff accuracy and crit",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bellow",
+        "SkillImage": "/images/heroes/man_at_arms/spells/bellow.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE debuff and speed reduction",
+        "EffectsBitfield": "Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Weapons Practice",
+        "SkillImage": "/images/heroes/man_at_arms/spells/weapons_practice.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party melee damage buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Tactics",
+        "SkillImage": "/images/heroes/man_at_arms/spells/tactics.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party dodge and crit received buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Instruction",
+        "SkillImage": "/images/heroes/man_at_arms/spells/instruction.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff ranged damage and speed",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Maintain Equipment",
+        "SkillImage": "/images/heroes/man_at_arms/spells/maintain_equipment.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party protection buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Occultist",
+    "Portrait": "/images/heroes/occultist/occultist_icon.webp",
+    "Sprite": "/images/heroes/occultist/occultist_sprite.webp",
+    "Role": "Healer",
+    "Health": 19,
+    "Skills": [
+      {
+        "Name": "Sacrificial Stab",
+        "SkillImage": "/images/heroes/occultist/spells/sacrificial_stab.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Melee damage with eldritch bonus",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Eldritch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Abyssal Artillery",
+        "SkillImage": "/images/heroes/occultist/spells/abyssal_artillery.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE damage to enemy backline",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Eldritch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Weakening Curse",
+        "SkillImage": "/images/heroes/occultist/spells/weakening_curse.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Damage debuff",
+        "EffectsBitfield": "Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Wyrd Reconstruction",
+        "SkillImage": "/images/heroes/occultist/spells/wyrd_reconstruction.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Variable heal with bleed risk",
+        "EffectsBitfield": "Heal, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Hands from the Abyss",
+        "SkillImage": "/images/heroes/occultist/spells/hands_from_the_abyss.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Stun with torch reduction",
+        "EffectsBitfield": "Stun, Torch",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Daemon's Pull",
+        "SkillImage": "/images/heroes/occultist/spells/daemons_pull.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "Pull enemy and clear corpse",
+        "EffectsBitfield": "Move, ClearCorpse",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Vulnerability Hex",
+        "SkillImage": "/images/heroes/occultist/spells/vulnerability_hex.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark and reduce dodge",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Dark Strength",
+        "SkillImage": "/images/heroes/occultist/spells/dark_strength.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Massive damage buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Unspeakable Commune",
+        "SkillImage": "/images/heroes/occultist/spells/unspeakable_commune.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Scout and eldritch knowledge",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Abandon Hope",
+        "SkillImage": "/images/heroes/occultist/spells/abandon_hope.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Strong self stress heal with party stress cost",
+        "EffectsBitfield": "StressHeal, StressDamage",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Dark Ritual",
+        "SkillImage": "/images/heroes/occultist/spells/dark_ritual.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Cure mortality debuffs and heal stress",
+        "EffectsBitfield": "StressHeal, Cure, Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Abomination",
+    "Portrait": "/images/heroes/abomination/abomination_icon.webp",
+    "Sprite": "/images/heroes/abomination/abomination_sprite.webp",
+    "Role": "Damage",
+    "Health": 26,
+    "Skills": [
+      {
+        "Name": "Manacles",
+        "SkillImage": "/images/heroes/abomination/spells/manacles.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Stun attack in human form",
+        "EffectsBitfield": "Stun",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Beast's Bile",
+        "SkillImage": "/images/heroes/abomination/spells/beasts_bile.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3],
+        "IsFriendly": false,
+        "Effects": "Backline blight attack",
+        "EffectsBitfield": "Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Absolution",
+        "SkillImage": "/images/heroes/abomination/spells/absolution.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self heal and stress heal",
+        "EffectsBitfield": "Heal, StressHeal, Cure, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Transform",
+        "SkillImage": "/images/heroes/abomination/spells/transform.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Transform and gain beast buffs",
+        "EffectsBitfield": "Buff, StressDamage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Rage",
+        "SkillImage": "/images/heroes/abomination/spells/rage.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Heavy transformed melee damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Rake",
+        "SkillImage": "/images/heroes/abomination/spells/rake.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Scaling cleave attack",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Slam",
+        "SkillImage": "/images/heroes/abomination/spells/slam.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage and knockback",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "The Quickening",
+        "SkillImage": "/images/heroes/abomination/spells/the_quickening.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff speed and dodge",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Anger Management",
+        "SkillImage": "/images/heroes/abomination/spells/anger_management.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Stress heal",
+        "EffectsBitfield": "StressHeal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Psych Up",
+        "SkillImage": "/images/heroes/abomination/spells/psych_up.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff damage and accuracy",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Eldritch Blood",
+        "SkillImage": "/images/heroes/abomination/spells/eldritch_blood.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self buff against eldritch",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Antiquarian",
+    "Portrait": "/images/heroes/antiquarian/antiquarian_icon.webp",
+    "Sprite": "/images/heroes/antiquarian/antiquarian_sprite.webp",
+    "Role": "Support",
+    "Health": 17,
+    "Skills": [
+      {
+        "Name": "Nervous Stab",
+        "SkillImage": "/images/heroes/antiquarian/spells/nervous_stab.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Light melee damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Festering Vapours",
+        "SkillImage": "/images/heroes/antiquarian/spells/festering_vapours.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3],
+        "IsFriendly": false,
+        "Effects": "Backline blight attack",
+        "EffectsBitfield": "Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Flashpowder",
+        "SkillImage": "/images/heroes/antiquarian/spells/flashpowder.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Accuracy debuff",
+        "EffectsBitfield": "Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Invigorating Vapours",
+        "SkillImage": "/images/heroes/antiquarian/spells/invigorating_vapours.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party dodge buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Protect Me!",
+        "SkillImage": "/images/heroes/antiquarian/spells/protect_me.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Request guard and self buff",
+        "EffectsBitfield": "Guard, Buff, Mark",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Get Down!",
+        "SkillImage": "/images/heroes/antiquarian/spells/get_down.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Move back and gain dodge",
+        "EffectsBitfield": "Move, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Fortifying Vapours",
+        "SkillImage": "/images/heroes/antiquarian/spells/fortifying_vapours.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Small heal and buff",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Trinket Scrounge",
+        "SkillImage": "/images/heroes/antiquarian/spells/trinket_scrounge.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Find valuables and resources",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Strange Powders",
+        "SkillImage": "/images/heroes/antiquarian/spells/strange_powders.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Cure and buff ally",
+        "EffectsBitfield": "Cure, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Curious Incantation",
+        "SkillImage": "/images/heroes/antiquarian/spells/curious_incantation.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff scouting and trap skills",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Resupply",
+        "SkillImage": "/images/heroes/antiquarian/spells/resupply.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party heal over time",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Arbalest",
+    "Portrait": "/images/heroes/arbalest/arbalest_icon.webp",
+    "Sprite": "/images/heroes/arbalest/arbalest_sprite.webp",
+    "Role": "Damage",
+    "Health": 27,
+    "Skills": [
+      {
+        "Name": "Sniper Shot",
+        "SkillImage": "/images/heroes/arbalest/spells/sniper_shot.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "High ranged damage",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Suppressing Fire",
+        "SkillImage": "/images/heroes/arbalest/spells/suppressing_fire.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE damage and debuff",
+        "EffectsBitfield": "Damage, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Bola",
+        "SkillImage": "/images/heroes/arbalest/spells/bola.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage and knockback",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Blindfire",
+        "SkillImage": "/images/heroes/arbalest/spells/blindfire.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Random shot and self speed buff",
+        "EffectsBitfield": "Damage, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Battlefield Bandage",
+        "SkillImage": "/images/heroes/arbalest/spells/battlefield_bandage.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal and received-healing buff",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Rallying Flare",
+        "SkillImage": "/images/heroes/arbalest/spells/rallying_flare.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Clear marks and stun, raise torch",
+        "EffectsBitfield": "Buff, Torch, Cure",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Sniper's Mark",
+        "SkillImage": "/images/heroes/arbalest/spells/snipers_mark.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark target and reduce dodge",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Restring Crossbow",
+        "SkillImage": "/images/heroes/arbalest/spells/restring_crossbow.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff ranged damage and speed",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Triage",
+        "SkillImage": "/images/heroes/arbalest/spells/triage.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party heal over time",
+        "EffectsBitfield": "Heal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Marching Plan",
+        "SkillImage": "/images/heroes/arbalest/spells/marching_plan.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party speed and scouting buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Field Dressing",
+        "SkillImage": "/images/heroes/arbalest/spells/field_dressing.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Heal and cure ally",
+        "EffectsBitfield": "Heal, Cure",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Bounty Hunter",
+    "Portrait": "/images/heroes/bounty_hunter/bounty_hunter_icon.webp",
+    "Sprite": "/images/heroes/bounty_hunter/bounty_hunter_sprite.webp",
+    "Role": "Damage",
+    "Health": 25,
+    "Skills": [
+      {
+        "Name": "Collect Bounty",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/collect_bounty.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Heavy damage versus marked targets",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Finish Him",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/finish_him.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Damage versus stunned or marked enemies",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked, Stunned",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Come Hither",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/come_hither.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "Pull enemy forward",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Flashbang",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/flashbang.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Stun and shuffle target",
+        "EffectsBitfield": "Stun, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Uppercut",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/uppercut.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Damage and knockback",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Caltrops",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/caltrops.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Bleed and speed debuff",
+        "EffectsBitfield": "Bleed, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Mark for Death",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/mark_for_death.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark target and reduce protection",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "This Is How We Do It",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/this_is_how_we_do_it.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff damage and critical chance",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Tracking",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/tracking.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff scouting and accuracy",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Planned Takedown",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/planned_takedown.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party damage buff versus marked",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Scout Ahead",
+        "SkillImage": "/images/heroes/bounty_hunter/spells/scout_ahead.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Heal and cure bleed",
+        "EffectsBitfield": "Heal, Cure",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Grave Robber",
+    "Portrait": "/images/heroes/grave_robber/grave_robber_icon.webp",
+    "Sprite": "/images/heroes/grave_robber/grave_robber_sprite.webp",
+    "Role": "Damage",
+    "Health": 20,
+    "Skills": [
+      {
+        "Name": "Pick to the Face",
+        "SkillImage": "/images/heroes/grave_robber/spells/pick_to_the_face.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Armor piercing melee attack",
+        "EffectsBitfield": "Damage, ArmorPiercing",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Thrown Dagger",
+        "SkillImage": "/images/heroes/grave_robber/spells/thrown_dagger.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Ranged damage versus marked targets",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Poison Dart",
+        "SkillImage": "/images/heroes/grave_robber/spells/poison_dart.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Backline blight attack",
+        "EffectsBitfield": "Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Lunge",
+        "SkillImage": "/images/heroes/grave_robber/spells/lunge.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "High damage and move forward",
+        "EffectsBitfield": "Damage, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Shadow Fade",
+        "SkillImage": "/images/heroes/grave_robber/spells/shadow_fade.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Move back and gain stealth",
+        "EffectsBitfield": "Stealth, Move, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Toxin Trickery",
+        "SkillImage": "/images/heroes/grave_robber/spells/toxin_trickery.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self buff, heal, and move back",
+        "EffectsBitfield": "Buff, Heal, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Flashing Daggers",
+        "SkillImage": "/images/heroes/grave_robber/spells/flashing_daggers.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [2, 3],
+        "IsFriendly": false,
+        "Effects": "AoE ranged damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Night Moves",
+        "SkillImage": "/images/heroes/grave_robber/spells/night_moves.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff scouting and speed",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Pilfer",
+        "SkillImage": "/images/heroes/grave_robber/spells/pilfer.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Gather loot and resources",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Snuff Box",
+        "SkillImage": "/images/heroes/grave_robber/spells/snuff_box.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Cure and resist blight/bleed",
+        "EffectsBitfield": "Cure, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Gallows Humor",
+        "SkillImage": "/images/heroes/grave_robber/spells/gallows_humor.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff stealth and dodge",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Houndmaster",
+    "Portrait": "/images/heroes/houndmaster/houndmaster_icon.webp",
+    "Sprite": "/images/heroes/houndmaster/houndmaster_sprite.webp",
+    "Role": "Support",
+    "Health": 21,
+    "Skills": [
+      {
+        "Name": "Hound's Rush",
+        "SkillImage": "/images/heroes/houndmaster/spells/hounds_rush.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Damage and bleed, stronger vs beast",
+        "EffectsBitfield": "Damage, Bleed",
+        "BonusAgainst": "Beast",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Hound's Harry",
+        "SkillImage": "/images/heroes/houndmaster/spells/hounds_harry.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "AoE bleed attack",
+        "EffectsBitfield": "Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Target Whistle",
+        "SkillImage": "/images/heroes/houndmaster/spells/target_whistle.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark and reduce protection/dodge",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Blackjack",
+        "SkillImage": "/images/heroes/houndmaster/spells/blackjack.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Stun melee attack",
+        "EffectsBitfield": "Damage, Stun",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Guard Dog",
+        "SkillImage": "/images/heroes/houndmaster/spells/guard_dog.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Guard ally and gain riposte",
+        "EffectsBitfield": "Guard, Riposte, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Cry Havoc",
+        "SkillImage": "/images/heroes/houndmaster/spells/cry_havoc.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party stress heal",
+        "EffectsBitfield": "StressHeal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Lick Wounds",
+        "SkillImage": "/images/heroes/houndmaster/spells/lick_wounds.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self heal",
+        "EffectsBitfield": "Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Therapy Dog",
+        "SkillImage": "/images/heroes/houndmaster/spells/therapy_dog.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party stress heal",
+        "EffectsBitfield": "StressHeal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Release the Hound",
+        "SkillImage": "/images/heroes/houndmaster/spells/release_the_hound.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff scouting and surprise chance",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Man's Best Friend",
+        "SkillImage": "/images/heroes/houndmaster/spells/mans_best_friend.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff dodge and stress resist",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Hound's Watch",
+        "SkillImage": "/images/heroes/houndmaster/spells/hounds_watch.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Prevent nighttime ambush",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Leper",
+    "Portrait": "/images/heroes/leper/leper_icon.webp",
+    "Sprite": "/images/heroes/leper/leper_sprite.webp",
+    "Role": "Frontline",
+    "Health": 35,
+    "Skills": [
+      {
+        "Name": "Chop",
+        "SkillImage": "/images/heroes/leper/spells/chop.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Massive front-rank damage",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Hew",
+        "SkillImage": "/images/heroes/leper/spells/hew.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Frontline cleave attack",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Purge",
+        "SkillImage": "/images/heroes/leper/spells/purge.webp",
+        "CastablePositions": [1],
+        "Targets": [1],
+        "IsFriendly": false,
+        "Effects": "Damage, knockback and corpse clear",
+        "EffectsBitfield": "Damage, Move, ClearCorpse",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Revenge",
+        "SkillImage": "/images/heroes/leper/spells/revenge.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self damage buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Withstand",
+        "SkillImage": "/images/heroes/leper/spells/withstand.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self tank buff",
+        "EffectsBitfield": "Buff, Mark",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Solemnity",
+        "SkillImage": "/images/heroes/leper/spells/solemnity.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self heal and stress heal",
+        "EffectsBitfield": "Heal, StressHeal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Intimidate",
+        "SkillImage": "/images/heroes/leper/spells/intimidate.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Debuff enemy damage",
+        "EffectsBitfield": "Debuff, Mark",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Reflection",
+        "SkillImage": "/images/heroes/leper/spells/reflection.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Reduce stress and improve accuracy",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Quarantine",
+        "SkillImage": "/images/heroes/leper/spells/quarantine.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party stress heal at a cost",
+        "EffectsBitfield": "StressHeal, StressDamage",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Bloody Shroud",
+        "SkillImage": "/images/heroes/leper/spells/bloody_shroud.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self defense buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Let the Mask Down",
+        "SkillImage": "/images/heroes/leper/spells/let_the_mask_down.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff dodge and speed",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Flagellant",
+    "Portrait": "/images/heroes/flagellant/flagellant_icon.webp",
+    "Sprite": "/images/heroes/flagellant/flagellant_sprite.webp",
+    "Role": "Healer",
+    "Health": 22,
+    "Skills": [
+      {
+        "Name": "Punish",
+        "SkillImage": "/images/heroes/flagellant/spells/punish.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Melee damage and bleed",
+        "EffectsBitfield": "Damage, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Rain of Sorrows",
+        "SkillImage": "/images/heroes/flagellant/spells/rain_of_sorrows.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [3, 4],
+        "IsFriendly": false,
+        "Effects": "Backline bleed attack",
+        "EffectsBitfield": "Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Exsanguinate",
+        "SkillImage": "/images/heroes/flagellant/spells/exsanguinate.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Heavy damage, bleed, and self heal",
+        "EffectsBitfield": "Damage, Bleed, Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Redeem",
+        "SkillImage": "/images/heroes/flagellant/spells/redeem.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Big heal on ally",
+        "EffectsBitfield": "Heal",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Reclaim",
+        "SkillImage": "/images/heroes/flagellant/spells/reclaim.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal over time with self bleed",
+        "EffectsBitfield": "Heal, Bleed",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Endure",
+        "SkillImage": "/images/heroes/flagellant/spells/endure.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Transfer and heal stress",
+        "EffectsBitfield": "StressHeal, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Suffer",
+        "SkillImage": "/images/heroes/flagellant/spells/suffer.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Transfer bleed/blight and guard ally",
+        "EffectsBitfield": "Guard, Cure, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Lash's Solace",
+        "SkillImage": "/images/heroes/flagellant/spells/lashs_solace.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self stress heal and cure",
+        "EffectsBitfield": "StressHeal, Cure, Heal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Lash's Anger",
+        "SkillImage": "/images/heroes/flagellant/spells/lashs_anger.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self damage buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Lash's Cure",
+        "SkillImage": "/images/heroes/flagellant/spells/lashs_cure.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Cure ally and resist blight/bleed",
+        "EffectsBitfield": "Cure, Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Lash's Kiss",
+        "SkillImage": "/images/heroes/flagellant/spells/lashs_kiss.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Self heal and stress heal",
+        "EffectsBitfield": "Heal, StressHeal",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Shieldbreaker",
+    "Portrait": "/images/heroes/shieldbreaker/shieldbreaker_icon.webp",
+    "Sprite": "/images/heroes/shieldbreaker/shieldbreaker_sprite.webp",
+    "Role": "Damage",
+    "Health": 21,
+    "Skills": [
+      {
+        "Name": "Pierce",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/pierce.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Armor piercing strike",
+        "EffectsBitfield": "Damage, ArmorPiercing",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Puncture",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/puncture.webp",
+        "CastablePositions": [1, 2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Pull, mark, and pierce protection",
+        "EffectsBitfield": "Damage, Move, Mark, ArmorPiercing",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Adders Kiss",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/adders_kiss.webp",
+        "CastablePositions": [1, 2],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Melee blight attack",
+        "EffectsBitfield": "Damage, Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Impale",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/impale.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Party-wide enemy attack and move back",
+        "EffectsBitfield": "Damage, Blight, Move",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Expose",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/expose.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Debuff dodge and remove stealth",
+        "EffectsBitfield": "Debuff, DeStealth",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Captivate",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/captivate.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Ranged blight attack",
+        "EffectsBitfield": "Blight",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Serpent Sway",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/serpent_sway.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Gain defensive blocks",
+        "EffectsBitfield": "Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Snake Eyes",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/snake_eyes.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff critical chance",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Sandstorm",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/sandstorm.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party dodge buff at stress cost",
+        "EffectsBitfield": "Buff, StressDamage",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Snake Skin",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/snake_skin.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff speed and scouting",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Adder's Embrace",
+        "SkillImage": "/images/heroes/shieldbreaker/spells/adders_embrace.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff blight skills",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
+  },
+  {
+    "Name": "Musketeer",
+    "Portrait": "/images/heroes/musketeer/musketeer_icon.webp",
+    "Sprite": "/images/heroes/musketeer/musketeer_sprite.webp",
+    "Role": "Damage",
+    "Health": 27,
+    "Skills": [
+      {
+        "Name": "Aimed Shot",
+        "SkillImage": "/images/heroes/musketeer/spells/aimed_shot.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "High ranged damage versus marked targets",
+        "EffectsBitfield": "Damage",
+        "BonusAgainst": "Marked",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Buckshot",
+        "SkillImage": "/images/heroes/musketeer/spells/buckshot.webp",
+        "CastablePositions": [2, 3],
+        "Targets": [1, 2, 3],
+        "IsFriendly": false,
+        "Effects": "Close-range shotgun blast",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Sidearm",
+        "SkillImage": "/images/heroes/musketeer/spells/sidearm.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2],
+        "IsFriendly": false,
+        "Effects": "Backup pistol shot",
+        "EffectsBitfield": "Damage",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Smokescreen",
+        "SkillImage": "/images/heroes/musketeer/spells/smokescreen.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark and debuff target",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Patch Up",
+        "SkillImage": "/images/heroes/musketeer/spells/patch_up.webp",
+        "CastablePositions": [2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Heal and heal received buff",
+        "EffectsBitfield": "Heal, Buff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Skeet Shot",
+        "SkillImage": "/images/heroes/musketeer/spells/skeet_shot.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Damage and de-stealth marked targets",
+        "EffectsBitfield": "Damage, DeStealth",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Call the Shot",
+        "SkillImage": "/images/heroes/musketeer/spells/call_the_shot.webp",
+        "CastablePositions": [3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": false,
+        "Effects": "Mark target and lower dodge",
+        "EffectsBitfield": "Mark, Debuff",
+        "Category": "Combat"
+      },
+      {
+        "Name": "Clean Musket",
+        "SkillImage": "/images/heroes/musketeer/spells/clean_musket.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1],
+        "IsFriendly": true,
+        "Effects": "Buff ranged damage and crit",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Marching Plan",
+        "SkillImage": "/images/heroes/musketeer/spells/marching_plan.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party speed and scouting buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Triage",
+        "SkillImage": "/images/heroes/musketeer/spells/triage.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party heal over time",
+        "EffectsBitfield": "Heal",
+        "Category": "Camping"
+      },
+      {
+        "Name": "Field Dressing",
+        "SkillImage": "/images/heroes/musketeer/spells/field_dressing.webp",
+        "CastablePositions": [1, 2, 3, 4],
+        "Targets": [1, 2, 3, 4],
+        "IsFriendly": true,
+        "Effects": "Party accuracy and dodge buff",
+        "EffectsBitfield": "Buff",
+        "Category": "Camping"
+      }
+    ]
   }
 ]
