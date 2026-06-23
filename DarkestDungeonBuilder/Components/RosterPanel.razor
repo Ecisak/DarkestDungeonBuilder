@@ -18,7 +18,7 @@
 
                 <div class="d-flex justify-space-between align-end mb-2 mt-4 pb-1">
                     <MudText Typo="Typo.subtitle1" Class="dd-text-heading">Available Heroes</MudText>
-                    <MudText Typo="Typo.caption" Class="dd-text-muted-italic">* Hold to drag</MudText>
+                    <MudText Typo="Typo.caption" Class="dd-text-muted-italic mr-4 pr-2">* Hold portrait to drag</MudText>
                 </div>
 
                 <div class="dd-roster-filter-row">
@@ -39,16 +39,18 @@
                                   Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search"
                                   IconSize="Size.Small"
+                                  DebounceInterval="250"
                                   Class="dd-input-text">
                     </MudTextField>
                 </div>
 
                 <div class="dd-roster-table-wrap">
                     <MudTable Items="@Roster"
-                              Filter="new Func<Hero,bool>(FilterHeroes)"
+                              Filter="_filterFunc"
                               Hover="true"
                               Dense="true"
                               Elevation="0"
+                              Breakpoint="Breakpoint.None"
                               Class="dd-roster-table">
 
                     <HeaderContent>
@@ -101,7 +103,7 @@
                         </MudTd>
 
                         <MudTd DataLabel="Action" Class="dd-roster-action-cell">
-                            <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary"
+                            <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Secondary"
                                      TransformOrigin="Origin.CenterLeft" AnchorOrigin="Origin.BottomRight"
                                      Dense="true"
                                      Class="dd-roster-action-menu">
@@ -129,6 +131,12 @@
     [Parameter] public EventCallback<(Hero hero, int slot)> OnAddHero { get; set; }
     private string _searchString = "";
     private Skill.SkillEffect? _selectedEffectFilter = null;
+    private Func<Hero, bool> _filterFunc = null!;
+
+    protected override void OnInitialized()
+    {
+        _filterFunc = FilterHeroes;
+    }
 
     private bool FilterHeroes(Hero hero)
     {

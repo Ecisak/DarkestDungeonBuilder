@@ -124,7 +124,7 @@ public partial class Home : ComponentBase
     {
         var result = await DialogService.ShowMessageBoxAsync(
             "Irreversible action",
-            "Do you really want to reset? This action is not reversible..",
+            "Do you really want to reset? This action is not reversible.",
             yesText: "YES",
             cancelText: "NO"
         );
@@ -274,19 +274,36 @@ public partial class Home : ComponentBase
     {
         if (_draggedSlotKey.HasValue)
         {
-            _currentTeam.RemoveHero(_draggedSlotKey.Value);
-
-            _draggedSlotKey = null;
-
-            await SaveTeam();
-            UpdateAdvisor();
+            var result = await DialogService.ShowMessageBoxAsync(
+                "Hero removal",
+                "Do you want to remove the hero from the roster? All of the settings will be lost.",
+                yesText: "Remove", cancelText: "Cancel");
+            if (result == true)
+            {
+                _currentTeam.RemoveHero(_draggedSlotKey.Value);
+                _draggedSlotKey = null;
+                await SaveTeam();
+                UpdateAdvisor();
+            }
         }
     }
+
+    private CancellationTokenSource? _saveCts;
 
     private async Task SaveTeam()
     {
         _currentTeam.SaveVersion = Team.CurrentSaveVersion;
-        await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
+        _saveCts?.Cancel();
+        _saveCts = new CancellationTokenSource();
+        var token = _saveCts.Token;
+        try
+        {
+            await Task.Delay(300, token);
+            await LocalStorage.SetItemAsync("currentTeam", _currentTeam);
+        }
+        catch (TaskCanceledException)
+        {
+        }
     }
 
     private void GetHeroesForLocation()
@@ -364,7 +381,7 @@ public partial class Home : ComponentBase
         var result = await DialogService.ShowMessageBoxAsync(
             "Hero removal",
             "Do you want to remove the hero from the roster? All of the settings will be lost.",
-            yesText: "Delete", cancelText: "Cancel");
+            yesText: "Remove", cancelText: "Cancel");
 
         if (result == true)
         {
@@ -610,27 +627,49 @@ public partial class Home : ComponentBase
         return canonicalTrinket;
     }
 
+    private CancellationTokenSource? _advisorCts;
+
     private void UpdateAdvisor()
     {
+        var location = _selectedLocation;
+        var team = _currentTeam;
 
-        if (_selectedLocation == null)
+        _advisorCts?.Cancel();
+        _advisorCts = new CancellationTokenSource();
+        var token = _advisorCts.Token;
+        _ = Task.Run(async () =>
         {
-            _advisorAnalysis = new AdvisorAnalysis();
-            return;
-        }
-
-        ILocationStrategy? strategy = _selectedLocation.Name switch
-        {
-            "Ruins" => new RuinsStrategy(),
-            "Weald" => new WealdStrategy(),
-            "Warrens" => new WarrensStrategy(),
-            "Cove" => new CoveStrategy(),
-            _ => null
-        };
-        _advisorAnalysis = strategy != null
-            ? Advisor.EvaluateTeam(_currentTeam, strategy)
-            : new AdvisorAnalysis();
-
-        StateHasChanged();
+            try
+            {
+                await Task.Delay(150, token);
+                AdvisorAnalysis analysis;
+                if (location == null)
+                {
+                    analysis = new AdvisorAnalysis();
+                }
+                else
+                {
+                    ILocationStrategy? strategy = location.Name switch
+                    {
+                        "Ruins" => new RuinsStrategy(),
+                        "Weald" => new WealdStrategy(),
+                        "Warrens" => new WarrensStrategy(),
+                        "Cove" => new CoveStrategy(),
+                        _ => null
+                    };
+                    analysis = strategy != null
+                        ? Advisor.EvaluateTeam(team, strategy)
+                        : new AdvisorAnalysis();
+                }
+                await InvokeAsync(() =>
+                {
+                    _advisorAnalysis = analysis;
+                    StateHasChanged();
+                });
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        });
     }
 }

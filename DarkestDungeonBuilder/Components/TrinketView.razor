@@ -15,20 +15,32 @@
                             @if (item.TrinketData != null)
                             {
                                 var isAlreadyEquipped = CurrentHero?.EquippedTrinkets.Any(t => t?.Name == item.TrinketData.Name) == true;
-                                <div class="d-flex align-center gap-2 pa-1 w-100 @(isAlreadyEquipped ? "dd-trinket-item dd-trinket-item-disabled" : "dd-trinket-item")"
-                                     @onclick="@(() => { if (!isAlreadyEquipped) SelectTrinket(item.TrinketData); })">
-                                    <MudImage Src="@item.TrinketData.TrinketImage" Width="48" Height="96" ObjectFit="ObjectFit.Contain"></MudImage>
-                                    <div class="d-flex flex-column">
-                                        <MudText Typo="Typo.body1" Class="fw-bold dd-trinket-name">
-                                            @item.Text
-                                            @if (isAlreadyEquipped)
-                                            {
-                                                <MudText Typo="Typo.caption" Class="dd-equipped-note"> (Equipped)</MudText>
-                                            }
-                                        </MudText>
-                                        <MudText Typo="Typo.caption" Class="dd-trinket-effects">@item.TrinketData.Effects</MudText>
+                                <MudTooltip Text="@(isAlreadyEquipped ? "This trinket is already equipped — each trinket can only be used once per hero." : "")">
+                                    <div class="d-flex align-center gap-2 pa-1 w-100 @(isAlreadyEquipped ? "dd-trinket-item dd-trinket-item-disabled" : "dd-trinket-item")"
+                                         @onclick="@(() =>
+                                                   {
+                                                       if (!isAlreadyEquipped)
+                                                       {
+                                                           SelectTrinket(item.TrinketData);
+                                                       }
+                                                       else
+                                                       {
+                                                           _selectedTrinket = null;
+                                                       }
+                                                   })">
+                                        <MudImage Src="@item.TrinketData.TrinketImage" Width="48" Height="96" ObjectFit="ObjectFit.Contain"></MudImage>
+                                        <div class="d-flex flex-column">
+                                            <MudText Typo="Typo.body1" Class="fw-bold dd-trinket-name">
+                                                @item.Text
+                                                @if (isAlreadyEquipped)
+                                                {
+                                                    <MudText Typo="Typo.caption" Class="dd-equipped-note"> (Equipped)</MudText>
+                                                }
+                                            </MudText>
+                                            <MudText Typo="Typo.caption" Class="dd-trinket-effects">@item.TrinketData.Effects</MudText>
+                                        </div>
                                     </div>
-                                </div>
+                                </MudTooltip>
                             }
                             else
                             {
@@ -45,6 +57,7 @@
         </MudStack>
     </DialogContent>
     <DialogActions>
+        <MudButton OnClick="UnequipTrinket" Color="Color.Error" Style="font-family: 'Cinzel', serif;">Unequip</MudButton>
         <MudButton OnClick="Cancel" Variant="Variant.Text" Class="dd-cancel-button">Cancel</MudButton>
         <MudButton OnClick="Save" Variant="Variant.Filled" Class="dd-btn-primary" Disabled="@(_selectedTrinket == null)">Save</MudButton>
     </DialogActions>
@@ -117,6 +130,7 @@
     }
 
     private void SelectTrinket(Trinket t) => _selectedTrinket = t;
+    private void UnequipTrinket() => MudDialog?.Close(DialogResult.Ok<Trinket?>(null));
     private void Save() => MudDialog?.Close(DialogResult.Ok(_selectedTrinket));
     private void Cancel() => MudDialog?.Cancel();
 

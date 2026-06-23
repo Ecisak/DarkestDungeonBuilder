@@ -1,6 +1,6 @@
 @using DarkestDungeonBuilder.Models
 
-<MudDialog>
+<MudDialog Class="dd-loadout-dialog">
     <TitleContent>
         <MudText Typo="Typo.h5" Class="font-weight-bold dd-dialog-title">Setup @Hero?.Name</MudText>
     </TitleContent>
@@ -11,91 +11,101 @@
 
         @if (Hero?.Skills != null)
         {
-            <MudAlert Severity="@(HasCompleteLoadout ? Severity.Success : Severity.Info)" Dense="true" Class="mb-4">
-                Combat: @CombatSelectedCount/4 | Camping: @CampingSelectedCount/4
-                @if (!HasCompleteLoadout)
-                {
-                    <span>You can save a partial loadout and finish it later.</span>
-                }
+            <MudAlert Severity="@(HasCompleteLoadout ? Severity.Success : Severity.Info)" Dense="true" Class="mb-4" Style="min-height: 68px;">
+                <div class="d-flex flex-column">
+                    Combat: @CombatSelectedCount/4 | Camping: @CampingSelectedCount/4
+                    @if (!HasCompleteLoadout)
+                    {
+                        <span>You can save a partial loadout and finish it later.</span>
+                    }
+                    else
+                    {
+                        <span>Loadout is complete and hero is ready for action!</span>
+                    }
+                </div>
             </MudAlert>
 
             <MudText Typo="Typo.subtitle1" Class="mb-2 dd-dialog-section-title">Choose 4 Combat Skills</MudText>
 
-            foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Combat))
-            {
-                bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
-                <div class="d-inline">
-                    <MudTooltip>
-                        <ChildContent>
-                            <MudImage
-                                Src="@(skill.SkillImage)"
-                                Width="48"
-                                Height="48"
-                                Class="@(isSelected ? "rounded ma-1 dd-skill-toggle dd-skill-toggle-selected" : "rounded ma-1 dd-skill-toggle dd-skill-toggle-unselected")"
-                                @onclick="@(() => OnSkillToggled(skill, !isSelected))"
-                                Alt="@skill.Name" />
-                        </ChildContent>
-                        <TooltipContent>
-                            <div class="d-block">
-                                @skill.Name
-                            </div>
-                            <div class="d-block">
-                                @for (int i = 4; i >= 1; i--)
-                                {
-                                    if (skill.CastablePositions.Contains(i))
+            <div class="dd-skill-row">
+                @foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Combat))
+                {
+                    bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
+                    <div class="d-inline">
+                        <MudTooltip>
+                            <ChildContent>
+                                <MudImage
+                                    Src="@(skill.SkillImage)"
+                                    Width="48"
+                                    Height="48"
+                                    Class="@(isSelected ? "rounded ma-1 dd-skill-toggle dd-skill-toggle-selected" : "rounded ma-1 dd-skill-toggle dd-skill-toggle-unselected")"
+                                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                                    Alt="@skill.Name" />
+                            </ChildContent>
+                            <TooltipContent>
+                                <div class="d-block">
+                                    @skill.Name
+                                </div>
+                                <div class="d-block">
+                                    @for (int i = 4; i >= 1; i--)
                                     {
-                                        <span>🟡</span>
-                                    }
-                                    else
-                                    {
-                                        <span>⚫</span>
-                                    }
-                                }
-
-                                @if (!skill.IsFriendly)
-                                {
-                                    <MudText Class="d-inline">|</MudText>
-                                    @for (int i = 1; i <= 4; i++)
-                                    {
-                                        if (skill.Targets.Contains(i))
+                                        if (skill.CastablePositions.Contains(i))
                                         {
-                                            <span>🔴</span>
+                                            <span>🟡</span>
                                         }
                                         else
                                         {
                                             <span>⚫</span>
                                         }
                                     }
-                                }
-                            </div>
-                        </TooltipContent>
-                    </MudTooltip>
-                </div>
-            }
+
+                                    @if (!skill.IsFriendly)
+                                    {
+                                        <MudText Class="d-inline">|</MudText>
+                                        @for (int i = 1; i <= 4; i++)
+                                        {
+                                            if (skill.Targets.Contains(i))
+                                            {
+                                                <span>🔴</span>
+                                            }
+                                            else
+                                            {
+                                                <span>⚫</span>
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </TooltipContent>
+                        </MudTooltip>
+                    </div>
+                }
+            </div>
 
             <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2 dd-dialog-section-title">Choose 4 Camping Skills</MudText>
-            foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Camping))
-            {
-                bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
-                <div class="d-inline">
-                    <MudTooltip>
-                        <ChildContent>
-                            <MudImage
-                                Src="@(skill.SkillImage)"
-                                Width="48"
-                                Height="48"
-                                Class="@(isSelected ? "rounded ma-1 dd-skill-toggle dd-skill-toggle-selected" : "rounded ma-1 dd-skill-toggle dd-skill-toggle-unselected")"
-                                @onclick="@(() => OnSkillToggled(skill, !isSelected))"
-                                Alt="@skill.Name" />
-                        </ChildContent>
-                        <TooltipContent>
-                            <div class="d-block">
-                                @skill.Name
-                            </div>
-                        </TooltipContent>
-                    </MudTooltip>
-                </div>
-            }
+            <div class="dd-skill-row">
+                @foreach (var skill in Hero.Skills.Where(s => s.Category == Skill.SkillCategory.Camping))
+                {
+                    bool isSelected = Hero.SelectedSkills.Any(s => s.Name == skill.Name);
+                    <div class="d-inline">
+                        <MudTooltip>
+                            <ChildContent>
+                                <MudImage
+                                    Src="@(skill.SkillImage)"
+                                    Width="48"
+                                    Height="48"
+                                    Class="@(isSelected ? "rounded ma-1 dd-skill-toggle dd-skill-toggle-selected" : "rounded ma-1 dd-skill-toggle dd-skill-toggle-unselected")"
+                                    @onclick="@(() => OnSkillToggled(skill, !isSelected))"
+                                    Alt="@skill.Name" />
+                            </ChildContent>
+                            <TooltipContent>
+                                <div class="d-block">
+                                    @skill.Name
+                                </div>
+                            </TooltipContent>
+                        </MudTooltip>
+                    </div>
+                }
+            </div>
         }
     </DialogContent>
     <DialogActions>
